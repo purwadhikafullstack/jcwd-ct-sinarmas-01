@@ -5,8 +5,9 @@ import { HashRouter as Router, Routes, Route } from "react-router-dom";
 
 // Pages
 import App from './App';
-import Admin from "./pages/dashboard/Admin";
+import Admin from "./pages/admin";
 import Home from "./pages/Home";
+import MainAdmin from './pages/admin/Main';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,7 +16,9 @@ root.render(
       <Routes>
         <Route path="/" element={<App />}>
           <Route path="/" element={<Home />} />
-          <Route path="admin" element={<Admin />} />
+          <Route path="admin" element={<Admin />}>
+            <Route path="/admin" element={<MainAdmin />} />
+          </Route>
         </Route>
       </Routes>
     </Router>

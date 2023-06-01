@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function AdminMenu () {
   return (
-    <Menu className="w-60 p-2 bg-base-200 gap-2">
+    <Menu className="w-60 p-2 bg-base-200 gap-1">
       <Menu.Title>
         <h3 className="text-lg font-bold">
           Admin Menu
@@ -13,6 +13,8 @@ export default function AdminMenu () {
         <Link to="/">
           Users
         </Link>
+      </Menu.Item>
+      <Menu.Item>
         <Link to="/">
           Warehouses
         </Link>

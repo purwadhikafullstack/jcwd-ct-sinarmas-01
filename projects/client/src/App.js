@@ -17,19 +17,22 @@ function App() {
       setMessage(data?.message || "");
     })();
   }, []);
+
+  const toggleDrawer = () => setOpenDrawer(open => !open);
+  const closeMenu = () => setOpenDrawer(false);
+
   return (
-    <Drawer open={openDrawer} mobile side={<AdminMenu />}>
-      <Navbar className="p-5 bg-base-300">
+    <Drawer open={openDrawer} onClickOverlay={closeMenu} mobile side={<AdminMenu />}>
+      <Navbar className="p-6 bg-base-300">
         <Navbar.Start>
+          {/* memberi className="lg:hidden" agar tombol menu tidak muncul */}
+          <Button color="ghost" onClick={toggleDrawer} className="lg:hidden">
+            <FaBars />
+          </Button>
           <h1 className="text-xl font-bold">
             {message}
           </h1>
         </Navbar.Start>
-        <Navbar.End>
-          <Button color="ghost">
-            <FaBars />
-          </Button>
-        </Navbar.End>
       </Navbar>
       <div className="p-5">
         <Outlet />
