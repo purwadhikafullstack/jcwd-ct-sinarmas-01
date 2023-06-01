@@ -1,11 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Navbar } from "react-daisyui";
+import { Button, Navbar, Drawer } from "react-daisyui";
 import { Outlet } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
+import AdminMenu from "./components/menu/Admin";
 
 function App() {
   const [message, setMessage] = useState("");
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -16,7 +18,7 @@ function App() {
     })();
   }, []);
   return (
-    <>
+    <Drawer open={openDrawer} mobile side={<AdminMenu />}>
       <Navbar className="p-5 bg-base-300">
         <Navbar.Start>
           <h1 className="text-xl font-bold">
@@ -32,7 +34,7 @@ function App() {
       <div className="p-5">
         <Outlet />
       </div>
-    </>
+    </Drawer>
   );
 }
 
