@@ -1,5 +1,4 @@
-const { sequelize, initModels } = require("../../models");
-const models = initModels(sequelize);
+const { models } = require("../../models");
 const { Users } = models;
 
 const adminController = {
