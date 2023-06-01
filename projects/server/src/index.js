@@ -2,9 +2,12 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
+const { sequelize } = require("../models");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
+sequelize.sync();
+
 app.use(
   cors({
     origin: [
