@@ -8,6 +8,8 @@ import App from './App';
 import Admin from "./pages/admin";
 import Home from "./pages/Home";
 import MainAdmin from './pages/admin/Main';
+import ManageUser from './pages/admin/ManageUser';
+import ManageWareHouses from './pages/admin/Warehouses';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -18,6 +20,8 @@ root.render(
           <Route path="/" element={<Home />} />
           <Route path="admin" element={<Admin />}>
             <Route path="/admin" element={<MainAdmin />} />
+            <Route path="users" element={<ManageUser />} />
+            <Route path="warehouses" element={<ManageWareHouses />} />
           </Route>
         </Route>
       </Routes>

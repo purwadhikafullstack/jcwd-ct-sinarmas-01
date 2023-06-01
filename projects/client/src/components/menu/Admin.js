@@ -10,12 +10,17 @@ export default function AdminMenu () {
         </h3>
       </Menu.Title>
       <Menu.Item>
-        <Link to="/">
+        <Link to="/admin">
+          Home
+        </Link>
+      </Menu.Item>
+      <Menu.Item>
+        <Link to="/admin/users">
           Users
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to="/">
+        <Link to="/admin/warehouses">
           Warehouses
         </Link>
       </Menu.Item>

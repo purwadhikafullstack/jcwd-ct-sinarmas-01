@@ -5,7 +5,7 @@ const { Stat } = Stats; // Jangan dihapus
 export default function MainAdmin () {
   return (
     <div className="text-center">
-      <Stats className="bg-base-300 stats-vertical lg:stats-horizontal shadow-md shadow-blue-700">
+      <Stats className="bg-base-300 stats-vertical md:stats-horizontal shadow-md shadow-blue-700">
         <Stats.Stat>
           <Stat.Item variant="title">
             User terdaftar

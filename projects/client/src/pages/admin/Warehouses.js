@@ -1,7 +1,7 @@
-import { Table, ButtonGroup, Button } from "react-daisyui";
+import { Table, Button, ButtonGroup } from "react-daisyui";
 import { FaTrash, FaPencilAlt } from "react-icons/fa";
 
-export default function ManageUser() {
+export default function ManageWareHouses () {
   return (
     <div className="text-center">
       <ButtonGroup className="mb-6">
