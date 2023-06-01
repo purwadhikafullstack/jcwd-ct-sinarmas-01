@@ -1,7 +1,8 @@
 import axios from "axios";
-import logo from "./logo.svg";
-import "./App.css";
 import { useEffect, useState } from "react";
+import { Button, Navbar } from "react-daisyui";
+import { Outlet } from "react-router-dom";
+import { FaBars } from "react-icons/fa";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -15,12 +16,23 @@ function App() {
     })();
   }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        {message}
-      </header>
-    </div>
+    <>
+      <Navbar className="p-5 bg-base-300">
+        <Navbar.Start>
+          <h1 className="text-xl font-bold">
+            {message}
+          </h1>
+        </Navbar.Start>
+        <Navbar.End>
+          <Button color="ghost">
+            <FaBars />
+          </Button>
+        </Navbar.End>
+      </Navbar>
+      <div className="p-5">
+        <Outlet />
+      </div>
+    </>
   );
 }
 
