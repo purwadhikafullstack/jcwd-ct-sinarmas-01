@@ -1,5 +1,10 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
+  return Users.init(sequelize, DataTypes);
+}
+
+class Users extends Sequelize.Model {
+  static init(sequelize, DataTypes) {
   return sequelize.define('Users', {
     id: {
       autoIncrement: true,
@@ -8,15 +13,15 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     email: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     username: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     password: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     isVerified: {
@@ -28,15 +33,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     reset_token: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     verify_token: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(255),
       allowNull: true
     }
   }, {
-    sequelize,
     tableName: 'users',
     timestamps: true,
     indexes: [
@@ -50,4 +54,5 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
-};
+  }
+}

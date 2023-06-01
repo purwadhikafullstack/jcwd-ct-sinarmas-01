@@ -1,5 +1,10 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
+  return Checkouts.init(sequelize, DataTypes);
+}
+
+class Checkouts extends Sequelize.Model {
+  static init(sequelize, DataTypes) {
   return sequelize.define('Checkouts', {
     id: {
       type: DataTypes.INTEGER,
@@ -19,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     struk_image: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     shipping_price: {
@@ -43,7 +48,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    sequelize,
     tableName: 'checkouts',
     timestamps: true,
     indexes: [
@@ -64,4 +68,5 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
-};
+  }
+}

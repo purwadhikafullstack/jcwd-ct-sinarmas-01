@@ -1,5 +1,10 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
+  return StockMutations.init(sequelize, DataTypes);
+}
+
+class StockMutations extends Sequelize.Model {
+  static init(sequelize, DataTypes) {
   return sequelize.define('StockMutations', {
     id: {
       autoIncrement: true,
@@ -8,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     notes: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     warehouse_id: {
@@ -40,7 +45,6 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   }, {
-    sequelize,
     tableName: 'stock_mutations',
     timestamps: true,
     indexes: [
@@ -75,4 +79,5 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
-};
+  }
+}
