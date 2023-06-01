@@ -12,6 +12,7 @@ export default function MainAdmin () {
           </Stat.Item>
           <Stat.Item variant="value">
             10
+            {/* Masih hardcode, dapat diganti dengan response dari REST API */}
           </Stat.Item>
         </Stats.Stat>
         <Stats.Stat>
@@ -20,6 +21,7 @@ export default function MainAdmin () {
           </Stat.Item>
           <Stat.Item variant="value">
             3
+            {/* Masih hardcode, dapat diganti dengan response dari REST API */}
           </Stat.Item>
         </Stats.Stat>
       </Stats>
