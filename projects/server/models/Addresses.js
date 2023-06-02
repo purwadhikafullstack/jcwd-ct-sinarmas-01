@@ -1,5 +1,10 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
+  return Addresses.init(sequelize, DataTypes);
+}
+
+class Addresses extends Sequelize.Model {
+  static init(sequelize, DataTypes) {
   return sequelize.define('Addresses', {
     id: {
       autoIncrement: true,
@@ -8,23 +13,22 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     address_name: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     city: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(100),
       allowNull: true
     },
     province: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(60),
       allowNull: true
     },
     geolocation: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(60),
       allowNull: true
     }
   }, {
-    sequelize,
     tableName: 'addresses',
     timestamps: true,
     indexes: [
@@ -38,4 +42,5 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
-};
+  }
+}

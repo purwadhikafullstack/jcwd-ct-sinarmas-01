@@ -1,5 +1,10 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
+  return StockJurnals.init(sequelize, DataTypes);
+}
+
+class StockJurnals extends Sequelize.Model {
+  static init(sequelize, DataTypes) {
   return sequelize.define('StockJurnals', {
     id: {
       autoIncrement: true,
@@ -48,7 +53,6 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   }, {
-    sequelize,
     tableName: 'stock_jurnals',
     timestamps: true,
     indexes: [
@@ -83,4 +87,5 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
-};
+  }
+}

@@ -1,15 +1,13 @@
 'use strict';
-
 require("dotenv/config");
 const fs = require('fs');
 const path = require('path');
-const { Sequelize } = require('sequelize');
+const Sequelize = require('sequelize');
 const process = require('process');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-// const config = require(__dirname + '/../config/config.json')[env];
-const initModels = require("./init-models");
 const db = {};
+const initModels = require("./init-models");
 
 let sequelize;
 sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASS, {
@@ -40,7 +38,6 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-db.initModels = initModels;
 db.models = initModels(sequelize);
 
 module.exports = db;
