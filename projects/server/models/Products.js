@@ -1,5 +1,10 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
+  return Products.init(sequelize, DataTypes);
+}
+
+class Products extends Sequelize.Model {
+  static init(sequelize, DataTypes) {
   return sequelize.define('Products', {
     id: {
       autoIncrement: true,
@@ -12,11 +17,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     image_product: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     desc: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.TEXT,
       allowNull: true
     },
     category_id: {
@@ -28,7 +33,6 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   }, {
-    sequelize,
     tableName: 'products',
     timestamps: true,
     indexes: [
@@ -49,4 +53,5 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
-};
+  }
+}
