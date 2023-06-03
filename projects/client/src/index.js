@@ -19,7 +19,7 @@ root.render(
         <Route path="/" element={<App />}>
           <Route path="/" element={<Home />} />
           <Route path="admin" element={<Admin />}>
-            <Route path="/admin" element={<MainAdmin />} />
+            <Route path="" element={<MainAdmin />} />
             <Route path="users" element={<ManageUser />} />
             <Route path="warehouses" element={<ManageWareHouses />} />
           </Route>
