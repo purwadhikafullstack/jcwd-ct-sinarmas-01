@@ -1,8 +1,60 @@
-const { models } = require("../../models");
-const { Users } = models;
+const bcrypt = require("bcrypt");
+const { models } = require("../models");
+const { Users, Warehouses } = models;
 
 const adminController = {
-  openUser
+  /**
+   * Menambah user baru dari halaman admin
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   */
+  addUser: async function (req, res) {
+    try {
+      const { email, password, username, role } = req.body;
+      const salt = await bcrypt.genSalt(10);
+      const hashed = await bcrypt.hash(password, salt);
+      const user = await Users.create({ email, password: hashed, username, role });
+      return res.status(201).json({ message: "User added", user });
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
+
+  /**
+   * Admin mengubah data user
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   */
+  editUser: async function (req, res) {
+    try {
+      const { user_id } = req.params;
+      const { role } = req.body;
+      /** @type {import("sequelize").Model} */
+      const user = await Users.findOne({
+        where: { id: user_id },
+      });
+      user.role = role;
+      await user.save();
+      return res.status(200).json({ message: "User Edited successfully", user });
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
+
+  /**
+   * Menambah gudang baru
+   * @param {import("exprses").Request} req
+   * @param {import("express").Response} res
+   */
+  newWarehouse: async function (req, res) {
+    try {
+      const { address_id, warehouse_name, user_id } = req.body;
+      const warehouse = await Warehouses.create({ warehouse_name, address_id, user_id });
+      return res.status(201).json({ message: "Warehouses Added", warehouse });
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
 };
 
 module.exports = adminController;

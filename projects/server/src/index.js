@@ -1,14 +1,14 @@
 require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
+const addressRoute = require("./routes/addresses");
 const { join } = require("path");
-const { sequelize, models } = require("../models");
+const { sequelize } = require("./models");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
 sequelize.sync();
 
-models.Users.findAll();
 app.use(
   cors({
     origin: [
@@ -34,6 +34,8 @@ app.get("/api/greetings", (req, res, next) => {
     message: "Hello, Student !",
   });
 });
+
+app.use("/api/addresses", addressRoute);
 
 // ===========================
 
