@@ -7,6 +7,7 @@ const { sequelize } = require("./models");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
+console.log(process.env.WHITELISTED_DOMAIN);
 sequelize.sync();
 
 app.use(

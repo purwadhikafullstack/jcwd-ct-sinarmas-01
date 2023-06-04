@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const { models } = require("../models");
 const { Users, Warehouses } = models;
+const transporter = require("../transporter");
 
 const adminController = {
   /**
@@ -10,10 +11,18 @@ const adminController = {
    */
   addUser: async function (req, res) {
     try {
-      const { email, password, username, role } = req.body;
+      const { email, username, role } = req.body;
       const salt = await bcrypt.genSalt(10);
+      const password = "Test.1234";
       const hashed = await bcrypt.hash(password, salt);
       const user = await Users.create({ email, password: hashed, username, role });
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: email,
+        html: `
+          <h1>Hello, ${username}. Please verify your account to use this app <br>
+        `
+      })
       return res.status(201).json({ message: "User added", user });
     } catch (error) {
       return res.status(500).json(error);

@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import MainAdmin from './pages/admin/Main';
 import ManageUser from './pages/admin/ManageUser';
 import ManageWareHouses from './pages/admin/Warehouses';
+import AdminLogin from './pages/admin/Login';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -22,6 +23,7 @@ root.render(
             <Route path="" element={<MainAdmin />} />
             <Route path="users" element={<ManageUser />} />
             <Route path="warehouses" element={<ManageWareHouses />} />
+            <Route path="login" element={<AdminLogin />} />
           </Route>
         </Route>
       </Routes>

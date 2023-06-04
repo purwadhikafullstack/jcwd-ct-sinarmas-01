@@ -9,8 +9,8 @@ export default function ManageWareHouses () {
           New
         </Button>
       </ButtonGroup>
-      <div className="flex justify-center items-center overflow-x-auto p-3">
-        <Table>
+      <div className="overflow-x-auto">
+        <Table className="w-full">
           <Table.Head>
             <span>ID</span>
             <span>E-mail</span>

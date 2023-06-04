@@ -14,11 +14,13 @@ class Users extends Sequelize.Model {
     },
     email: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: false,
+      unique: "email"
     },
     username: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: false,
+      unique: "username"
     },
     password: {
       type: DataTypes.STRING(255),
@@ -50,6 +52,22 @@ class Users extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "id" },
+        ]
+      },
+      {
+        name: "username",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "username" },
+        ]
+      },
+      {
+        name: "email",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "email" },
         ]
       },
     ]
