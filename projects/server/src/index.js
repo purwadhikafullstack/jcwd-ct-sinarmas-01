@@ -1,9 +1,10 @@
 require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
-const addressRoute = require("./routes/addresses");
 const { join } = require("path");
 const { sequelize } = require("./models");
+const addressRoute = require("./routes/addresses");
+const warehouseRoute = require("./routes/warehouses");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -11,12 +12,13 @@ console.log(process.env.WHITELISTED_DOMAIN);
 sequelize.sync();
 
 app.use(
-  cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
-  })
+  // cors({
+  //   origin: [
+  //     process.env.WHITELISTED_DOMAIN &&
+  //       process.env.WHITELISTED_DOMAIN.split(","),
+  //   ],
+  // })
+  cors()
 );
 
 app.use(express.json());
@@ -31,12 +33,13 @@ app.get("/api", (req, res) => {
 });
 
 app.get("/api/greetings", (req, res, next) => {
-  res.status(200).json({
+  return res.status(200).json({
     message: "Hello, Student !",
   });
 });
 
 app.use("/api/addresses", addressRoute);
+app.use("/api/warehouses", warehouseRoute);
 
 // ===========================
 

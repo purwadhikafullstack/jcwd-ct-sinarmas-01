@@ -20,9 +20,13 @@ const adminController = {
         from: process.env.EMAIL_USER,
         to: email,
         html: `
-          <h1>Hello, ${username}. Please verify your account to use this app <br>
+          <h1>Hello, ${username}. Please verify your account to use this app and set your password <br>
+          <a href="${process.env.WHITELISTED_DOMAIN}/#/auth/verify">Verify Me</a>
         `
-      })
+      }, (err, info) => {
+        if (err) return res.status(500).json(err);
+        console.log(info);
+      });
       return res.status(201).json({ message: "User added", user });
     } catch (error) {
       return res.status(500).json(error);
@@ -49,7 +53,20 @@ const adminController = {
       return res.status(500).json(error);
     }
   },
-
+  /**
+   * Menghapus user
+   * @param {import("express").Request} req 
+   * @param {import("express").Response} res 
+   */
+  removeUser: async function (req, res) {
+    try {
+      const { user_id } = req.params;
+      const user = await Users.destroy({ where: { id: user_id }});
+      return res.status(200).json({ message: "Delete Success", user });
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
   /**
    * Menambah gudang baru
    * @param {import("exprses").Request} req

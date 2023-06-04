@@ -35,6 +35,20 @@ const accountController = {
       return res.status(500).json(error);
     }
   },
+  /**
+   * 
+   * @param {import("express").Request} req 
+   * @param {import("express").Response} res 
+   */
+  allUsers: async function (req, res) {
+    try {
+      const { page } = req.query;
+      const user = await Users.findAndCountAll({ limit:5, offset: (page-1) * 5 });
+      return res.status(200).json({ message: "Fetch Success", ...user });
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
 };
 
 module.exports = accountController;

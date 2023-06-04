@@ -26,7 +26,7 @@ const addressController = {
       const place = await fromCoordinates(q);
       const address = await Addresses.create({
         address_name: place.formatted,
-        city: place.components.city,
+        city: place.components?.city || place.components?.county,
         province: place.components.state,
         geolocation: q,
       });
@@ -35,7 +35,6 @@ const addressController = {
       return res.status(500).json(error);
     }
   },
-
   /**
    * Melihat daftar alamat yang telah ada di database
    * @param {import("express").Request} req
@@ -49,7 +48,6 @@ const addressController = {
       return res.status(500).json(error);
     }
   },
-
   /**
    * 
    * @param {import("express").Request} req 
@@ -65,6 +63,20 @@ const addressController = {
     } 
     catch (error) {
       return res.status(500).json(error);  
+    }
+  },
+  /**
+   * 
+   * @param {import("express").Request} req 
+   * @param {import("express").Response} res 
+   */
+  removeAddress: async function (req, res) {
+    try {
+      const { address_id } = req.params;
+      const address = await Addresses.destroy({ where: { id: address_id } });
+      return res.status(200).json({ message: "Address deleted", address });
+    } catch (error) {
+      return res.status(500).json(error);
     }
   }
 };

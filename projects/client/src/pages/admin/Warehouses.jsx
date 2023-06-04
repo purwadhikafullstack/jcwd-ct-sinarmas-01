@@ -1,7 +1,15 @@
+import { useQuery } from "@tanstack/react-query";
 import { Table, Button, ButtonGroup } from "react-daisyui";
 import { FaTrash, FaPencilAlt } from "react-icons/fa";
+import getWarehouses from "../../apis/getWarehouses";
 
 export default function ManageWareHouses () {
+  const query = useQuery({
+    queryFn: async () => await getWarehouses(),
+    queryKey: ["warehouses"]
+  });
+  console.log(query?.data);
+
   return (
     <div className="text-center">
       <ButtonGroup className="mb-6">
@@ -13,28 +21,32 @@ export default function ManageWareHouses () {
         <Table className="w-full">
           <Table.Head>
             <span>ID</span>
-            <span>E-mail</span>
-            <span>Username</span>
-            <span>Role</span>
+            <span>Warehouse Name</span>
+            <span>Managed By</span>
+            <span>Address</span>
             <span>Actions</span>
           </Table.Head>
           <Table.Body className="bg-base-200">
-            <Table.Row>
-              <span>1</span>
-              <span>example@email.com</span>
-              <span>user_123</span>
-              <span>Admin</span>
-              <span>
-                <ButtonGroup>
-                  <Button color="warning">
-                    <FaPencilAlt />
-                  </Button>
-                  <Button color="error">
-                    <FaTrash />
-                  </Button>
-                </ButtonGroup>
-              </span>
-            </Table.Row>
+            {query.data?.rows?.map((data, key) => {
+              return (
+                <Table.Row>
+                  <span>{data?.id}</span>
+                  <span>{data?.warehouse_name}</span>
+                  <span>user_123</span>
+                  <span>{data?.address?.address_name}</span>
+                  <span>
+                    <ButtonGroup>
+                      <Button color="warning">
+                        <FaPencilAlt />
+                      </Button>
+                      <Button color="error">
+                        <FaTrash />
+                      </Button>
+                    </ButtonGroup>
+                  </span>
+                </Table.Row>
+              )
+            })}
           </Table.Body>
         </Table>
       </div>
