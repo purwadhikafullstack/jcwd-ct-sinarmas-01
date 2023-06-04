@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
 const { sequelize, models } = require("../models");
-
+const { authRoutes } = require("./routes");
 const PORT = process.env.PORT || 8000;
 const app = express();
 sequelize.sync();
@@ -24,6 +24,7 @@ app.use(express.json());
 
 // ===========================
 // NOTE : Add your routes here
+app.use("/api/auth", authRoutes);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
