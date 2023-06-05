@@ -8,12 +8,14 @@ export default function ManageWareHouses () {
   const [page, setPage] = useState(1);
   const query = useQuery({
     queryFn: async () => await getWarehouses(page),
-    queryKey: ["warehouses"],
+    queryKey: ["warehouses", page],
   });
-  console.log(query.data);
 
   return (
     <div className="text-center">
+      <h1 className="text-2xl font-bold mb-3">
+        Warehouses
+      </h1>
       <ButtonGroup className="mb-6">
         <Button color="primary">
           New
@@ -34,7 +36,7 @@ export default function ManageWareHouses () {
                 <Table.Row key={key}>
                   <span>{data?.id}</span>
                   <span>{data?.warehouse_name}</span>
-                  <span>user_123</span>
+                  <span>{data?.user?.username}</span>
                   <span>{data?.address?.address_name}</span>
                   <span>
                     <ButtonGroup>
@@ -50,6 +52,9 @@ export default function ManageWareHouses () {
               )
             })}
           </Table.Body>
+          <Table.Footer>
+            <span /><span /><span /><span /><span />
+          </Table.Footer>
         </Table>
       </div>
     </div>

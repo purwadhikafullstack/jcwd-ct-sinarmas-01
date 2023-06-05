@@ -58,7 +58,7 @@ const warehouseController = {
     try {
       const page = Number(req.query.page);
       const offset = (page > 0) ? ((page-1) * 5) : 0;
-      const warehouses = await Warehouses.findAndCountAll({ limit: 5, offset, include: 'address' });
+      const warehouses = await Warehouses.findAndCountAll({ limit: 5, offset, include: ['address', 'user'] });
       return res.status(200).json(warehouses);
     } catch (error) {
       return res.status(500).json(error);

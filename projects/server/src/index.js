@@ -3,8 +3,10 @@ const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
 const { sequelize } = require("./models");
+// API Routes
 const addressRoute = require("./routes/addresses");
 const warehouseRoute = require("./routes/warehouses");
+const userRoute = require("./routes/users");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -40,6 +42,7 @@ app.get("/api/greetings", (req, res, next) => {
 
 app.use("/api/addresses", addressRoute);
 app.use("/api/warehouses", warehouseRoute);
+app.use("/api/users", userRoute);
 
 // ===========================
 
