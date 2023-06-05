@@ -67,9 +67,9 @@ export default function ManageUser() {
         </Table>
       </div>
       <div className="my-5">
-        Page : <Select onChange={(e) => setPage(e.currentTarget.value)}>
+        <Select onChange={(e) => setPage(e.currentTarget.value)}>
           {pages.map(data => {
-            return <Select.Option value={data} key={data}>{data}</Select.Option>
+            return <Select.Option value={data} key={data}>Page {data}</Select.Option>
           })}
         </Select>
       </div>
