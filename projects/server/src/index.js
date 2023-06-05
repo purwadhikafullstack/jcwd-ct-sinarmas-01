@@ -1,73 +1,76 @@
-require("dotenv/config");
+const dotenv = require("dotenv");
 const express = require("express");
 const cors = require("cors");
-const { join } = require("path");
+const mysql = require("mysql");
 
-const PORT = process.env.PORT || 8000;
+dotenv.config();
 const app = express();
-app.use(
-  cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
-  })
-);
+const PORT = process.env.PORT || 8000;
 
+// Middleware
 app.use(express.json());
+app.use(cors());
 
-//#region API ROUTES
-
-// ===========================
-// NOTE : Add your routes here
-
-app.get("/api", (req, res) => {
-  res.send(`Hello, this is my API`);
+// Database connection
+const db = mysql.createConnection({
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "root",
+  database: process.env.DB_NAME || "profile",
 });
 
-app.get("/api/greetings", (req, res, next) => {
-  res.status(200).json({
-    message: "Hello, Student !",
+db.connect((err) => {
+  if (err) {
+    console.error("Error connecting to the database:", err);
+    return;
+  }
+  console.log("Connected to MySQL database ✅");
+});
+
+// Login API
+app.post("/api/login", (req, res) => {
+  const { email, password } = req.body;
+
+  // Validasi input email dan password
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ message: "Please enter your email and password" });
+  }
+
+  const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+  const values = [email, password];
+
+  db.query(sql, values, (err, data) => {
+    if (err) {
+      console.error("Error executing SQL query:", err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+
+    if (data.length === 0) {
+      return res.status(401).json({ message: "Wrong email or password" });
+    }
+
+    // Jika email dan password sesuai, kirim respons sukses
+    return res.status(200).json({ message: "Login success" });
   });
 });
 
-// ===========================
-
-// not found
-app.use((req, res, next) => {
-  if (req.path.includes("/api/")) {
-    res.status(404).send("Not found !");
-  } else {
-    next();
-  }
+// Handle not found routes
+app.use("/api/*", (req, res) => {
+  res.status(404).send("Not found!");
 });
 
-// error
+// Handle errors
 app.use((err, req, res, next) => {
-  if (req.path.includes("/api/")) {
-    console.error("Error : ", err.stack);
-    res.status(500).send("Error !");
-  } else {
-    next();
-  }
+  console.error("Error:", err.stack);
+  res.status(500).send("Error!");
 });
 
-//#endregion
-
-//#region CLIENT
-const clientPath = "../../client/build";
-app.use(express.static(join(__dirname, clientPath)));
-
-// Serve the HTML page
-app.get("*", (req, res) => {
-  res.sendFile(join(__dirname, clientPath, "index.html"));
-});
-
-//#endregion
-
+// Start the server
 app.listen(PORT, (err) => {
   if (err) {
-    console.log(`ERROR: ${err}`);
+    console.error(`ERROR: ${err}`);
   } else {
     console.log(`APP RUNNING at ${PORT} ✅`);
   }

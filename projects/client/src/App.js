@@ -1,26 +1,27 @@
-import axios from "axios";
-import logo from "./logo.svg";
-import "./App.css";
-import { useEffect, useState } from "react";
+import React from "react";
+import Navbar from "./components/Navbar";
+import LoginForm from "./components/LoginForm";
+import HomePage from "./components/HomePage";
+
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 function App() {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    (async () => {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/greetings`
-      );
-      setMessage(data?.message || "");
-    })();
-  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        {message}
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Navbar />
+        <Routes>
+          <Route path="/homepage" element={<HomePage />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/*" element={<Navigate to="/homepage" />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
