@@ -21,7 +21,7 @@ const adminController = {
         to: email,
         html: `
           <h1>Hello, ${username}. Please verify your account to use this app and set your password <br>
-          <a href="${process.env.WHITELISTED_DOMAIN}/#/auth/verify">Verify Me</a>
+          <a href="http://${process.env.WHITELISTED_DOMAIN}/#/auth/verify">Verify Me</a>
         `
       }, (err, info) => {
         if (err) return res.status(500).json(err);

@@ -9,7 +9,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 function App() {
   const [message, setMessage] = useState("");
   const [openDrawer, setOpenDrawer] = useState(false);
-  const queryClient = new QueryClient();
+  const settings = {
+    networkMode: "always"
+  };
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      mutations: settings,
+      queries: settings
+    }
+  });
 
   useEffect(() => {
     (async () => {

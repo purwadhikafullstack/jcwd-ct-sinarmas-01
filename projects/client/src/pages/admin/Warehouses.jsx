@@ -2,13 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 import { Table, Button, ButtonGroup } from "react-daisyui";
 import { FaTrash, FaPencilAlt } from "react-icons/fa";
 import getWarehouses from "../../apis/getWarehouses";
+import { useState } from "react";
 
 export default function ManageWareHouses () {
+  const [page, setPage] = useState(1);
   const query = useQuery({
-    queryFn: async () => await getWarehouses(),
-    queryKey: ["warehouses"]
+    queryFn: async () => await getWarehouses(page),
+    queryKey: ["warehouses"],
   });
-  console.log(query?.data);
+  console.log(query.data);
 
   return (
     <div className="text-center">
@@ -29,7 +31,7 @@ export default function ManageWareHouses () {
           <Table.Body className="bg-base-200">
             {query.data?.rows?.map((data, key) => {
               return (
-                <Table.Row>
+                <Table.Row key={key}>
                   <span>{data?.id}</span>
                   <span>{data?.warehouse_name}</span>
                   <span>user_123</span>
