@@ -7,6 +7,7 @@ const { sequelize } = require("./models");
 const addressRoute = require("./routes/addresses");
 const warehouseRoute = require("./routes/warehouses");
 const userRoute = require("./routes/users");
+const { authRoutes } = require("./routes");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -29,6 +30,7 @@ app.use(express.json());
 
 // ===========================
 // NOTE : Add your routes here
+app.use("/api/auth", authRoutes);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
