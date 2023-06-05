@@ -1,9 +1,9 @@
-const { models } = require("../../models");
+const { models } = require("../models");
 const { Users } = models;
 require("dotenv").config();
 const transporter = require("../lib/sendemail");
 const { createToken } = require("../lib/createToken");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const AuthController = {
   registerUser: async (req, res) => {
@@ -57,6 +57,7 @@ const AuthController = {
               err: errMail,
             });
           }
+          console.log(resMail);
           res.status(200).send({
             message: "Verification Success",
             success: true,
@@ -78,6 +79,40 @@ const AuthController = {
       });
     }
   },
+  /**
+   * 
+   * @param {import("express").Request} req 
+   * @param {import("express").Response} res 
+   */
+  login: async function (req, res) {
+    try {
+      const { email, password } = req.body;
+      
+    } catch (error) {
+      return res.status(error.statusCode || 500).json(error);
+    }
+  },
+  /**
+   * 
+   * @param {import("express").Request} req 
+   * @param {import("express").Response} res 
+   * @returns 
+   */
+  setPassword: async function (req, res) {
+    try {
+      const { verify_token } = req.params;
+      const { password } = req.body;
+      const user = await Users.findOne({ where: { verify_token } });
+      const salt = await bcrypt.genSalt(10);
+      const hashed = await bcrypt.hash(password, salt);
+      user.password = hashed;
+      user.verify_token = "";
+      await user.save();
+      return res.status(200).json({ message: "Set password success" });
+    } catch (error) {
+      return res.status(error.statusCode || 500).json(error);
+    }
+  }
 };
 
 module.exports = AuthController;
