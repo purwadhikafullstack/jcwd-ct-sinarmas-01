@@ -5,18 +5,18 @@ const mysql = require("mysql");
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT;
 
 // Middleware
 app.use(express.json());
 app.use(cors());
-
+ 
 // Database connection
 const db = mysql.createConnection({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "root",
-  database: process.env.DB_NAME || "profile",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 });
 
 db.connect((err) => {
@@ -68,7 +68,7 @@ app.use((err, req, res, next) => {
 });
 
 // Start the server
-app.listen(PORT, (err) => {
+app.listen(PORT, (err) => {  
   if (err) {
     console.error(`ERROR: ${err}`);
   } else {
