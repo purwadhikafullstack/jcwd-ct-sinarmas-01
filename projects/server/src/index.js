@@ -8,6 +8,7 @@ const addressRoute = require("./routes/addresses");
 const warehouseRoute = require("./routes/warehouses");
 const userRoute = require("./routes/users");
 const { authRoutes } = require("./routes");
+const bodyParser = require("body-parser");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -23,7 +24,7 @@ app.use(
   // })
   cors()
 );
-
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 //#region API ROUTES
@@ -42,6 +43,7 @@ app.get("/api/greetings", (req, res, next) => {
   });
 });
 
+app.use("/api/auth", authRoutes);
 app.use("/api/addresses", addressRoute);
 app.use("/api/warehouses", warehouseRoute);
 app.use("/api/users", userRoute);

@@ -1,7 +1,7 @@
-const bcrypt = require("bcrypt");
 const { models } = require("../models");
 const { Users, Warehouses } = models;
 const transporter = require("../transporter");
+const crypto = require("crypto");
 
 const adminController = {
   /**
@@ -11,12 +11,11 @@ const adminController = {
    */
   addUser: async function (req, res) {
     try {
-      const { email, username, role } = req.body;
-      const salt = await bcrypt.genSalt(10);
-      const password = "Test.1234";
-      const hashed = await bcrypt.hash(password, salt);
-      const user = await Users.create({ email, password: hashed, username, role });
+      const { email, username } = req.body;
+      const password = crypto.randomBytes(8).toString('hex');
+      const user = await Users.create({ email, password, username, role: "Admin" });
       await transporter.sendMail({
+        subject: "Admin Verification",
         from: process.env.EMAIL_USER,
         to: email,
         html: `
@@ -41,13 +40,12 @@ const adminController = {
   editUser: async function (req, res) {
     try {
       const { user_id } = req.params;
-      const { role } = req.body;
-      /** @type {import("sequelize").Model} */
-      const user = await Users.findOne({
-        where: { id: user_id },
-      });
-      user.role = role;
+      const { email, username } = req.body;
+      const user = await Users.findOne({ where: { id: user_id } });
+      user.email = email;
+      user.username = username;
       await user.save();
+      console.log(user);
       return res.status(200).json({ message: "User Edited successfully", user });
     } catch (error) {
       return res.status(500).json(error);

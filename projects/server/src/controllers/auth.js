@@ -4,49 +4,27 @@ require("dotenv").config();
 const transporter = require("../lib/sendemail");
 const { createToken } = require("../lib/createToken");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const AuthController = {
   registerUser: async (req, res) => {
     try {
       const { email, fullname, username } = req.body;
-      //check email
-      const isEmailExist = await Users.findOne({
-        where: { email },
-      });
-      const isUsernameExist = await Users.findOne({
-        where: { username },
-      });
-      if (isEmailExist) {
-        return res.status(409).json({
-          message: "Email already exist!",
-        });
-      } else if (isUsernameExist) {
-        return res.status(409).json({
-          message: "Username already exist!",
-        });
-      }
-      //
-
-      let token = createToken({
-        username,
-        email,
-        role: "user",
-        isVerified: 0,
-      }); // memasukan bahan data ke createToken untuk menjadi payloadnya
+      const verify_token = crypto.randomBytes(20).toString('hex');
       await Users.create({
         fullname,
         username,
         email,
         role: "user",
         isVerified: 0,
-        verify_token: token,
+        verify_token,
+        password: crypto.randomBytes(8).toString('hex'),
       });
       await transporter.sendMail(
         {
           from: `Admin Multi Warehouse <${process.env.EMAIL_USER}>`,
           to: `${email}`,
           subject: "Activate account",
-          html: `<h1>Welcome to Multi-Warehouse E-Commerce. Hello ${email}, please confirm your account <a href='http://localhost:3000/authentication/${token}'>here</a></h1>`,
+          html: `<h1>Welcome to Multi-Warehouse E-Commerce. Hello ${username}, please confirm your account <a href='http://localhost:3000/authentication/${verify_token}'>here</a></h1>`,
         },
         (errMail, resMail) => {
           if (errMail) {
@@ -69,13 +47,13 @@ const AuthController = {
       });
 
       return res.status(200).json({
-        token,
+        verify_token,
         message: "Register Success!",
       });
     } catch (err) {
       console.log(err);
       return res.status(err.statusCode || 500).json({
-        message: err.message,
+        message: err?.errors[0]?.message || err.message,
       });
     }
   },
@@ -87,7 +65,17 @@ const AuthController = {
   login: async function (req, res) {
     try {
       const { email, password } = req.body;
-      
+      const user = await Users.findOne({ where: { email } });
+      console.log(user);
+      if (!user) return res.status(422).json({ message: "User not registered" });
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) return res.status(409).json({ message: "Wrong Password" });
+      const { id, username, role } = user;
+      const token = createToken({ id, email, username, role });
+      return res.status(200).json({
+        message: "Login Success",
+        token
+      })
     } catch (error) {
       return res.status(error.statusCode || 500).json(error);
     }
