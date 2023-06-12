@@ -6,7 +6,6 @@ const verifyToken = (req, res, next) => {
     // jika tidak mempunyai token maka unauthorized
     return res.status(401).json({ message: "Unauthorized Request" });
   }
-
   try {
     token = token.split(" ")[1]; // displit lalu diambil index ke 1 yakni tokennya doang
     if (token === null || !token) {
@@ -20,17 +19,31 @@ const verifyToken = (req, res, next) => {
     req.user = verifyUser;
     next();
   } catch (err) {
-    res.status(500).json({ message: "invalid token" });
+    res.status(500).json(err);
   }
 };
 
 // check role
-const checkRole = async (req, res, next) => {
-  if (req.user.isAdmin) {
-    return next();
+// const checkRole = async (req, res, next) => {
+//   if (req.user.isAdmin) {
+//     return next();
+//   }
+//   return res.status(401).json({ message: "Unauthorized" });
+// };
+/**
+ * 
+ * @param {string} role 
+ * @returns {(req: import("express").Request, res: import("express").Response, next: import("express").NextFunction) => unknown}
+ */
+function checkRole (role) {
+  return function (req, res, next) {
+    console.log(req.user);
+    if (req.user.role !== role) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    next();
   }
-  return res.status(401).json({ message: "Unauthorized" });
-};
+}
 
 module.exports = {
   verifyToken,
