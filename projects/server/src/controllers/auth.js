@@ -19,7 +19,7 @@ const AuthController = {
         verify_token,
         password: crypto.randomBytes(8).toString('hex'),
       });
-      await transporter.sendMail(
+      transporter.sendMail(
         {
           from: `Admin Multi Warehouse <${process.env.EMAIL_USER}>`,
           to: `${email}`,

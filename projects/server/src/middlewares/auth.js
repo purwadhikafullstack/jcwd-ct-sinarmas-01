@@ -23,15 +23,8 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-// check role
-// const checkRole = async (req, res, next) => {
-//   if (req.user.isAdmin) {
-//     return next();
-//   }
-//   return res.status(401).json({ message: "Unauthorized" });
-// };
 /**
- * 
+ * Check Role dengan menggunakan nama Rolenya
  * @param {string} role 
  * @returns {(req: import("express").Request, res: import("express").Response, next: import("express").NextFunction) => unknown}
  */

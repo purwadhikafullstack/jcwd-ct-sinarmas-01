@@ -78,6 +78,21 @@ const addressController = {
     } catch (error) {
       return res.status(500).json(error);
     }
+  },
+  /**
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   */
+  editAddress: async function (req, res) {
+    try {
+      const { address_id } = req.params;
+      const { address_name } = req.body;
+      await Addresses.update({ address_name }, { where: { address_id } });
+      return res.status(200).json({ message: "Address Updated" });
+    } catch(e) {
+      console.log(e);
+      return res.status(e.statusCode || 500).json({ message: e.message, err: e });
+    }
   }
 };
 
