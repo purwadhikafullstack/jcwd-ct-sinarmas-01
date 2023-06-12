@@ -3,9 +3,7 @@ import { Link } from "react-router-dom";
 export default function FooterComponents() {
   return (
     <>
-      <Footer
-        dataTheme='garden'
-        className='p-10 mt-40 flex flex-row justify-between text-secondary-content'>
+      <Footer className='bg-base-300 p-10 text-secondary-content left-0 bottom-0 mt-80'>
         <div>
           <svg
             width='50'
