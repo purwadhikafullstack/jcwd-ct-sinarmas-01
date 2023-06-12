@@ -5,7 +5,7 @@ export default function FooterComponents() {
     <>
       <Footer
         dataTheme='garden'
-        className='p-10 flex flex-row justify-between text-secondary-content'>
+        className='p-10 mt-40 flex flex-row justify-between text-secondary-content'>
         <div>
           <svg
             width='50'

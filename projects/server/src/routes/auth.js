@@ -15,5 +15,7 @@ router.post(
   },
   authControllers.registerUser
 );
+router.patch("/verified", verifyToken, authControllers.verification);
+router.post("/setting-password", verifyToken, authControllers.setPassword);
 
 module.exports = router;
