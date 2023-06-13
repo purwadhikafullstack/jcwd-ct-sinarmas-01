@@ -15,4 +15,7 @@
 	.swal2-select {
 		@apply text-gray-800 dark:text-gray-300 shadow-md shadow-blue-700;
 	}
+	.swal2-html-container {
+		@apply text-gray-800 dark:text-gray-200;
+	}
 }

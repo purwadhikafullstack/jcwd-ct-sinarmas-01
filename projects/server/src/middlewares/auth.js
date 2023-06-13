@@ -31,7 +31,7 @@ const verifyToken = (req, res, next) => {
 function checkRole (role) {
   return function (req, res, next) {
     console.log(req.user);
-    if (req.user.role !== role) {
+    if (req.user.role.toLowerCase() !== role.toLowerCase()) {
       return res.status(401).json({ message: "Unauthorized" });
     }
     next();

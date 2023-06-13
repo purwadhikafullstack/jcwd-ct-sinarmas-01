@@ -5,11 +5,10 @@ import {
   Indicator,
   Card,
   Badge,
-  Avatar,
   Menu,
 } from "react-daisyui";
 import { Link, useNavigate } from "react-router-dom";
-import { FaChevronDown } from "react-icons/fa";
+import { FaChevronDown, FaUserCircle } from "react-icons/fa";
 import DarkButton from "@/components/DarkButton";
 export default function NavComponents() {
   const navigate = useNavigate();
@@ -33,7 +32,7 @@ export default function NavComponents() {
         </Button>
       </Navbar.Start>
       <Navbar.Center>
-        <Dropdown vertical="bottom" horizontal="center">
+        {/*<Dropdown vertical="bottom" horizontal="center">
           <Dropdown.Toggle color="ghost" className="flex gap-3">
             Let's buy <FaChevronDown />
           </Dropdown.Toggle>
@@ -52,9 +51,10 @@ export default function NavComponents() {
           </Dropdown.Menu>
         </Dropdown>
         <Menu className='p-0'>
-        </Menu>
+        </Menu>*/}
+        Multiwarehouse olshop
       </Navbar.Center>
-      <Navbar.End>
+      <Navbar.End className="gap-2">
         <DarkButton />
         <Dropdown className='dropdown-end'>
           <Button tabIndex={0} color='ghost' shape='circle'>
@@ -90,14 +90,10 @@ export default function NavComponents() {
         </Dropdown>
         <Button
           onClick={() => navigate("/register")}
-          className='ml-10'
           shape='circle'
+          color="ghost"
           size='md'>
-          <Avatar
-            shape={"circle"}
-            size={40}
-            src='http://daisyui.com/tailwind-css-component-profile-1@94w.png'
-          />
+          <FaUserCircle />
         </Button>
       </Navbar.End>
     </Navbar>

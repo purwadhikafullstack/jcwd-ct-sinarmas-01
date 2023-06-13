@@ -8,6 +8,7 @@ import Layout from "./layout/Layout";
 import Register from "./pages/user/Register";
 import Login from "./pages/user/Login";
 import { Routes, Route } from "react-router-dom";
+import Error404 from "./pages/error/Error404";
 
 function App() {
   const settings = {
@@ -25,12 +26,15 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="" element={<Home />} />
-          <Route path="/admin" element={<MainAdmin />} />
-          <Route path="/admin/users" element={<ManageUser />} />
-          <Route path="/admin/warehouses" element={<Warehouses />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
         </Route>
+        <Route path="/super" element={<Layout />}>
+          <Route path="" element={<MainAdmin />} />
+          <Route path="users" element={<ManageUser />} />
+          <Route path="warehouses" element={<Warehouses />} />
+        </Route>
+        <Route path="*" element={<Error404 />} />
       </Routes>
     </QueryClientProvider>
   );

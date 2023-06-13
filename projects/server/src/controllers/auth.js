@@ -60,7 +60,7 @@ const AuthController = {
     }
   },
   /**
-   * 
+   * Login ke Akun yang tersedia
    * @param {import("express").Request} req 
    * @param {import("express").Response} res 
    */

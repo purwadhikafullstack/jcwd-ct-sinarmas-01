@@ -9,9 +9,8 @@ const warehouseController = {
    */
   addWarehouse: async function (req, res) {
     try {
-      const { warehouse_name, address_id, user_id } = req.body;
-      // const { user_id } = req.user;
-      const warehouse = await Warehouses.create({ warehouse_name, address_id, user_id });
+      const { warehouse_name, address_id } = req.body;
+      const warehouse = await Warehouses.create({ warehouse_name, address_id });
       return res.status(201).json({ message: "Warehouse added", warehouse });
     } catch (error) {
       return res.status(500).json(error);

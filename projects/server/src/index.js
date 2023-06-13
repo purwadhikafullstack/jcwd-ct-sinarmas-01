@@ -15,17 +15,9 @@ const app = express();
 console.log(process.env.WHITELISTED_DOMAIN);
 sequelize.sync();
 
-app.use(
-  // cors({
-  //   origin: [
-  //     process.env.WHITELISTED_DOMAIN &&
-  //     process.env.WHITELISTED_DOMAIN.split(",")
-  //   ],
-  // })
-  cors({
-    origin: process.env.WHITELISTED_DOMAIN
-  })
-);
+app.use(cors({
+  origin: process.env.WHITELISTED_DOMAIN
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
