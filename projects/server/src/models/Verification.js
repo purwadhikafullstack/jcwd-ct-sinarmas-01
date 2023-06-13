@@ -1,40 +1,33 @@
 const Sequelize = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  return Warehouses.init(sequelize, DataTypes);
+  return Verification.init(sequelize, DataTypes);
 }
 
-class Warehouses extends Sequelize.Model {
+class Verification extends Sequelize.Model {
   static init(sequelize, DataTypes) {
-  return sequelize.define('Warehouses', {
+  return sequelize.define('Verification', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    warehouse_name: {
-      type: DataTypes.STRING(50),
-      allowNull: true
+    token: {
+      type: DataTypes.STRING(70),
+      allowNull: false,
+      unique: "token_UNIQUE"
     },
     user_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'users',
         key: 'id'
       }
-    },
-    address_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'addresses',
-        key: 'id'
-      }
     }
   }, {
-    tableName: 'warehouses',
-    timestamps: true,
+    tableName: 'verification',
+    timestamps: false,
     indexes: [
       {
         name: "PRIMARY",
@@ -45,17 +38,18 @@ class Warehouses extends Sequelize.Model {
         ]
       },
       {
-        name: "fk_warehouse_user1_idx",
+        name: "token_UNIQUE",
+        unique: true,
         using: "BTREE",
         fields: [
-          { name: "user_id" },
+          { name: "token" },
         ]
       },
       {
-        name: "fk_warehouse_address1_idx",
+        name: "fk_verification_users1_idx",
         using: "BTREE",
         fields: [
-          { name: "address_id" },
+          { name: "user_id" },
         ]
       },
     ]

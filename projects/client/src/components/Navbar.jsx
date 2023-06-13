@@ -10,6 +10,7 @@ import {
 } from "react-daisyui";
 import { Link, useNavigate } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa";
+import DarkButton from "@/components/DarkButton";
 export default function NavComponents() {
   const navigate = useNavigate();
   return (
@@ -54,6 +55,7 @@ export default function NavComponents() {
         </Menu>
       </Navbar.Center>
       <Navbar.End>
+        <DarkButton />
         <Dropdown className='dropdown-end'>
           <Button tabIndex={0} color='ghost' shape='circle'>
             <Indicator item={<Badge size='sm'>8</Badge>}>

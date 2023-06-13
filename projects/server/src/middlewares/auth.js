@@ -25,7 +25,7 @@ const verifyToken = (req, res, next) => {
 
 /**
  * Check Role dengan menggunakan nama Rolenya
- * @param {string} role 
+ * @param {"User" | "Admin" | "Superadmin"} role 
  * @returns {(req: import("express").Request, res: import("express").Response, next: import("express").NextFunction) => unknown}
  */
 function checkRole (role) {

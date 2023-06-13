@@ -5,9 +5,7 @@ import { useState } from "react";
 import Swal from "@/components/Swal";
 import Datas from "@/components/Datas";
 import deleteUser from "@/apis/deleteUser";
-import TextInput from "@/components/Text";
 import newAdmin from "@/apis/newAdmin";
-import { useFormik } from "formik";
 import editUser from "@/apis/editUser";
 
 export default function ManageUser() {
@@ -74,7 +72,7 @@ export default function ManageUser() {
   const editMutation = useMutation({
     mutationFn: async (data) => await editUser(editId, data),
     onSuccess: (data) => {
-      client.invalidateQueries({ queryKey: ["users"] });
+      onMutate();
       Swal.fire({ icon: "success", text: data?.message });
     },
     onError: (err) => {
@@ -92,7 +90,7 @@ export default function ManageUser() {
       didOpen: () => {
         const popup = Swal.getPopup();
         popup.querySelector('[name="email"]').value = email;
-        popup.querySelector('[name="password"]').value = username;
+        popup.querySelector('[name="username"]').value = username;
       },
       preConfirm: () => {
         const editForm = document.getElementById("edit-form");
@@ -105,7 +103,12 @@ export default function ManageUser() {
   return (
     <div className="text-center">
       <Datas 
-        columns={[["id", "user id"], ["email", "email"], ["username", "username"], ["role", "role"]]} 
+        columns={[
+          ["id", "ID Pengguna"], 
+          ["email", "email"], 
+          ["username", "username"], 
+          ["role", "role"]
+        ]} 
         editFn={editFn} 
         data={users?.data?.rows} 
         deleteFn={deleteFn}

@@ -36,9 +36,8 @@ export default function Datas(props) {
               return (
                 <tr key={val.id}>
                   {columns.map((key, ind) => {
-                    const isObj = typeof val[key] === "object";
                     const [parent, child] = key[0].split(".");
-                    const value = val[parent][child] || val[parent];                  
+                    const value = (val[parent][child] || val[parent]) || "(empty)";                  
                     return <td key={ind} id={`${val.id}-${key[0]}`}>{value}</td>;
                   })}
                   <td>

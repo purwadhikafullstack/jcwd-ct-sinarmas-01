@@ -22,7 +22,9 @@ app.use(
   //     process.env.WHITELISTED_DOMAIN.split(",")
   //   ],
   // })
-  cors()
+  cors({
+    origin: process.env.WHITELISTED_DOMAIN
+  })
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

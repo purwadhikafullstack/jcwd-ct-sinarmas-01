@@ -7,7 +7,8 @@
   "scripts": {
     "start": "nodemon",
     "serve": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "init-models": "sequelize-auto -d mydb -h localhost -p 3306 -e mysql -u root -x --cm p --cf p -o ./src/models -l es6 --useDefine"
   },
   "keywords": [],
   "author": "",

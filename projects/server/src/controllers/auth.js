@@ -1,5 +1,5 @@
 const { models } = require("../models");
-const { Users } = models;
+const { Users, Verification } = models;
 require("dotenv").config();
 const transporter = require("../lib/sendemail");
 const { createToken } = require("../lib/createToken");
@@ -9,14 +9,16 @@ const AuthController = {
   registerUser: async (req, res) => {
     try {
       const { email, fullname, username } = req.body;
-      const verify_token = crypto.randomBytes(20).toString('hex');
+      const token = crypto.randomBytes(20).toString('hex');
+      await Verification.create({
+        token
+      });
       await Users.create({
         fullname,
         username,
         email,
-        role: "user",
+        role: "User",
         isVerified: 0,
-        verify_token,
         password: crypto.randomBytes(8).toString('hex'),
       });
       transporter.sendMail(
@@ -24,7 +26,7 @@ const AuthController = {
           from: `Admin Multi Warehouse <${process.env.EMAIL_USER}>`,
           to: `${email}`,
           subject: "Activate account",
-          html: `<h1>Welcome to Multi-Warehouse E-Commerce. Hello ${username}, please confirm your account <a href='http://localhost:3000/authentication/${verify_token}'>here</a></h1>`,
+          html: `<h1>Welcome to Multi-Warehouse E-Commerce. Hello ${username}, please confirm your account <a href='${process.env.WHITELISTED_DOMAIN}/authentication/${token}'>here</a></h1>`,
         },
         (errMail, resMail) => {
           if (errMail) {
