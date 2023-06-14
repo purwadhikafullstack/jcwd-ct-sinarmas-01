@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function FooterComponents() {
   return (
     <>
-      <Footer className='bg-base-300 p-10 left-0 bottom-0 mt-80'>
+      <Footer className='bg-base-300 p-10 left-0 bottom-0 mt-60'>
         <div>
           <svg
             width='50'

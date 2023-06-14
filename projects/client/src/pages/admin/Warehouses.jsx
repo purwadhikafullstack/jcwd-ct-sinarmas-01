@@ -62,7 +62,8 @@ export default function ManageWareHouses() {
       html: <WarehouseForm id={0} />,
       preConfirm: () => {
         return Swal.getPopup().querySelector("form");
-      }
+      },
+      showCancelButton: true
     }).then (result => {
       const form = new FormData(result.value);
       form.append("geo", mapPos);

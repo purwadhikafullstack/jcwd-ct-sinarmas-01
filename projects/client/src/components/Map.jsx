@@ -28,9 +28,9 @@ function LocationMarker(props) {
 	const { onChange } = props;
 	const map = useMapEvents({
 		click(e) {
-			setPosition(e.latlng);
-			console.log(e.latlng);
-			(onChange)(e.latlng);
+			const { lat, lng } = e.latlng;
+			setPosition([lat, lng]);
+			(onChange)([lat, lng]);
 			map.setView(e.latlng, map.getZoom());
 		},
 		locationfound(e) {
@@ -59,7 +59,7 @@ export default function Map(props) {
 	return (
 		<MapContainer
 			center={{ lat: -6.1761924, lng: 106.6382161 }}
-			zoom={6}
+			zoom={13}
 			scrollWheelZoom={true}
 		>
 			<TileLayer

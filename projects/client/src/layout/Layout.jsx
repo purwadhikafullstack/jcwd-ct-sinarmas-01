@@ -6,8 +6,7 @@ const Layout = (props) => {
   return (
     <div className="w-full">
       <NavComponents />
-      <div className="p-5 mb-5">
-        {props.children}
+      <div className="text-center p-5 mb-5">
         <Outlet />
       </div>
       <FooterComponents />
