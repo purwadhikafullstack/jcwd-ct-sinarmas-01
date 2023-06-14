@@ -3,12 +3,6 @@ const opencage = require("opencage-api-client");
 const { models } = require("../models");
 const { Addresses } = models;
 
-async function fromCoordinates(q) {
-  const data = await opencage.geocode({ q });
-  console.log(data);
-  return data.results[0];
-}
-
 async function search(q) {
   const data = await opencage.geocode({ q });
   return data.results;
@@ -23,7 +17,7 @@ const addressController = {
   newAddress: async function (req, res) {
     try {
       const { q } = req.body;
-      const place = await fromCoordinates(q);
+      const [place] = await search(q);
       const address = await Addresses.create({
         address_name: place.formatted,
         city: place.components?.city || place.components?.county,
@@ -93,7 +87,7 @@ const addressController = {
       console.log(e);
       return res.status(e.statusCode || 500).json({ message: e.message, err: e });
     }
-  }
+  },
 };
 
 module.exports = addressController;

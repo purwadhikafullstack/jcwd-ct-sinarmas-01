@@ -7,10 +7,13 @@ import Swal from "@/components/Swal";
 import getAddresses from "@/apis/getAddresses";
 import editWarehouse from "@/apis/editWarehouse";
 import deleteWarehouse from "@/apis/deleteWarehouse";
+import { QueryClient } from "@tanstack/react-query";
+import Map from "@/components/Map";
 
 export default function ManageWareHouses() {
   const [page, setPage] = useState(1);
   const [editId, setEditId] = useState(0);
+  const [mapPos, setMapPos] = useState([0, 0]);
   const query = useQuery({
     queryFn: async () => await getWarehouses(page),
     queryKey: ["warehouses", page],
@@ -31,16 +34,19 @@ export default function ManageWareHouses() {
     queryFn: async () => await getAddresses(),
     queryKey: ["addresses"],
   });
-  const WarehouseForm = (props) => (
-    <form id={props.id ? "edit-form" : "new-form"} onSubmit={(e) => e.preventDefault()}>
-      <input name="warehouse_name" className="swal2-input" placeholder="Enter Warehouse Name" defaultValue={props.default} />
-      <select name="address_id" className="swal2-select">
-        {addresses.data?.rows.map((val, key) => (
-          <option value={val.id} key={key}>{val.address_name}</option>
-        ))}
-      </select>
-    </form>
-  );
+  const WarehouseForm = (props) => {
+    return (
+      <form id={props.id ? "edit-form" : "new-form"} onSubmit={(e) => e.preventDefault()}>
+        <input name="warehouse_name" className="swal2-input" placeholder="Enter Warehouse Name" defaultValue={props.default} />
+        <select name="address_id" className="swal2-select">
+          {addresses.data?.rows.map((val, key) => (
+            <option value={val.id} key={key}>{val.address_name}</option>
+          ))}
+        </select>
+        <Map onChange={setMapPos} />
+      </form>
+    )
+  };
   const editMutation = useMutation({
     mutationFn: async (data) => await editWarehouse(editId, data),
     onSuccess: onMutated
@@ -57,7 +63,11 @@ export default function ManageWareHouses() {
       preConfirm: () => {
         return Swal.getPopup().querySelector("form");
       }
-    }).then (result => result.isConfirmed && newMutation.mutate(new FormData(result.value)));
+    }).then (result => {
+      const form = new FormData(result.value);
+      form.append("geo", mapPos);
+      result.isConfirmed && newMutation.mutate(form);
+    });
   };
 
   const editFn = (id) => {
@@ -76,7 +86,9 @@ export default function ManageWareHouses() {
         return Swal.getPopup().querySelector("#edit-form");
       }
     }).then (result => {
-      result.isConfirmed && editMutation.mutate(new FormData(result.value))
+      const form = new FormData(result.value);
+      form.append("geo", mapPos);
+      result.isConfirmed && editMutation.mutate(form);
     });
   };
 

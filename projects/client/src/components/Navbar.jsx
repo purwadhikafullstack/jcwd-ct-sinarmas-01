@@ -32,27 +32,9 @@ export default function NavComponents() {
         </Button>
       </Navbar.Start>
       <Navbar.Center>
-        {/*<Dropdown vertical="bottom" horizontal="center">
-          <Dropdown.Toggle color="ghost" className="flex gap-3">
-            Let's buy <FaChevronDown />
-          </Dropdown.Toggle>
-          <Dropdown.Menu className="bg-base-200 shadow-lg shadow-blue-700">
-            <Menu.Item>
-              <Link>
-                <h1 className='font-bold'>Handphone</h1>
-              </Link>
-            </Menu.Item>
-            <Menu.Item tabIndex={0}>
-              <h1 className='font-bold'>Laptop</h1>
-            </Menu.Item>
-            <Menu.Item>
-              <h1 className='font-bold'>Accesoris</h1>
-            </Menu.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-        <Menu className='p-0'>
-        </Menu>*/}
-        Multiwarehouse olshop
+        <h1 className="text-xl font-bold">
+          Multi-warehouse E-commerce
+        </h1>
       </Navbar.Center>
       <Navbar.End className="gap-2">
         <DarkButton />
@@ -74,19 +56,6 @@ export default function NavComponents() {
               </svg>
             </Indicator>
           </Button>
-          <Dropdown.Menu
-            tabIndex={0}
-            className='mt-3 card card-compact  w-52 bg-base-100 !p-0'>
-            <Card.Body className='card-body'>
-              <span className='font-bold text-lg'>8 Items</span>
-              <span className='text-info'>Subtotal: $999</span>
-              <Card.Actions>
-                <Button color='primary' fullWidth>
-                  View cart
-                </Button>
-              </Card.Actions>
-            </Card.Body>
-          </Dropdown.Menu>
         </Dropdown>
         <Button
           onClick={() => navigate("/register")}
