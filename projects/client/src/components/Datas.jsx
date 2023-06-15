@@ -21,7 +21,7 @@ export default function Datas(props) {
       </div>
       <div className="overflow-x-auto">
         <table className="table w-full">
-          <thead>
+          <thead className="text-center">
             <tr>
               {columns.map((val, key) => {
                 return <th key={key}>{val[1]}</th>;

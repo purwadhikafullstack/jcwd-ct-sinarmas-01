@@ -1,5 +1,6 @@
 const { models } = require("../models");
 const { Warehouses, Addresses } = models;
+const { searchGeo } = require("../controllers/address");
 
 const warehouseController = {
   /**
@@ -9,8 +10,15 @@ const warehouseController = {
    */
   addWarehouse: async function (req, res) {
     try {
-      const { warehouse_name, address_id } = req.body;
-      const warehouse = await Warehouses.create({ warehouse_name, address_id });
+      const { warehouse_name, q } = req.body;
+      const [place] = await searchGeo(q);
+      const address = await Addresses.create({
+        address_name: place.formatted,
+        city: place.components?.city || place.components?.county,
+        province: place.components.state,
+        geolocation: q,
+      });
+      const warehouse = await Warehouses.create({ warehouse_name, address_id: address.id });
       return res.status(201).json({ message: "Warehouse added", warehouse });
     } catch (error) {
       return res.status(500).json(error);
@@ -24,14 +32,23 @@ const warehouseController = {
   editWarehouse: async function (req, res) {
     try {
       const { warehouse_id } = req.params;
-      const { warehouse_name, address_id } = req.body;
+      const { warehouse_name, q, address_id } = req.body;
+      const [place] = await searchGeo(q);
+      const address = await Addresses.update({
+          address_name: place.formatted,
+          city: place.components?.city || place.components?.county,
+          province: place.components.state,
+          geolocation: q,
+        },
+        { where: { id: address_id } }
+      );
       const warehouse = await Warehouses.findOne({ where: { id: warehouse_id } });
       warehouse.warehouse_name = warehouse_name;
-      warehouse.address_id = address_id;
+      warehouse.address_id = address.id;
       await warehouse.save();
       return res.status(200).json({ message: "Warehouse edited", warehouse });
     } catch (error) {
-      return res.status(500).json(error);
+      return res.status(500).json({ message: error.message });
     }
   },
   /**

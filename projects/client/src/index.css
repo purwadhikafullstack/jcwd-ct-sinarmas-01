@@ -4,27 +4,27 @@
 
 @layer components {
 	.swal2-input {
-		@apply w-[90%] text-gray-800 placeholder:text-gray-400 dark:text-gray-100;
+		@apply w-auto text-gray-800 placeholder:text-gray-400 dark:text-gray-100;
 	}
 	.swal2-modal {
-		@apply w-[90%] h-auto bg-base-300 shadow-md shadow-blue-700;
+		@apply h-auto bg-base-300 shadow-md shadow-blue-700;
 	}
 	.swal2-title {
 		@apply text-gray-700 dark:text-gray-100;
 	}
 	.swal2-select, .swal2-select > option {
-		@apply w-[90%] text-gray-800 dark:text-gray-300 shadow-md shadow-blue-700;
+		@apply w-auto text-gray-800 dark:text-gray-300 shadow-md shadow-blue-700;
 	}
 	.swal2-html-container form {
-		@apply -m-5 text-left w-auto;
+		@apply -m-5 w-auto;
 	}
 	.swal2-actions {
 		@apply p-5;
 	}
 	div:where(.swal2-container) .swal2-html-container {
-		@apply h-[110%] text-gray-800 dark:text-gray-300 overflow-hidden !important;
+		@apply w-auto h-auto text-center text-gray-800 dark:text-gray-300 overflow-hidden !important;
 	}
 	.swal2-html-container .leaflet-container {
-		@apply mt-4 w-full h-[50vh] !important;
+		@apply mt-4 w-[30rem] mx-5 h-[50vh] !important;
 	}
 }

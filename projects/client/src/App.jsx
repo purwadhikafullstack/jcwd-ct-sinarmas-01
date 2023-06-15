@@ -9,6 +9,7 @@ import Register from "./pages/user/Register";
 import Login from "./pages/user/Login";
 import { Routes, Route } from "react-router-dom";
 import Error404 from "./pages/error/Error404";
+import Swal from "@/components/Swal";
 
 function App() {
   const settings = {
@@ -16,7 +17,16 @@ function App() {
   };
   const queryClient = new QueryClient({
     defaultOptions: {
-      mutations: settings,
+      mutations: {
+        ...settings, 
+        onError: (err) => {
+          Swal.fire({
+            title: "Error",
+            text: err.response?.data?.message || err.message,
+            icon: "error"
+          });
+        }
+      },
       queries: settings,
     },
   });
@@ -30,7 +40,7 @@ function App() {
           <Route path="login" element={<Login />} />
         </Route>
         <Route path="/super" element={<Layout />}>
-          <Route path="" element={<MainAdmin />} />
+          <Route index element={<MainAdmin />} />
           <Route path="users" element={<ManageUser />} />
           <Route path="warehouses" element={<Warehouses />} />
         </Route>

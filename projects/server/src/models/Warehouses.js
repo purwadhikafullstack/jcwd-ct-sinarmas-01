@@ -14,7 +14,7 @@ class Warehouses extends Sequelize.Model {
     },
     warehouse_name: {
       type: DataTypes.STRING(50),
-      allowNull: true
+      allowNull: false
     },
     user_id: {
       type: DataTypes.INTEGER,
