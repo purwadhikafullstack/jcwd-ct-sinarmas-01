@@ -38,8 +38,8 @@ function initModels(sequelize) {
 
   Profiles.belongsTo(Addresses, { as: "address", foreignKey: "address_id"});
   Addresses.hasMany(Profiles, { as: "profiles", foreignKey: "address_id"});
-  Warehouses.belongsTo(Addresses, { as: "address", foreignKey: "address_id"});
-  Addresses.hasMany(Warehouses, { as: "warehouses", foreignKey: "address_id"});
+  Warehouses.belongsTo(Addresses, { onDelete: "CASCADE", as: "address", foreignKey: "address_id"});
+  Addresses.hasMany(Warehouses, { onDelete: "CASCADE", as: "warehouses", foreignKey: "address_id"});
   CartItems.belongsTo(Carts, { as: "cart", foreignKey: "cart_id"});
   Carts.hasMany(CartItems, { as: "cart_items", foreignKey: "cart_id"});
   Products.belongsTo(Categories, { as: "category", foreignKey: "category_id"});

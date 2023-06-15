@@ -27,26 +27,8 @@ const AuthController = {
           to: `${email}`,
           subject: "Activate account",
           html: `<h1>Welcome to Multi-Warehouse E-Commerce. Hello ${username}, please confirm your account <a href='${process.env.WHITELISTED_DOMAIN}/authentication/${token}'>here</a></h1>`,
-        },
-        (errMail, resMail) => {
-          if (errMail) {
-            console.log(errMail);
-            res.status(500).send({
-              message: "Verification Failed!",
-              success: false,
-              err: errMail,
-            });
-          }
-          console.log(resMail);
-          res.status(200).send({
-            message: "Verification Success",
-            success: true,
-          });
         }
       );
-      const user = await Users.findOne({
-        where: { email },
-      });
 
       return res.status(200).json({
         verify_token,

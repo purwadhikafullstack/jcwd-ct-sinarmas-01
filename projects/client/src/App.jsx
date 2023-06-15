@@ -1,5 +1,4 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import 'animate.css';
 import Home from "./pages/Home";
 import MainAdmin from './pages/admin/Main';
 import ManageUser from './pages/admin/ManageUser';

@@ -12,35 +12,42 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow
+  iconUrl: icon,
+  shadowUrl: iconShadow
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
 /**
- * @param {{onChange?: Function | null}} props
+ * @param {{ onChange?: Function | null, position: {lat: number, lng:number} }} props
  * */
 function LocationMarker(props) {
-	const [position, setPosition] = useState(props.position);
-	const [name, setName] = useState("");
-	const { onChange } = props;
+	const [pos, setPos] = useState(null);
+	const { onChange, position } = props;
 	const map = useMapEvents({
 		click(e) {
-			setPosition(e.latlng);
-			(onChange)(e.latlng);
+			const { lat, lng } = e.latlng;
+			(onChange)(lat, lng);
+			setPos(e.latlng);
 			console.log(e.latlng);
 		},
+		load() {
+			map.flyTo(position, map.getZoom());
+		}
 	});
 	useEffect(() => {
 		setTimeout(() => {
 			map.invalidateSize();
 		}, 0);
-		map.flyTo(props.position, map.getZoom());
+		// map.flyTo(position, map.getZoom());
+		setPos(map.getCenter());
 	}, []);
-	return position === null ? null : (
-		<Marker position={position}>
-			<Popup>{name}</Popup>
+	useEffect(() => {
+		console.log(`Lat: ${pos?.lat}, Lng: ${pos?.lng}`);
+	}, [pos]);
+	return pos === null ? null : (
+		<Marker position={pos}>
+			<Popup>Lokasi Anda</Popup>
 		</Marker>
 	);
 }

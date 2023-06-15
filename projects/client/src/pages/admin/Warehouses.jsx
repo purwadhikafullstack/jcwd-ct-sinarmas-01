@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import getWarehouses from "@/apis/getWarehouses";
 import newWarehouse from "@/apis/newWarehouse";
 import Datas from "@/components/Datas";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Swal from "@/components/Swal";
 import editWarehouse from "@/apis/editWarehouse";
 import deleteWarehouse from "@/apis/deleteWarehouse";
@@ -13,7 +13,11 @@ export default function ManageWareHouses() {
   const [page, setPage] = useState(1);
   const [editId, setEditId] = useState(0);
   const defaultPos = { lat: -6.3021366, lng: 106.6439783 };
-  const [mapPos, setMapPos] = useState(defaultPos);
+  const mapPos = defaultPos;
+  const setMapPos = (lat, lng) => {
+    mapPos.lat = lat;
+    mapPos.lng = lng;
+  }
   const query = useQuery({
     queryFn: async () => await getWarehouses(page),
     queryKey: ["warehouses", page],
@@ -56,7 +60,8 @@ export default function ManageWareHouses() {
   });
 
   const newFn = () => {
-    setMapPos(defaultPos);
+    setMapPos(defaultPos.lat, defaultPos.lng);
+    console.log(mapPos);
     Swal.fire({
       title: "New Warehouse",
       html: <WarehouseForm id={0} />,
@@ -67,7 +72,7 @@ export default function ManageWareHouses() {
     }).then((result) => {
       const form = new FormData(result.value);
       form.append("geo", `${mapPos.lat}, ${mapPos.lng}`);
-      !result.isConfirmed ? setMapPos(defaultPos) : newMutation.mutate(form);
+      !result.isConfirmed ? setMapPos(defaultPos.lat, defaultPos.lng) : newMutation.mutate(form);
     });
   };
 
@@ -81,7 +86,7 @@ export default function ManageWareHouses() {
           `${id}-address.geolocation`
         ).textContent;
         const latlng = toLatLng(geo);
-        setMapPos(latlng);
+        setMapPos(latlng.lat, latlng.lng);
         const popup = Swal.getPopup();
         const name = document.getElementById(
           `${id}-warehouse_name`
@@ -97,7 +102,7 @@ export default function ManageWareHouses() {
       const addressId = document.getElementById(`${id}-address.id`).textContent;
       form.append("geo", `${mapPos.lat}, ${mapPos.lng}`);
       form.append("address_id", addressId);
-      !result.isConfirmed ? setMapPos(defaultPos) : editMutation.mutate(form);
+      !result.isConfirmed ? setMapPos(defaultPos.lat, defaultPos.lng) : editMutation.mutate(form);
     });
   };
 
