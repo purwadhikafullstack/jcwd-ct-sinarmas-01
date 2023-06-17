@@ -17,11 +17,11 @@ class Products extends Sequelize.Model {
       allowNull: false
     },
     image_product: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(45),
       allowNull: true
     },
     desc: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(45),
       allowNull: true
     },
     category_id: {

@@ -10,10 +10,7 @@ const AuthController = {
     try {
       const { email, fullname, username } = req.body;
       const token = crypto.randomBytes(20).toString('hex');
-      await Verification.create({
-        token
-      });
-      await Users.create({
+      const user = await Users.create({
         fullname,
         username,
         email,
@@ -21,17 +18,18 @@ const AuthController = {
         isVerified: 0,
         password: crypto.randomBytes(8).toString('hex'),
       });
-      transporter.sendMail(
-        {
-          from: `Admin Multi Warehouse <${process.env.EMAIL_USER}>`,
-          to: `${email}`,
-          subject: "Activate account",
-          html: `<h1>Welcome to Multi-Warehouse E-Commerce. Hello ${username}, please confirm your account <a href='${process.env.WHITELISTED_DOMAIN}/authentication/${token}'>here</a></h1>`,
-        }
-      );
+      await Verification.create({
+        token,
+        user_id: user.id
+      });
+      transporter.sendMail({
+        from: `Admin Multi Warehouse <${process.env.EMAIL_USER}>`,
+        to: `${email}`,
+        subject: "Activate account",
+        html: `<h1>Welcome to Multi-Warehouse E-Commerce. Hello ${username}, please confirm your account <a href='${process.env.WHITELISTED_DOMAIN}/authentication/${token}'>here</a></h1>`,
+      });
 
       return res.status(200).json({
-        verify_token,
         message: "Register Success!",
       });
     } catch (err) {
@@ -54,14 +52,17 @@ const AuthController = {
       if (!user) return res.status(422).json({ message: "User not registered" });
       const match = await bcrypt.compare(password, user.password);
       if (!match) return res.status(409).json({ message: "Wrong Password" });
-      const { id, username, role } = user;
-      const token = createToken({ id, email, username, role });
+      const { id, role } = user;
+      const token = createToken({ id, email, role });
       return res.status(200).json({
         message: "Login Success",
-        token
+        token,
+        role: role.toLowerCase()
       })
     } catch (error) {
-      return res.status(error.statusCode || 500).json(error);
+      return res.status(error.statusCode || 500).json({
+        message: error?.errors[0]?.message || error.message
+      });
     }
   },
   /**
@@ -82,7 +83,9 @@ const AuthController = {
       await user.save();
       return res.status(200).json({ message: "Set password success" });
     } catch (error) {
-      return res.status(error.statusCode || 500).json(error);
+      return res.status(error.statusCode || 500).json({
+        message: error.message
+      });
     }
   }
 };

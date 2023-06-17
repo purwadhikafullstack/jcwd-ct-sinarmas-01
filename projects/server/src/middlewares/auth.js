@@ -32,7 +32,11 @@ function checkRole (role) {
   return function (req, res, next) {
     console.log(req.user);
     if (req.user.role.toLowerCase() !== role.toLowerCase()) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ 
+        message: "Unauthorized", 
+        role: req.user.role,
+        require: role
+      });
     }
     next();
   }

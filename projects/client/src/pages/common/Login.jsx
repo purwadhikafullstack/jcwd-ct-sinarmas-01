@@ -2,25 +2,13 @@ import { Card, Button, Input, Form } from "react-daisyui";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useFormik } from "formik";
-import login from "../../apis/login";
+import { login } from "@/api/auth";
 import { useMutation } from "@tanstack/react-query";
 import PassInput from "@/components/Password";
-import useLogin from "@/hooks/useLogin";
 
 export default function Login() {
-  const navigate = useNavigate();
-  const { setToken, getToken } = useLogin();
   const mutation = useMutation({
-    mutationFn: async (data) => await login(data),
-    onSuccess: (data) => {
-      Swal.fire({ title: data?.message, icon: "success" }).then (res => {
-        res && setToken(data.token);
-        getToken() && navigate("/");
-      });
-    },
-    onError: (err) => {
-      Swal.fire({ title: err.response?.data?.message || err.message, icon: "warning" });
-    }
+    mutationFn: async (data) => await login(data)
   });
   const formik = useFormik({
     initialValues: {

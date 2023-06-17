@@ -12,10 +12,6 @@ class Profiles extends Sequelize.Model {
       allowNull: false,
       primaryKey: true
     },
-    fullname: {
-      type: DataTypes.STRING(45),
-      allowNull: true
-    },
     image_url: {
       type: DataTypes.STRING(255),
       allowNull: true

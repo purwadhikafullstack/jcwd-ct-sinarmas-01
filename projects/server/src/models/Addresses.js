@@ -13,21 +13,20 @@ class Addresses extends Sequelize.Model {
       primaryKey: true
     },
     address_name: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(45),
       allowNull: false
     },
     city: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(45),
       allowNull: true
     },
     province: {
-      type: DataTypes.STRING(60),
+      type: DataTypes.STRING(45),
       allowNull: true
     },
     geolocation: {
-      type: DataTypes.STRING(60),
-      allowNull: true,
-      unique: "geolocation"
+      type: DataTypes.STRING(45),
+      allowNull: true
     }
   }, {
     tableName: 'addresses',
@@ -39,14 +38,6 @@ class Addresses extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "id" },
-        ]
-      },
-      {
-        name: "geolocation",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "geolocation" },
         ]
       },
     ]

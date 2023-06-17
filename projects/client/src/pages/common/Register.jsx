@@ -2,7 +2,7 @@ import { Card, Button, Input, Form } from "react-daisyui";
 import { Link, useNavigate } from "react-router-dom";
 import swal from "sweetalert2";
 import { useFormik } from "formik";
-import register from "../../apis/register";
+import { register } from "@/api/auth";
 import { useMutation } from "@tanstack/react-query";
 
 export default function RegisterPage() {
@@ -11,9 +11,6 @@ export default function RegisterPage() {
     mutationFn: async (data) => await register(data),
     onSuccess: (data) => {
       swal.fire({ title: data.message, icon: "success" }).then((res) => res && navigate("/login"));
-    },
-    onError: (err) => {
-      swal.fire({ title: err.response?.data?.message || err.message, icon: "warning" });
     }
   });
   const formik = useFormik({

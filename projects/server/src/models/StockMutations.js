@@ -13,7 +13,7 @@ class StockMutations extends Sequelize.Model {
       primaryKey: true
     },
     notes: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(45),
       allowNull: true
     },
     warehouse_id: {

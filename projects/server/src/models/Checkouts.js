@@ -24,7 +24,7 @@ class Checkouts extends Sequelize.Model {
       allowNull: true
     },
     struk_image: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(45),
       allowNull: true
     },
     shipping_price: {

@@ -27,4 +27,10 @@
 	.swal2-html-container .leaflet-container {
 		@apply mt-4 w-[30rem] mx-5 h-[50vh] !important;
 	}
+	.loading-icon {
+		@apply animate-spin;
+	}
+	.btn {
+		@apply shadow-md shadow-blue-700;
+	}
 }
