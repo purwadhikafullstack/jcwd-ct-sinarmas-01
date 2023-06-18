@@ -6,26 +6,25 @@ import toLatLng from "@/libs/toLatLng";
 import formToObj from "@/libs/formToObj";
 import useWarehouseQuery from "@/hooks/queries/warehouses/useWarehouseQuery";
 import useWarehouseMutations from "@/hooks/mutations/super/useWarehouseMutations";
+import countToArr from "@/libs/countToArr";
 
 export default function ManageWareHouses() {
-  const [page, setPage] = useState(1);
   const [editId, setEditId] = useState(0);
   const defaultPos = { lat: -6.3021366, lng: 106.6439783 };
-  const mapPos = defaultPos;
+  const mapPos = {...defaultPos};
   const setMapPos = (lat, lng) => {
     mapPos.lat = lat;
     mapPos.lng = lng;
   }
   const query = useWarehouseQuery();
+  const { nextPage, prevPage, goToPage, pagesCount, page } = query;
+  const pages = countToArr(pagesCount);
   const { useAddMutation, useEditMutation, useDeleteMutation } = useWarehouseMutations();
   const add = useAddMutation();
   const edit = useEditMutation();
   const del = useDeleteMutation();
   const WarehouseForm = (props) =>  (
-    <form
-      id={props.id ? "edit-form" : "new-form"}
-      onSubmit={(e) => e.preventDefault()}
-    >
+    <form onSubmit={(e) => e.preventDefault()}>
       <input
         name="warehouse_name"
         className="swal2-input"
@@ -71,7 +70,7 @@ export default function ManageWareHouses() {
         popup.querySelector('[name="warehouse_name"]').value = name;
       },
       preConfirm: () => {
-        return Swal.getPopup().querySelector("#edit-form");
+        return Swal.getPopup().querySelector("form");
       },
       showCancelButton: true,
     }).then((result) => {
@@ -79,7 +78,8 @@ export default function ManageWareHouses() {
       const addressId = document.getElementById(`${id}-address.id`).textContent;
       form.append("q", `${mapPos.lat}, ${mapPos.lng}`);
       form.append("address_id", addressId);
-      !result.isConfirmed ? setMapPos(defaultPos.lat, defaultPos.lng) : edit.mutate(id, formToObj(form));
+      form.append("id", id);
+      !result.isConfirmed ? setMapPos(defaultPos.lat, defaultPos.lng) : edit.mutate(formToObj(form));
     });
   };
 
@@ -107,6 +107,11 @@ export default function ManageWareHouses() {
         deleteFn={deleteFn}
         newFn={newFn}
         caption="Warehouse"
+        pages={pages}
+        page={page}
+        nextPage={nextPage}
+        prevPage={prevPage}
+        goToPage={goToPage}
       />
     </>
   );

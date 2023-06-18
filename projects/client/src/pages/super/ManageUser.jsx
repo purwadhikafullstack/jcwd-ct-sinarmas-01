@@ -1,53 +1,29 @@
-import { Button, Select } from "react-daisyui";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUsers } from "@/api/common";
+import { Select } from "react-daisyui";
 import { useState } from "react";
 import Swal from "@/components/Swal";
 import Datas from "@/components/Datas";
-import { newAdmin, editUser, deleteUser } from "@/api/super";
+import useUserMutations from "@/hooks/mutations/super/useUserMutations";
+import useUserQuery from "@/hooks/queries/useUserQuery";
+import formToObj from "@/libs/formToObj";
+import countToArr from "@/libs/countToArr";
 
 export default function ManageUser() {
-  const [page, setPage] = useState(1);
-  const [pages, setPages] = useState([]);
   const [editId, setEditId] = useState(0);
 
-  const client = useQueryClient();
-  const onMutate = () => client.invalidateQueries({ queryKey: ["users"] });
-  const users = useQuery({
-    queryFn: async () => await getUsers(page),
-    queryKey: ["users", page],
-    onSuccess: (data) => {
-      const arr = [];
-      const count = Math.ceil(data?.count / 5);
-      for(let i = 1; i <= count; i++) {
-        arr.push(i);
-        setPages(arr);
-      }
-    }
-  });
+  const users = useUserQuery();
+  const { goToPage, nextPage, prevPage, pagesCount, page } = users;
+  const { useAddMutation, useDeleteMutation, useEditMutation } = useUserMutations();
+  const add = useAddMutation();
+  const edit = useEditMutation();
+  const del = useDeleteMutation();
+  const pages = countToArr(pagesCount);
   const UserForm = (props) => (
-    <form id={props.id ? "edit-form" : "new-form"}>
+    <form onSubmit={() => false}>
       <input className="swal2-input" name="email" placeholder="Enter E-mail" />
+      <input className="swal2-input" name="fullname" placeholder="Enter Full Name" />
       <input className="swal2-input" name="username" placeholder="Enter Username" />
     </form>
-  )
-  const deletion = useMutation({
-    mutationFn: async (data) => await deleteUser(data),
-    onSuccess: (data) => {
-      onMutate();
-      Swal.fire({ text: data.message, icon: "success" });
-    }
-  });
-  const newMutation = useMutation({
-    mutationFn: async (data) => await newAdmin(data),
-    onSuccess: () => {
-      onMutate();
-      Swal.fire({ text: "Tambah Admin Berhasil", icon: "success" });
-    },
-    onError: (err) => {
-      Swal.fire({ text: err.response?.data?.message || err.message, icon: "error" })
-    }
-  });
+  );
   const newFn = () => {
     Swal.fire({
       title: "New Warehouse Admin",
@@ -55,7 +31,11 @@ export default function ManageUser() {
       preConfirm: () => {
         return Swal.getPopup().querySelector("form");
       }
-    }).then(res => res.isConfirmed && newMutation.mutate(new FormData(res.value)));
+    }).then(res => {
+      const form = new FormData(res.value);
+      console.log(formToObj(form));
+      res.isConfirmed && add.mutate(formToObj(form));
+    });
   }
   const deleteFn = (id) => {
     Swal.fire({ 
@@ -63,20 +43,8 @@ export default function ManageUser() {
       icon: "question", 
       showDenyButton: true, 
       confirmButtonText: "Yes" 
-    }).then (res => {
-      if (res.isConfirmed) deletion.mutate(id)
-    })
+    }).then (res => res.isConfirmed && del.mutate(id));
   };
-  const editMutation = useMutation({
-    mutationFn: async (data) => await editUser(editId, data),
-    onSuccess: (data) => {
-      onMutate();
-      Swal.fire({ icon: "success", text: data?.message });
-    },
-    onError: (err) => {
-      Swal.fire({ icon: "error", text: err.message || err.response?.data?.message })
-    }
-  })
   const editFn = (id) => {
     setEditId(id);
     const email = document.getElementById(`${id}-email`).textContent;
@@ -91,11 +59,13 @@ export default function ManageUser() {
         popup.querySelector('[name="username"]').value = username;
       },
       preConfirm: () => {
-        const editForm = document.getElementById("edit-form");
-        const formData = new FormData(editForm);
-        return formData;
+        return Swal.getPopup().querySelector("form");
       },
-    }).then(res => res.isConfirmed && editMutation.mutate(res.value));
+    }).then(res => {
+      const form = new FormData(res.value);
+      form.append("id", id);
+      res.isConfirmed && edit.mutate(formToObj(form));
+    });
   }
 
   return (
@@ -112,14 +82,13 @@ export default function ManageUser() {
         deleteFn={deleteFn}
         newFn={newFn}
         caption="User"
+        goToPage={goToPage}
+        nextPage={nextPage}
+        prevPage={prevPage}
+        page={page}
+        pagesCount={users?.data?.pages}
+        pages={pages}
       />
-      <div className="my-5">
-        <Select onChange={(e) => setPage(e.currentTarget.value)}>
-          {pages.map(data => {
-            return <Select.Option value={data} key={data}>Page {data}</Select.Option>
-          })}
-        </Select>
-      </div>
     </div>
   )
 }

@@ -11,11 +11,12 @@ const accountController = {
    */
   allUsers: async function (req, res) {
     try {
-      const { page, role = "" } = req.query;
+      const { page = 1, role = "" } = req.query;
       const where = role ? ({ where: { role: capitalize(role) } }) : {};
       const offset = (page > 0) ? (Number(page)-1) * 5 : 0;
       const user = await Users.findAndCountAll({ limit:5, offset, ...where });
-      return res.status(200).json({ message: "Fetch Success", ...user });
+      const pages = Math.ceil(user.count / 5);
+      return res.status(200).json({ message: "Fetch Success", ...user, pages });
     } catch (error) {
       return res.status(500).json(error);
     }

@@ -47,7 +47,8 @@ instance.interceptors.response.use(
     if (err.response.status === 401) {
       window.location.href = "/login";
     }
-    Swal.fire({
+    const method = err.config.method.toLowerCase();
+    (method !== 'get') && Swal.fire({
       title: "Error",
       text: err.response?.data?.message || err.message,
       icon: "error"

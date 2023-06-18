@@ -1,7 +1,9 @@
 import { ButtonGroup, Button } from "react-daisyui";
-import { FaTrash, FaPencilAlt } from "react-icons/fa";
+import { FaTrash, FaPencilAlt, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Loading from "./Loading";
 import NoContent from "./NoContent";
+import { Select } from "react-daisyui";
+import { useEffect, useState } from "react";
 
 /**
  * Template Table Untuk Data
@@ -12,7 +14,26 @@ import NoContent from "./NoContent";
  * @returns
  */
 export default function Datas(props) {
-  const { columns, data, deleteFn, editFn, newFn, caption, readOnly } = props;
+  // const [pages, setPages] = useState([]);
+  const { 
+    columns, 
+    data, 
+    deleteFn, 
+    editFn, 
+    newFn, 
+    caption, 
+    readOnly,
+    nextPage,
+    prevPage,
+    goToPage,
+    pages,
+    page
+  } = props;
+
+  useEffect(() => {
+    console.log(pages);
+    console.log(goToPage);
+  }, []);
   return (
     <>
       <h1 className="text-2xl font-bold mb-3 text-center">{caption}s</h1>
@@ -21,7 +42,18 @@ export default function Datas(props) {
           New {caption}
         </Button>
       </div>
-      <div className="overflow-x-auto">
+      <div className="flex flex-row gap-4 justify-center items-center mb-4">
+        <Button color="ghost" onClick={prevPage}>
+          <FaChevronLeft />
+        </Button>
+        <Select onChange={(e) => (goToPage)(e.currentTarget.value)} value={page}>
+          {pages.map((data, ind) => <Select.Option value={data} key={ind}>Page {data}</Select.Option>)}
+        </Select>
+        <Button color="ghost" onClick={nextPage}>
+          <FaChevronRight />
+        </Button>
+      </div>
+      <div className="overflow-x-auto mb-5">
         {
           data ? (
             <table className="table w-full">
@@ -63,7 +95,7 @@ export default function Datas(props) {
                         </td>
                       }
                     </tr>
-                  )) : <NoContent />
+                  )) : <tr><td><NoContent /></td></tr>
                 }
               </tbody>
               <tfoot>

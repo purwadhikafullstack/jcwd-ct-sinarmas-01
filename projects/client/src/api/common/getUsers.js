@@ -1,6 +1,6 @@
-import axios from "axios";
+import api from "@/api";
 
-export default async function getUsers(page) {
-  const { data } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users`);
+export default async function getUsers(page = 1) {
+  const { data } = await api.get(`/users?page=${page}`);
   return data;
 }

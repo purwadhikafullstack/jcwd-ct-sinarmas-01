@@ -18,7 +18,7 @@ const warehouseController = {
         province: place.components.state,
         geolocation: q,
       });
-      console.log(address.id);
+      console.log(address);
       const warehouse = await Warehouses.create({ warehouse_name, address_id: address.id });
       return res.status(201).json({ message: "Warehouse added", warehouse });
     } catch (error) {
@@ -48,9 +48,8 @@ const warehouseController = {
 
       const warehouse = await Warehouses.findOne({ where: { id: warehouse_id } });
       warehouse.warehouse_name = warehouse_name;
-      warehouse.address_id = address.id;
       await warehouse.save();
-      return res.status(200).json({ message: "Warehouse edited", warehouse });
+      return res.status(200).json({ message: "Warehouse edited", warehouse, address });
     } catch (error) {
       return res.status(500).json({ ...error });
     }
