@@ -13,19 +13,19 @@ class Addresses extends Sequelize.Model {
       primaryKey: true
     },
     address_name: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     city: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(70),
       allowNull: true
     },
     province: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(60),
       allowNull: true
     },
     geolocation: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(50),
       allowNull: true
     }
   }, {

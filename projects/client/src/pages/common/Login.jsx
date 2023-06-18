@@ -1,6 +1,5 @@
 import { Card, Button, Input, Form } from "react-daisyui";
-import { Link, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import { login } from "@/api/auth";
 import { useMutation } from "@tanstack/react-query";

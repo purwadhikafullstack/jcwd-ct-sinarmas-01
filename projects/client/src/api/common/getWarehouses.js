@@ -1,11 +1,6 @@
-import axios from "axios";
-import getToken from "@/libs/getToken";
+import api from "@/api";
 
 export default async function getWarehouses (page = 1) {
-  const { data } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/warehouses?page=${page}`, {
-    headers: {
-      Authorization: `Bearer ${getToken()}`
-    }
-  });
+  const { data } = await api.get(`/warehouses?page=${page}`);
   return data;
 }

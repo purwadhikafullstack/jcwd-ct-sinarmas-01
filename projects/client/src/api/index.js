@@ -1,5 +1,6 @@
 import axios from "axios";
 import { updateToken, getToken } from "./token";
+import Swal from "@/components/Swal";
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL,
@@ -24,20 +25,33 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (res) => {
     const { url } = res.config;
+    const { data } = res;
     if (url === "/auth/register") 
       window.location.href = "/login";
     if (url === "/auth/login") {
-      updateToken(res.data.token);
-      window.location.href = `/${res.data.role}`;
+      const { token } = res.data;
+      const role = data.role.substring(0, 5);
+      updateToken(token);
+      window.location.href = `/${role}`;
+    }
+    if (url.indexOf("/auth") < 0 && res.config.method.toLowerCase() !== 'get') {
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: data.message
+      })
     }
     return res;
   },
   async (err) => {
-    const originalConfig = err.config;
-
-    if (originalConfig.url !== "/auth/login" && err.response) {
-      err.response.status > 201 && (window.location.href = "/login");
+    if (err.response.status === 401) {
+      window.location.href = "/login";
     }
+    Swal.fire({
+      title: "Error",
+      text: err.response?.data?.message || err.message,
+      icon: "error"
+    });
 
     return Promise.reject(err);
   }

@@ -18,6 +18,7 @@ const warehouseController = {
         province: place.components.state,
         geolocation: q,
       });
+      console.log(address.id);
       const warehouse = await Warehouses.create({ warehouse_name, address_id: address.id });
       return res.status(201).json({ message: "Warehouse added", warehouse });
     } catch (error) {
@@ -65,7 +66,7 @@ const warehouseController = {
       const warehouse = await Warehouses.destroy({ where: { id: warehouse_id } });
       return res.status(200).json({ message: "Warehouse deleted", warehouse });
     } catch (error) {
-      return res.status(500).json(error);
+      return res.status(500).json({ message: error.message });
     }
   },
   /**
@@ -78,11 +79,15 @@ const warehouseController = {
       const page = Number(req.query.page);
       const offset = (page > 0) ? ((page-1) * 5) : 0;
       const warehouses = await Warehouses.findAndCountAll({ limit: 5, offset, include: ['address', 'user'] });
-      return res.status(200).json(warehouses);
+      return res.status(200).json({
+        message: "Fetch Success",
+        ...warehouses,
+        pages: Math.ceil(warehouses.count / 5)
+      });
     } catch (error) {
-      return res.status(500).json(error);
+      return res.status(500).json({ message: error.message });
     }
-  }
+  },
 };
 
 module.exports = warehouseController;

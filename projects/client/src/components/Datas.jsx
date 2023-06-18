@@ -1,6 +1,7 @@
 import { ButtonGroup, Button } from "react-daisyui";
 import { FaTrash, FaPencilAlt } from "react-icons/fa";
 import Loading from "./Loading";
+import NoContent from "./NoContent";
 
 /**
  * Template Table Untuk Data
@@ -22,7 +23,7 @@ export default function Datas(props) {
       </div>
       <div className="overflow-x-auto">
         {
-          data && (
+          data ? (
             <table className="table w-full">
               <thead className="text-center">
                 <tr>
@@ -33,8 +34,8 @@ export default function Datas(props) {
                 </tr>
               </thead>
               <tbody>
-                {data?.map((val) => {
-                  return (
+                {
+                  (data.length > 0) ? data?.map((val) => (
                     <tr key={val.id}>
                       {columns.map((key, ind) => {
                         const [parent, child] = key[0].split(".");
@@ -62,8 +63,8 @@ export default function Datas(props) {
                         </td>
                       }
                     </tr>
-                  );
-                })}
+                  )) : <NoContent />
+                }
               </tbody>
               <tfoot>
                 <tr>
@@ -71,7 +72,7 @@ export default function Datas(props) {
                 </tr>
               </tfoot>
             </table>
-          )
+          ) : <Loading />
         }
       </div>
     </>

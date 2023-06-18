@@ -30,7 +30,4 @@
 	.loading-icon {
 		@apply animate-spin;
 	}
-	.btn {
-		@apply shadow-md shadow-blue-700;
-	}
 }

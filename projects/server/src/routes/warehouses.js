@@ -10,7 +10,7 @@ const routes = require("express").Router();
 const { body } = require("express-validator");
 const isValid = require("../lib/validation");
 
-routes.get("/", verifyToken, checkRole("Superadmin"), warehouseList);
+routes.get("/", warehouseList);
 routes.post("/", verifyToken, checkRole("Superadmin"), addWarehouse);
 routes.put("/:warehouse_id", verifyToken, checkRole("Superadmin"), editWarehouse);
 routes.delete("/:warehouse_id", verifyToken, checkRole("Superadmin"), removeWarehouse);

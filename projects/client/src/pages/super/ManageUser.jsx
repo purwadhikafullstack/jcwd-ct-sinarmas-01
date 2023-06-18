@@ -1,12 +1,10 @@
 import { Button, Select } from "react-daisyui";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import getUsers from "../../apis/getUsers";
+import { getUsers } from "@/api/common";
 import { useState } from "react";
 import Swal from "@/components/Swal";
 import Datas from "@/components/Datas";
-import deleteUser from "@/apis/deleteUser";
-import newAdmin from "@/apis/newAdmin";
-import editUser from "@/apis/editUser";
+import { newAdmin, editUser, deleteUser } from "@/api/super";
 
 export default function ManageUser() {
   const [page, setPage] = useState(1);
