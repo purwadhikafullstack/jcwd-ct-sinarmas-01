@@ -26,8 +26,9 @@ instance.interceptors.response.use(
   (res) => {
     const { url } = res.config;
     const { data } = res;
-    if (url === "/auth/register") 
+    if (url.indexOf("/auth/account") > -1) {
       window.location.href = "/login";
+    }
     if (url === "/auth/login") {
       const { token } = res.data;
       const role = data.role.substring(0, 5);

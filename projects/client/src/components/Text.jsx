@@ -1,12 +1,11 @@
 import { Input } from "react-daisyui";
 
 export default function TextInput(props) {
-  const { className, name, id, placeholder, error, label, onChange, ref, defaultValue } = props;
+  const { className, name, id, placeholder, error, label, onChange, defaultValue } = props;
   return (
     <div className="mb-4">
       <label htmlFor={id} className="mb-1">{label}</label>
       <Input
-        ref={ref}
         defaultValue={defaultValue}
         className={`w-full ${className}`}
         name={name}

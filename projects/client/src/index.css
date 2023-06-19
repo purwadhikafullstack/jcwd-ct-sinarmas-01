@@ -22,12 +22,15 @@
 		@apply p-5;
 	}
 	div:where(.swal2-container) .swal2-html-container {
-		@apply w-auto h-fit text-center text-gray-800 dark:text-gray-300 overflow-y-auto overflow-x-hidden !important;
+		@apply w-auto p-5 h-fit text-center text-gray-800 dark:text-gray-300 overflow-y-auto overflow-x-hidden !important;
 	}
 	.swal2-html-container .leaflet-container {
 		@apply mt-4 w-[30rem] mx-5 h-[50vh] !important;
 	}
 	.loading-icon {
 		@apply animate-spin;
+	}
+	.card {
+		@apply bg-base-300 shadow-lg shadow-blue-700;
 	}
 }
