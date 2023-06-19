@@ -1,7 +1,7 @@
 const { models } = require("../models");
 const { Users, Verification } = models;
 require("dotenv").config();
-const transporter = require("../lib/sendemail");
+const transporter = require("../lib/transporter");
 const { createToken } = require("../lib/createToken");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");

@@ -13,7 +13,7 @@ export default function useUserMutations() {
 		onSuccess
 	});
 	const useDeleteMutation = () => useMutation({
-		muttionFn: async (data) => await deleteUser(data),
+		mutationFn: async (data) => await deleteUser(data),
 		onSuccess
 	});
 

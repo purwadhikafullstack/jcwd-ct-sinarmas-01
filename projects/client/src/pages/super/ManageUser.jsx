@@ -1,4 +1,3 @@
-import { Select } from "react-daisyui";
 import { useState } from "react";
 import Swal from "@/components/Swal";
 import Datas from "@/components/Datas";
@@ -6,6 +5,14 @@ import useUserMutations from "@/hooks/mutations/super/useUserMutations";
 import useUserQuery from "@/hooks/queries/useUserQuery";
 import formToObj from "@/libs/formToObj";
 import countToArr from "@/libs/countToArr";
+
+const UserForm = (props) => (
+  <form onSubmit={() => false}>
+    <input className="swal2-input" name="email" placeholder="Enter E-mail" />
+    <input className="swal2-input" name="fullname" placeholder="Enter Full Name" />
+    <input className="swal2-input" name="username" placeholder="Enter Username" />
+  </form>
+);
 
 export default function ManageUser() {
   const [editId, setEditId] = useState(0);
@@ -17,13 +24,6 @@ export default function ManageUser() {
   const edit = useEditMutation();
   const del = useDeleteMutation();
   const pages = countToArr(pagesCount);
-  const UserForm = (props) => (
-    <form onSubmit={() => false}>
-      <input className="swal2-input" name="email" placeholder="Enter E-mail" />
-      <input className="swal2-input" name="fullname" placeholder="Enter Full Name" />
-      <input className="swal2-input" name="username" placeholder="Enter Username" />
-    </form>
-  );
   const newFn = () => {
     Swal.fire({
       title: "New Warehouse Admin",
@@ -48,6 +48,7 @@ export default function ManageUser() {
   const editFn = (id) => {
     setEditId(id);
     const email = document.getElementById(`${id}-email`).textContent;
+    const fullname = document.getElementById(`${id}-fullname`).textContent;
     const username = document.getElementById(`${id}-username`).textContent;
     Swal.fire({
       title: "Edit Form",
@@ -56,6 +57,7 @@ export default function ManageUser() {
       didOpen: () => {
         const popup = Swal.getPopup();
         popup.querySelector('[name="email"]').value = email;
+        popup.querySelector('[name="fullname"]').value = fullname;
         popup.querySelector('[name="username"]').value = username;
       },
       preConfirm: () => {
@@ -72,8 +74,9 @@ export default function ManageUser() {
     <div className="text-center">
       <Datas 
         columns={[
-          ["id", "ID Pengguna"], 
+          ["id", "User ID"], 
           ["email", "email"], 
+          ["fullname", "Full name"],
           ["username", "username"], 
           ["role", "role"]
         ]} 

@@ -44,15 +44,16 @@ instance.interceptors.response.use(
     return res;
   },
   async (err) => {
-    if (err.response.status === 401) {
-      window.location.href = "/login";
-    }
     const method = err.config.method.toLowerCase();
+    console.log(err);
     (method !== 'get') && Swal.fire({
       title: "Error",
       text: err.response?.data?.message || err.message,
       icon: "error"
     });
+    if (err.response.status === 401) {
+      window.location.href = "/login";
+    }
 
     return Promise.reject(err);
   }
