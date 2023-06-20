@@ -17,7 +17,7 @@ class Addresses extends Sequelize.Model {
       allowNull: false
     },
     city: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(70),
       allowNull: true
     },
     province: {
@@ -25,9 +25,8 @@ class Addresses extends Sequelize.Model {
       allowNull: true
     },
     geolocation: {
-      type: DataTypes.STRING(60),
-      allowNull: true,
-      unique: "geolocation"
+      type: DataTypes.STRING(50),
+      allowNull: true
     }
   }, {
     tableName: 'addresses',
@@ -39,14 +38,6 @@ class Addresses extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "id" },
-        ]
-      },
-      {
-        name: "geolocation",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "geolocation" },
         ]
       },
     ]

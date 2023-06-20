@@ -2,20 +2,16 @@ import { Card, Button, Input, Form } from "react-daisyui";
 import { Link, useNavigate } from "react-router-dom";
 import swal from "sweetalert2";
 import { useFormik } from "formik";
-import register from "../../apis/register";
+import { register } from "@/api/auth";
 import { useMutation } from "@tanstack/react-query";
+import { FaReact } from "react-icons/fa";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   const mutation = useMutation({
-    mutationFn: async (data) => await register(data),
-    onSuccess: (data) => {
-      swal.fire({ title: data.message, icon: "success" }).then((res) => res && navigate("/login"));
-    },
-    onError: (err) => {
-      swal.fire({ title: err.response?.data?.message || err.message, icon: "warning" });
-    }
+    mutationFn: async (data) => await register(data)
   });
+  const { isLoading, isSuccess } = mutation;
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -28,7 +24,7 @@ export default function RegisterPage() {
   });
   return (
     <main className='flex w-full items-center justify-center'>
-      <Card className='bg-base-200 shadow-2xl shadow-blue-700'>
+      <Card>
         <div className='mx-4'>
           <Card.Body className='items-center text-center'>
             <Card.Title tag='h1' className='text-2xl'>
@@ -66,9 +62,11 @@ export default function RegisterPage() {
                 type='text'
               />
               <Card.Actions className='items-center text-center w-full flex flex-col justify-normal gap-4'>
-                <Button type='submit' color='default' className='w-full my-8'>
+                <Button disabled={isLoading || isSuccess} type='submit' color='default' className='w-full my-8'>
                   <h1 className='font-semibold text-lg text-pink-50'>
-                    SIGN UP
+                    {
+                      (isLoading) ? <FaReact className="loading-icon" /> : <>Sign Up</>
+                    }
                   </h1>
                 </Button>
               </Card.Actions>

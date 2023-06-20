@@ -13,12 +13,12 @@ class Warehouses extends Sequelize.Model {
       primaryKey: true
     },
     warehouse_name: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(45),
       allowNull: true
     },
     user_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'users',
         key: 'id'

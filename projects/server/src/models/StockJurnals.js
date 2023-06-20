@@ -31,6 +31,7 @@ class StockJurnals extends Sequelize.Model {
     tipe_jurnal_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
       references: {
         model: 'tipe_jurnals',
         key: 'id'
@@ -62,6 +63,7 @@ class StockJurnals extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "id" },
+          { name: "tipe_jurnal_id" },
         ]
       },
       {

@@ -1,22 +1,45 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import 'animate.css';
-import "@sweetalert2/themes/bootstrap-4/bootstrap-4.css";
-import Home from "./pages/Home";
-import MainAdmin from './pages/admin/Main';
-import ManageUser from './pages/admin/ManageUser';
-import Warehouses from './pages/admin/Warehouses';
 import Layout from "./layout/Layout";
-import Register from "./pages/user/Register";
-import Login from "./pages/user/Login";
 import { Routes, Route } from "react-router-dom";
+import Error404 from "./pages/error/Error404";
+import Swal from "@/components/Swal";
+import { lazy } from "react";
+import Suspensed from "./components/Suspensed";
+
+const Home = lazy(() => import("./pages/Home"));
+const Register = lazy(() => import("./pages/common/Register"));
+const Login = lazy(() => import("./pages/common/Login"));
+const ManageUser = lazy(() => import("./pages/super/ManageUser"));
+const ManageWarehouses = lazy(() => import("./pages/super/Warehouses"));
+const Forgot = lazy(() => import("./pages/common/Forgot"));
+const Reset = lazy(() => import("./pages/common/Reset"));
+const Super = lazy(() => import("./pages/super/Super"));
+const Admin = lazy(() => import("./pages/admin/Admin"));
 
 function App() {
   const settings = {
     networkMode: "always",
   };
+  const mutateConfig = {
+    ...settings,
+    onError: (err) => {
+      Swal.fire({
+        title: "Error",
+        text: err.response?.data?.message || err.message,
+        icon: "error"
+      });
+    },
+    onSuccess: (data) => {
+      Swal.fire({
+        title: "Success",
+        text: data.message || "Action Success",
+        icon: "success"
+      });
+    }
+  };
   const queryClient = new QueryClient({
     defaultOptions: {
-      mutations: settings,
+      mutations: mutateConfig,
       queries: settings,
     },
   });
@@ -25,13 +48,21 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route path="" element={<Home />} />
-          <Route path="/admin" element={<MainAdmin />} />
-          <Route path="/admin/users" element={<ManageUser />} />
-          <Route path="/admin/warehouses" element={<Warehouses />} />
-          <Route path="register" element={<Register />} />
-          <Route path="login" element={<Login />} />
+          <Route index element={<Suspensed><Home /></Suspensed>} />
+          <Route path="register" element={<Suspensed><Register/></Suspensed>} />
+          <Route path="login" element={<Suspensed><Login /></Suspensed>} />
+          <Route path="forgot" element={<Suspensed><Forgot /></Suspensed>} />
+          <Route path="account/:mode/:token" element={<Suspensed><Reset /></Suspensed>} />
         </Route>
+        <Route path="/super" element={<Layout />}>
+          <Route index element={<Suspensed><Super /></Suspensed>} />
+          <Route path="users" element={<Suspensed><ManageUser /></Suspensed>} />
+          <Route path="warehouses" element={<Suspensed><ManageWarehouses /></Suspensed>} />
+        </Route>
+        <Route path="/admin" element={<Layout />}>
+          <Route index element={<Suspensed><Admin /></Suspensed>} />
+        </Route>
+        <Route path="*" element={<Error404 />} />
       </Routes>
     </QueryClientProvider>
   );

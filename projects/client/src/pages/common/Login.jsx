@@ -1,27 +1,16 @@
 import { Card, Button, Input, Form } from "react-daisyui";
-import { Link, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 import { useFormik } from "formik";
-import login from "../../apis/login";
+import { login } from "@/api/auth";
 import { useMutation } from "@tanstack/react-query";
 import PassInput from "@/components/Password";
-import useLogin from "@/hooks/useLogin";
+import { FaReact } from "react-icons/fa";
 
 export default function Login() {
-  const navigate = useNavigate();
-  const { setToken, getToken } = useLogin();
   const mutation = useMutation({
-    mutationFn: async (data) => await login(data),
-    onSuccess: (data) => {
-      Swal.fire({ title: data?.message, icon: "success" }).then (res => {
-        res && setToken(data.token);
-        getToken() && navigate("/");
-      });
-    },
-    onError: (err) => {
-      Swal.fire({ title: err.response?.data?.message || err.message, icon: "warning" });
-    }
+    mutationFn: async (data) => await login(data)
   });
+  const { isLoading, isSuccess } = mutation;
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -32,8 +21,8 @@ export default function Login() {
     }
   });
   return (
-    <main className="flex w-full items-center justify-center">
-      <Card className="bg-base-200 shadow-2xl shadow-blue-700">
+    <div className="flex w-full items-center justify-center">
+      <Card>
         <div className="mx-4">
           <Card.Body className="items-center text-center">
             <Card.Title tag="h1" className="text-2xl">
@@ -53,24 +42,34 @@ export default function Login() {
               <label id="password" className="label">
                 <span className="label-text">Password</span>
               </label>
-              <PassInput id="password" name="password" onChange={formik.handleChange} />
+              <PassInput placeholder="Enter your password" id="password" name="password" onChange={formik.handleChange} />
               <Card.Actions className="items-center text-center w-full flex flex-col justify-normal gap-4">
-                <Button type="submit" color="default" className="w-full my-8">
-                  <h1 className="font-semibold text-lg text-pink-50">
-                    Log Me In !
-                  </h1>
+                <Button 
+                  type="submit" 
+                  color="default" 
+                  className="w-full my-8 font-semibold text-lg text-pink-50"
+                  disabled={isLoading || isSuccess}
+                >
+                  {
+                    isLoading ? <FaReact className="loading-icon" /> : <>Login</>
+                  }
                 </Button>
               </Card.Actions>
             </Form>
-            <h1 className="font-semibold font-sans">
-              Don't have account?
-              <Link to="/register">
-                <span className="text-blue-700 ml-1">Register Now</span>
+            <h1 className="flex flex-col justify-end items-center gap-2 font-semibold font-sans">
+              <Link to="/register" className="link">
+                New Account
+              </Link>
+              <Link to="/forgot" className="link">
+                Forgot Password?
+              </Link>
+              <Link to="/forgot" className="link">
+                I'm not verified
               </Link>
             </h1>
           </Card.Body>
         </div>
       </Card>
-    </main>
+    </div>
   );
 }

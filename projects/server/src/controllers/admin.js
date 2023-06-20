@@ -1,7 +1,8 @@
 const { models } = require("../models");
 const { Users, Warehouses } = models;
-const transporter = require("../transporter");
+const transporter = require("../lib/transporter");
 const crypto = require("crypto");
+const { mailsend } = require("../lib");
 
 const adminController = {
   /**
@@ -11,21 +12,14 @@ const adminController = {
    */
   addUser: async function (req, res) {
     try {
-      const { email, username } = req.body;
+      const { email, username, fullname } = req.body;
       const password = crypto.randomBytes(8).toString('hex');
-      const user = await Users.create({ email, password, username, role: "Admin" });
-      await transporter.sendMail({
-        subject: "Admin Verification",
-        from: process.env.EMAIL_USER,
-        to: email,
-        html: `
-          <h1>Hello, ${username}. Please verify your account to use this app and set your password <br>
-          <a href="http://${process.env.WHITELISTED_DOMAIN}/#/auth/verify">Verify Me</a>
-        `
-      }, (err, info) => {
-        if (err) return res.status(500).json(err);
-        console.log(info);
-      });
+      const user = await Users.create({ email, password, username, fullname, role: "Admin" });
+      mailsend.compose("Verification", email, `
+        <h1>Welcome to Multi-Warehouse E-Commerce. Hello ${username}, please confirm your account 
+        <a href="${process.env.WHITELISTED_DOMAIN}/account/verify/${token}">here</a>
+        </h1>
+      `);
       return res.status(201).json({ message: "User added", user });
     } catch (error) {
       return res.status(500).json(error);

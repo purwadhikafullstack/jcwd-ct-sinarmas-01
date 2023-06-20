@@ -23,23 +23,20 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-// check role
-// const checkRole = async (req, res, next) => {
-//   if (req.user.isAdmin) {
-//     return next();
-//   }
-//   return res.status(401).json({ message: "Unauthorized" });
-// };
 /**
- * 
- * @param {string} role 
+ * Check Role dengan menggunakan nama Rolenya
+ * @param {"User" | "Admin" | "Superadmin"} role 
  * @returns {(req: import("express").Request, res: import("express").Response, next: import("express").NextFunction) => unknown}
  */
 function checkRole (role) {
   return function (req, res, next) {
     console.log(req.user);
-    if (req.user.role !== role) {
-      return res.status(401).json({ message: "Unauthorized" });
+    if (req.user.role.toLowerCase() !== role.toLowerCase()) {
+      return res.status(401).json({ 
+        message: "Unauthorized", 
+        role: req.user.role,
+        require: role
+      });
     }
     next();
   }

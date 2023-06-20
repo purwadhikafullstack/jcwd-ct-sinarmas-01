@@ -2,7 +2,7 @@ import { Stats } from "react-daisyui";
 
 const { Stat } = Stats; // Jangan dihapus
 
-export default function MainAdmin () {
+export default function Super () {
   return (
     <div className="text-center">
       <Stats className="bg-base-300 stats-vertical md:stats-horizontal shadow-md shadow-blue-700">

@@ -1,53 +1,39 @@
 const { models } = require("../models");
-const { Users } = models;
+const { Users, Verification, Reset } = models;
 require("dotenv").config();
-const transporter = require("../lib/sendemail");
 const { createToken } = require("../lib/createToken");
-const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const { hash, mailsend, randomStr } = require("../lib");
+
 const AuthController = {
   registerUser: async (req, res) => {
     try {
       const { email, fullname, username } = req.body;
-      const verify_token = crypto.randomBytes(20).toString('hex');
-      await Users.create({
+      const token = crypto.randomBytes(20).toString("hex");
+      const password = randomStr();
+      const user = await Users.create({
         fullname,
         username,
         email,
-        role: "user",
+        role: "User",
         isVerified: 0,
-        verify_token,
-        password: crypto.randomBytes(8).toString('hex'),
+        password,
       });
-      await transporter.sendMail(
-        {
-          from: `Admin Multi Warehouse <${process.env.EMAIL_USER}>`,
-          to: `${email}`,
-          subject: "Activate account",
-          html: `<h1>Welcome to Multi-Warehouse E-Commerce. Hello ${username}, please confirm your account <a href='http://localhost:3000/authentication/${verify_token}'>here</a></h1>`,
-        },
-        (errMail, resMail) => {
-          if (errMail) {
-            console.log(errMail);
-            res.status(500).send({
-              message: "Verification Failed!",
-              success: false,
-              err: errMail,
-            });
-          }
-          console.log(resMail);
-          res.status(200).send({
-            message: "Verification Success",
-            success: true,
-          });
-        }
+      await Verification.create({
+        token,
+        user_id: user.id,
+      });
+      mailsend.compose(
+        "Verification",
+        email,
+        `
+        <h1>Welcome to Multi-Warehouse E-Commerce. Hello ${username}, please confirm your account 
+        <a href='${process.env.WHITELISTED_DOMAIN}/account/verify/${token}'>here</a>
+        </h1>
+        `
       );
-      const user = await Users.findOne({
-        where: { email },
-      });
 
       return res.status(200).json({
-        verify_token,
         message: "Register Success!",
       });
     } catch (err) {
@@ -58,49 +44,90 @@ const AuthController = {
     }
   },
   /**
-   * 
-   * @param {import("express").Request} req 
-   * @param {import("express").Response} res 
+   * Login ke Akun yang tersedia
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
    */
   login: async function (req, res) {
     try {
       const { email, password } = req.body;
       const user = await Users.findOne({ where: { email } });
       console.log(user);
-      if (!user) return res.status(422).json({ message: "User not registered" });
-      const match = await bcrypt.compare(password, user.password);
+      if (!user)
+        return res.status(422).json({ message: "User not registered" });
+      const match = await hash.verify(password, user.password);
       if (!match) return res.status(409).json({ message: "Wrong Password" });
-      const { id, username, role } = user;
-      const token = createToken({ id, email, username, role });
+      const { id, role } = user;
+      const token = createToken({ id, email, role });
       return res.status(200).json({
         message: "Login Success",
-        token
-      })
+        token,
+        role: role.toLowerCase(),
+      });
     } catch (error) {
-      return res.status(error.statusCode || 500).json(error);
+      return res.status(error.statusCode || 500).json({
+        message: error?.errors[0]?.message || error.message,
+      });
     }
   },
   /**
-   * 
-   * @param {import("express").Request} req 
-   * @param {import("express").Response} res 
-   * @returns 
+   *
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns
    */
   setPassword: async function (req, res) {
     try {
-      const { verify_token } = req.params;
+      const { mode, token } = req.params;
       const { password } = req.body;
-      const user = await Users.findOne({ where: { verify_token } });
-      const salt = await bcrypt.genSalt(10);
-      const hashed = await bcrypt.hash(password, salt);
+      const Target = mode === "reset" ? Reset : (mode === "verify" ? Verification : null);
+      if (!Target) return res.status(422).json({ message: "Invalid Request URL" });
+      const result = await Target.findOne({
+        where: { token },
+      });
+      const user = await Users.findOne({ where: { id: result.user_id } });
+      if (!user) return res.status(404).json({ message: "User not found" });
+      const hashed = await hash.encrypt(password);
       user.password = hashed;
-      user.verify_token = "";
+      user.isVerified = 1;
       await user.save();
-      return res.status(200).json({ message: "Set password success" });
+      await Target.destroy({ where: { user_id: user.id } });
+      return res.status(200).json({ message: "Password Changed Successfully" });
     } catch (error) {
-      return res.status(error.statusCode || 500).json(error);
+      return res.status(error.statusCode || 500).json({
+        message: error.message,
+      });
     }
-  }
+  },
+  /**
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * */
+  requestReset: async function (req, res) {
+    try {
+      const { email } = req.body;
+      if (!email) return res.status(422).json({ message: "E-mail is required" });
+      const user = await Users.findOne({ where: { email } });
+      if (!user) return res.status(404).json({ message: "E-mail not registered yet" });
+      const token = randomStr(20);
+      const reset = await Reset.create({
+        token,
+        user_id: user.id,
+      });
+      mailsend.compose("Password Reset", email, `
+        <h1>Hello, ${email}. Here is your reset code<br/>
+        <a href="${process.env.WHITELISTED_DOMAIN}/account/reset/${token}">Reset Password</a>
+        </h1>
+      `);
+
+      return res.status(200).json({
+        message: "Reset Link Sent",
+        reset
+      });
+    } catch (e) {
+      return res.status(500).json({ message: e.message });
+    }
+  },
 };
 
 module.exports = AuthController;

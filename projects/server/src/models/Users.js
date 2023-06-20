@@ -13,14 +13,18 @@ class Users extends Sequelize.Model {
       primaryKey: true
     },
     email: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(200),
       allowNull: false,
-      unique: "email"
+      unique: "email_UNIQUE"
     },
     username: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(50),
       allowNull: false,
-      unique: "username"
+      unique: "username_UNIQUE"
+    },
+    fullname: {
+      type: DataTypes.STRING(70),
+      allowNull: false
     },
     password: {
       type: DataTypes.STRING(255),
@@ -32,14 +36,6 @@ class Users extends Sequelize.Model {
     },
     role: {
       type: DataTypes.STRING(45),
-      allowNull: true
-    },
-    reset_token: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    verify_token: {
-      type: DataTypes.STRING(255),
       allowNull: true
     }
   }, {
@@ -55,19 +51,19 @@ class Users extends Sequelize.Model {
         ]
       },
       {
-        name: "username",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "username" },
-        ]
-      },
-      {
-        name: "email",
+        name: "email_UNIQUE",
         unique: true,
         using: "BTREE",
         fields: [
           { name: "email" },
+        ]
+      },
+      {
+        name: "username_UNIQUE",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "username" },
         ]
       },
     ]

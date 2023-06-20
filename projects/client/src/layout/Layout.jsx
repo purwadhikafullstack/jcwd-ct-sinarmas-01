@@ -1,13 +1,12 @@
 import React from "react";
-import NavComponents from "../components/Navbar";
-import FooterComponents from "../components/Footer";
+import NavComponents from "@/components/Navbar";
+import FooterComponents from "@/components/Footer";
 import { Outlet } from "react-router-dom";
 const Layout = (props) => {
   return (
     <div className="w-full">
       <NavComponents />
-      <div className="p-5 mb-5">
-        {props.children}
+      <div className="text-center p-5 mb-5">
         <Outlet />
       </div>
       <FooterComponents />

@@ -11,9 +11,9 @@ const { body } = require("express-validator");
 const isValid = require("../lib/validation");
 
 routes.get("/", warehouseList);
-routes.post("/", addWarehouse);
-routes.put("/:warehouse_id", editWarehouse);
-routes.delete("/:warehouse_id", removeWarehouse);
+routes.post("/", verifyToken, checkRole("Superadmin"), addWarehouse);
+routes.put("/:warehouse_id", verifyToken, checkRole("Superadmin"), editWarehouse);
+routes.delete("/:warehouse_id", verifyToken, checkRole("Superadmin"), removeWarehouse);
 routes.post(
   "/admins",
   verifyToken,
