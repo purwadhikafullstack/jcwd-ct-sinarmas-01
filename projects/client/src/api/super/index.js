@@ -4,3 +4,6 @@ export { default as editWarehouse } from "./editWarehouse";
 export { default as editUser } from "./editUser";
 export { default as deleteUser } from "./deleteUser";
 export { default as deleteWarehouse } from "./deleteWarehouse";
+export { default as newProduct } from "./newProduct";
+export { default as editProduct } from "./editProduct";
+export { default as deleteProduct } from "./deleteProduct";

@@ -20,6 +20,7 @@ export default function useUserQuery() {
 		data,
 		isError,
 		isLoading,
-		pagesCount
+		pagesCount,
+		page
 	};
 };

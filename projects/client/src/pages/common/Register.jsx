@@ -1,10 +1,11 @@
 import { Card, Button, Input, Form } from "react-daisyui";
 import { Link, useNavigate } from "react-router-dom";
-import swal from "sweetalert2";
 import { useFormik } from "formik";
 import { register } from "@/api/auth";
 import { useMutation } from "@tanstack/react-query";
 import { FaReact } from "react-icons/fa";
+import { getRole } from "@/api/token";
+import { useEffect } from "react";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -22,6 +23,10 @@ export default function RegisterPage() {
       mutation.mutate(data);
     }
   });
+  useEffect(() => {
+    const role = getRole();
+    role && navigate(`/${role.toLowerCase()}`);
+  }, []);
   return (
     <main className='flex w-full items-center justify-center'>
       <Card>

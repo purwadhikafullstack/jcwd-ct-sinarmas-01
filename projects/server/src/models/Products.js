@@ -13,20 +13,21 @@ class Products extends Sequelize.Model {
       primaryKey: true
     },
     product_name: {
-      type: DataTypes.STRING(45),
-      allowNull: false
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      unique: "product_name"
     },
-    image_product: {
-      type: DataTypes.STRING(45),
+    product_image: {
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     desc: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.TEXT,
       allowNull: true
     },
     category_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'categories',
         key: 'id'
@@ -42,6 +43,14 @@ class Products extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "id" },
+        ]
+      },
+      {
+        name: "product_name",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "product_name" },
         ]
       },
       {

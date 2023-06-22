@@ -7,6 +7,7 @@ const regex = require("./regex");
 const transporter = require("./transporter");
 const uploader = require("./uploader");
 const validation = require("./validation");
+const paginate = require("./paginate");
 
 module.exports = {
 	capitalize,
@@ -17,5 +18,6 @@ module.exports = {
 	regex,
 	transporter,
 	uploader,
-	validation
+	validation,
+	paginate
 }

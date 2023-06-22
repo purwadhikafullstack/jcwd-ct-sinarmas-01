@@ -4,15 +4,16 @@ const cors = require("cors");
 const { join } = require("path");
 const { sequelize } = require("./models");
 // API Routes
-const addressRoute = require("./routes/addresses");
-const warehouseRoute = require("./routes/warehouses");
-const userRoute = require("./routes/users");
-const { authRoutes } = require("./routes");
-const bodyParser = require("body-parser");
+const { 
+  authRoutes, 
+  addressRoutes, 
+  warehouseRoutes, 
+  userRoutes,
+  productRoutes
+} = require("./routes");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-console.log(process.env.WHITELISTED_DOMAIN);
 sequelize.sync();
 
 app.use(cors({
@@ -25,7 +26,6 @@ app.use(express.json());
 
 // ===========================
 // NOTE : Add your routes here
-app.use("/api/auth", authRoutes);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
@@ -38,9 +38,10 @@ app.get("/api/greetings", (req, res, next) => {
 });
 
 app.use("/api/auth", authRoutes);
-app.use("/api/addresses", addressRoute);
-app.use("/api/warehouses", warehouseRoute);
-app.use("/api/users", userRoute);
+app.use("/api/addresses", addressRoutes);
+app.use("/api/warehouses", warehouseRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
 
 // ===========================
 
@@ -68,6 +69,7 @@ app.use((err, req, res, next) => {
 //#region CLIENT
 const clientPath = "../../client/build";
 app.use(express.static(join(__dirname, clientPath)));
+app.use(express.static("public"));
 
 // Serve the HTML page
 app.get("*", (req, res) => {

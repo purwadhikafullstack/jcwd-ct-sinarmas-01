@@ -10,19 +10,19 @@ const routes = require("express").Router();
 const { body } = require("express-validator");
 const isValid = require("../lib/validation");
 
-routes.get("/", warehouseList);
-routes.post("/", verifyToken, checkRole("Superadmin"), addWarehouse);
-routes.put("/:warehouse_id", verifyToken, checkRole("Superadmin"), editWarehouse);
-routes.delete("/:warehouse_id", verifyToken, checkRole("Superadmin"), removeWarehouse);
+routes.get("/", verifyToken, checkRole(["super"]), warehouseList);
+routes.post("/", verifyToken, checkRole(["super"]), addWarehouse);
+routes.put("/:warehouse_id", verifyToken, checkRole(["super"]), editWarehouse);
+routes.delete("/:warehouse_id", verifyToken, checkRole(["super"]), removeWarehouse);
 routes.post(
   "/admins",
   verifyToken,
-  checkRole("Superadmin"),
+  checkRole(["super"]),
   body("email").isEmail().withMessage("Email harus valid"),
   isValid,
   adminController.addUser
 );
-routes.delete("/admins/:user_id", verifyToken, checkRole("Superadmin"), adminController.removeUser);
-routes.put("/admins/:user_id", verifyToken, checkRole("Superadmin"), adminController.editUser);
+routes.delete("/admins/:user_id", verifyToken, checkRole(["super"]), adminController.removeUser);
+routes.put("/admins/:user_id", verifyToken, checkRole(["super"]), adminController.editUser);
 
 module.exports = routes;

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { updateToken, getToken } from "./token";
+import { updateToken, getToken, getRole } from "./token";
 import Swal from "@/components/Swal";
 
 const instance = axios.create({
@@ -12,9 +12,15 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const token = getToken();
+    const { url } = config;
     if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;  
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
+
+    if (url.indexOf("/products") > -1) {
+      config.headers["Content-Type"] = "multipart/form-data";
+    }
+
     return config;
   },
   (error) => {
@@ -46,15 +52,15 @@ instance.interceptors.response.use(
   },
   async (err) => {
     const method = err.config.method.toLowerCase();
-    console.log(err);
+    const { data, status } = err.response;
     (method !== 'get') && Swal.fire({
       title: "Error",
-      text: err.response?.data?.message || err.message,
+      text: data.message || err.message,
       icon: "error"
     });
-    if (err.response.status === 401) {
-      window.location.href = "/login";
-    }
+
+    if (status === 401 && method === "get") 
+      window.location.href = `/${getRole().toLowerCase() || "login"}`;
 
     return Promise.reject(err);
   }

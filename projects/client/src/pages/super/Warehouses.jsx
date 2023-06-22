@@ -1,15 +1,13 @@
 import Datas from "@/components/Datas";
-import { useState } from "react";
 import Swal from "@/components/Swal";
 import Map from "@/components/Map";
 import toLatLng from "@/libs/toLatLng";
 import formToObj from "@/libs/formToObj";
-import useWarehouseQuery from "@/hooks/queries/warehouses/useWarehouseQuery";
+import useWarehouseQuery from "@/hooks/queries/common/useWarehouseQuery";
 import useWarehouseMutations from "@/hooks/mutations/super/useWarehouseMutations";
 import countToArr from "@/libs/countToArr";
 
 export default function ManageWareHouses() {
-  const [editId, setEditId] = useState(0);
   const defaultPos = { lat: -6.3021366, lng: 106.6439783 };
   const mapPos = {...defaultPos};
   const setMapPos = (lat, lng) => {
@@ -53,7 +51,6 @@ export default function ManageWareHouses() {
   };
 
   const editFn = (id) => {
-    setEditId(id);
     Swal.fire({
       title: `Edit Warehouse #${id}`,
       html: <WarehouseForm id={id} />,

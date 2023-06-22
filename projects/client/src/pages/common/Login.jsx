@@ -5,11 +5,15 @@ import { login } from "@/api/auth";
 import { useMutation } from "@tanstack/react-query";
 import PassInput from "@/components/Password";
 import { FaReact } from "react-icons/fa";
+import { getRole } from "@/api/token";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function Login() {
   const mutation = useMutation({
     mutationFn: async (data) => await login(data)
   });
+  const navigate = useNavigate();
   const { isLoading, isSuccess } = mutation;
   const formik = useFormik({
     initialValues: {
@@ -20,6 +24,10 @@ export default function Login() {
       mutation.mutate(data);
     }
   });
+  useEffect(() => {
+    const role = getRole() || "";
+    getRole() && navigate(`/${role.toLowerCase()}`);
+  }, []);
   return (
     <div className="flex w-full items-center justify-center">
       <Card>

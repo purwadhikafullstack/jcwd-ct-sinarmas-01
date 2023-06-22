@@ -3,7 +3,7 @@ import { FaTrash, FaPencilAlt, FaChevronLeft, FaChevronRight } from "react-icons
 import Loading from "./Loading";
 import NoContent from "./NoContent";
 import { Select } from "react-daisyui";
-import { useEffect, useState } from "react";
+import usePageStore from "@/hooks/store/usePageStore";
 
 /**
  * Template Table Untuk Data
@@ -14,7 +14,6 @@ import { useEffect, useState } from "react";
  * @returns
  */
 export default function Datas(props) {
-  // const [pages, setPages] = useState([]);
   const { 
     columns, 
     data, 
@@ -23,17 +22,16 @@ export default function Datas(props) {
     newFn, 
     caption, 
     readOnly,
-    nextPage,
-    prevPage,
-    goToPage,
-    pages,
-    page
+    // nextPage,
+    // prevPage,
+    // goToPage,
+    pages
   } = props;
+  const page = usePageStore(state => state.page);
+  const nextPage = usePageStore(state => state.nextPage);
+  const prevPage = usePageStore(state => state.prevPage);
+  const goToPage = usePageStore(state => state.goToPage);
 
-  useEffect(() => {
-    console.log(pages);
-    console.log(goToPage);
-  }, []);
   return (
     <>
       <h1 className="text-2xl font-bold mb-3 text-center">{caption}s</h1>

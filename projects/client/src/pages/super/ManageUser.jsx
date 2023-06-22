@@ -1,8 +1,7 @@
-import { useState } from "react";
 import Swal from "@/components/Swal";
 import Datas from "@/components/Datas";
 import useUserMutations from "@/hooks/mutations/super/useUserMutations";
-import useUserQuery from "@/hooks/queries/useUserQuery";
+import useUserQuery from "@/hooks/queries/common/useUserQuery";
 import formToObj from "@/libs/formToObj";
 import countToArr from "@/libs/countToArr";
 
@@ -15,8 +14,6 @@ const UserForm = (props) => (
 );
 
 export default function ManageUser() {
-  const [editId, setEditId] = useState(0);
-
   const users = useUserQuery();
   const { goToPage, nextPage, prevPage, pagesCount, page } = users;
   const { useAddMutation, useDeleteMutation, useEditMutation } = useUserMutations();
@@ -30,7 +27,8 @@ export default function ManageUser() {
       html: <UserForm id={0} />,
       preConfirm: () => {
         return Swal.getPopup().querySelector("form");
-      }
+      },
+      showCancelButton: true
     }).then(res => {
       const form = new FormData(res.value);
       console.log(formToObj(form));
@@ -46,7 +44,6 @@ export default function ManageUser() {
     }).then (res => res.isConfirmed && del.mutate(id));
   };
   const editFn = (id) => {
-    setEditId(id);
     const email = document.getElementById(`${id}-email`).textContent;
     const fullname = document.getElementById(`${id}-fullname`).textContent;
     const username = document.getElementById(`${id}-username`).textContent;
@@ -89,7 +86,6 @@ export default function ManageUser() {
         nextPage={nextPage}
         prevPage={prevPage}
         page={page}
-        pagesCount={users?.data?.pages}
         pages={pages}
       />
     </div>
