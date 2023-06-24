@@ -15,6 +15,7 @@ const Forgot = lazy(() => import("./pages/common/Forgot"));
 const Reset = lazy(() => import("./pages/common/Reset"));
 const Super = lazy(() => import("./pages/super/Super"));
 const Admin = lazy(() => import("./pages/admin/Admin"));
+const ManageProducts = lazy(() => import("./pages/super/Products"));
 
 function App() {
   const settings = {
@@ -58,6 +59,7 @@ function App() {
           <Route index element={<Suspensed><Super /></Suspensed>} />
           <Route path="users" element={<Suspensed><ManageUser /></Suspensed>} />
           <Route path="warehouses" element={<Suspensed><ManageWarehouses /></Suspensed>} />
+          <Route path="products" element={<Suspensed><ManageProducts /></Suspensed>} />
         </Route>
         <Route path="/admin" element={<Layout role="admin" />}>
           <Route index element={<Suspensed><Admin /></Suspensed>} />

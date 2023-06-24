@@ -6,3 +6,5 @@ export { default as register } from "./register";
 export { default as searchLocation } from "./searchLocation";
 export { default as requestReset } from "./requestReset";
 export { default as setPassword } from "./setPassword";
+export { default as getProducts } from "./getProducts";
+export { default as getProductDetail } from "./getProductDetail";

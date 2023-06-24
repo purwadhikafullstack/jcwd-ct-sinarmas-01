@@ -1,30 +1,19 @@
-import { Stats } from "react-daisyui";
-
-const { Stat } = Stats; // Jangan dihapus
+import { Card, Button } from "react-daisyui";
+import { useNavigate } from "react-router-dom";
 
 export default function Super () {
+  const navigate = useNavigate();
   return (
-    <div className="text-center">
-      <Stats className="bg-base-300 stats-vertical md:stats-horizontal shadow-md shadow-blue-700">
-        <Stats.Stat>
-          <Stat.Item variant="title">
-            User terdaftar
-          </Stat.Item>
-          <Stat.Item variant="value">
-            10
-            {/* Masih hardcode, dapat diganti dengan response dari REST API */}
-          </Stat.Item>
-        </Stats.Stat>
-        <Stats.Stat>
-          <Stat.Item variant="title">
-            Gudang
-          </Stat.Item>
-          <Stat.Item variant="value">
-            3
-            {/* Masih hardcode, dapat diganti dengan response dari REST API */}
-          </Stat.Item>
-        </Stats.Stat>
-      </Stats>
-    </div>
+    <Card className="mx-5">
+      <Card.Body>
+        <Card.Title className="mb-3 text-center"> 
+          Superadmin Menu
+        </Card.Title>
+        <div className="flex flex-wrap gap-3">
+          <Button onClick={() => navigate("warehouses")} fullWidth>Warehouses Management</Button>
+          <Button onClick={() => navigate("users")} fullWidth>Users Management</Button>
+        </div>
+      </Card.Body>
+    </Card>
   )
 }

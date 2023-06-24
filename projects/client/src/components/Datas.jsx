@@ -4,6 +4,7 @@ import Loading from "./Loading";
 import NoContent from "./NoContent";
 import { Select } from "react-daisyui";
 import usePageStore from "@/hooks/store/usePageStore";
+import countToArr from "@/libs/countToArr";
 
 /**
  * Template Table Untuk Data
@@ -21,16 +22,10 @@ export default function Datas(props) {
     editFn, 
     newFn, 
     caption, 
-    readOnly,
-    // nextPage,
-    // prevPage,
-    // goToPage,
-    pages
+    readOnly
   } = props;
-  const page = usePageStore(state => state.page);
-  const nextPage = usePageStore(state => state.nextPage);
-  const prevPage = usePageStore(state => state.prevPage);
-  const goToPage = usePageStore(state => state.goToPage);
+  const { page, nextPage, prevPage, goToPage, count } = usePageStore();
+  const pages = countToArr(count);
 
   return (
     <>
@@ -41,13 +36,13 @@ export default function Datas(props) {
         </Button>
       </div>
       <div className="flex flex-row gap-4 justify-center items-center mb-4">
-        <Button color="ghost" onClick={prevPage}>
+        <Button disabled={page === 1} color="ghost" onClick={prevPage}>
           <FaChevronLeft />
         </Button>
         <Select onChange={(e) => (goToPage)(e.currentTarget.value)} value={page}>
           {pages.map((data, ind) => <Select.Option value={data} key={ind}>Page {data}</Select.Option>)}
         </Select>
-        <Button color="ghost" onClick={nextPage}>
+        <Button disabled={page === count} color="ghost" onClick={nextPage}>
           <FaChevronRight />
         </Button>
       </div>
@@ -57,6 +52,7 @@ export default function Datas(props) {
             <table className="table w-full">
               <thead className="text-center">
                 <tr>
+                  <th>No</th>
                   {columns.map((val, key) => {
                     return <th key={key}>{val[1]}</th>;
                   })}
@@ -65,8 +61,9 @@ export default function Datas(props) {
               </thead>
               <tbody>
                 {
-                  (data.length > 0) ? data?.map((val) => (
+                  (data.length > 0) ? data?.map((val, index) => (
                     <tr key={val.id}>
+                      <td>{index + 1}</td>
                       {columns.map((key, ind) => {
                         const [parent, child] = key[0].split(".");
                         const value =
@@ -98,7 +95,7 @@ export default function Datas(props) {
               </tbody>
               <tfoot>
                 <tr>
-                  <th colSpan={columns.length + 1} />
+                  <th colSpan={columns.length + 2} />
                 </tr>
               </tfoot>
             </table>

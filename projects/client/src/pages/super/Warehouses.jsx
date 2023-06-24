@@ -5,7 +5,6 @@ import toLatLng from "@/libs/toLatLng";
 import formToObj from "@/libs/formToObj";
 import useWarehouseQuery from "@/hooks/queries/common/useWarehouseQuery";
 import useWarehouseMutations from "@/hooks/mutations/super/useWarehouseMutations";
-import countToArr from "@/libs/countToArr";
 
 export default function ManageWareHouses() {
   const defaultPos = { lat: -6.3021366, lng: 106.6439783 };
@@ -15,8 +14,6 @@ export default function ManageWareHouses() {
     mapPos.lng = lng;
   }
   const query = useWarehouseQuery();
-  const { nextPage, prevPage, goToPage, pagesCount, page } = query;
-  const pages = countToArr(pagesCount);
   const { useAddMutation, useEditMutation, useDeleteMutation } = useWarehouseMutations();
   const add = useAddMutation();
   const edit = useEditMutation();
@@ -92,7 +89,6 @@ export default function ManageWareHouses() {
     <>
       <Datas
         columns={[
-          ["id", "warehouse id"],
           ["warehouse_name", "warehouse name"],
           ["address.address_name", "address"],
           ["address.geolocation", "Geo"],
@@ -104,11 +100,6 @@ export default function ManageWareHouses() {
         deleteFn={deleteFn}
         newFn={newFn}
         caption="Warehouse"
-        pages={pages}
-        page={page}
-        nextPage={nextPage}
-        prevPage={prevPage}
-        goToPage={goToPage}
       />
     </>
   );

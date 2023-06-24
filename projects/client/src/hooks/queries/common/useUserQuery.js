@@ -1,26 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUsers } from "@/api/common";
-import { useState } from "react";
+import usePageStore from "@/hooks/store/usePageStore";
 
 export default function useUserQuery() {
-	const [page, setPage] = useState(1);
+	const page = usePageStore(state => state.page);
+	const setCount = usePageStore(state => state.setCount);
+	const goToPage = usePageStore(state => state.goToPage);
 	const { data, isError, isLoading } = useQuery({
 		queryFn: async () => await getUsers(page),
-		queryKey: ["users", page]
+		queryKey: ["users", page],
+		onSuccess: data => {
+			setCount(data.pages);
+			page > data.pages && goToPage(1);
+		}
 	});
-	const nextPage = () => (page < data.pages) && setPage(page => page + 1);
-	const prevPage = () => (page > 1) && setPage(page => page - 1);
-	const goToPage = (id) => (id > 0 && id <= data.pages) && setPage(id);
-	const pagesCount = data?.pages;
 
 	return {
-		nextPage,
-		prevPage,
-		goToPage,
 		data,
 		isError,
 		isLoading,
-		pagesCount,
 		page
 	};
 };

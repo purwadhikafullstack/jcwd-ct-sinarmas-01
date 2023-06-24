@@ -3,9 +3,8 @@ import Datas from "@/components/Datas";
 import useUserMutations from "@/hooks/mutations/super/useUserMutations";
 import useUserQuery from "@/hooks/queries/common/useUserQuery";
 import formToObj from "@/libs/formToObj";
-import countToArr from "@/libs/countToArr";
 
-const UserForm = (props) => (
+const UserForm = () => (
   <form onSubmit={() => false}>
     <input className="swal2-input" name="email" placeholder="Enter E-mail" />
     <input className="swal2-input" name="fullname" placeholder="Enter Full Name" />
@@ -15,12 +14,10 @@ const UserForm = (props) => (
 
 export default function ManageUser() {
   const users = useUserQuery();
-  const { goToPage, nextPage, prevPage, pagesCount, page } = users;
   const { useAddMutation, useDeleteMutation, useEditMutation } = useUserMutations();
   const add = useAddMutation();
   const edit = useEditMutation();
   const del = useDeleteMutation();
-  const pages = countToArr(pagesCount);
   const newFn = () => {
     Swal.fire({
       title: "New Warehouse Admin",
@@ -71,7 +68,6 @@ export default function ManageUser() {
     <div className="text-center">
       <Datas 
         columns={[
-          ["id", "User ID"], 
           ["email", "email"], 
           ["fullname", "Full name"],
           ["username", "username"], 
@@ -82,11 +78,6 @@ export default function ManageUser() {
         deleteFn={deleteFn}
         newFn={newFn}
         caption="User"
-        goToPage={goToPage}
-        nextPage={nextPage}
-        prevPage={prevPage}
-        page={page}
-        pages={pages}
       />
     </div>
   )

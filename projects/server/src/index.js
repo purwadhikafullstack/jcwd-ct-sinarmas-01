@@ -14,7 +14,7 @@ const {
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-sequelize.sync();
+sequelize.sync({ alter: true });
 
 app.use(cors({
   origin: process.env.WHITELISTED_DOMAIN
