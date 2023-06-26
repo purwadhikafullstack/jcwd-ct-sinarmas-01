@@ -8,3 +8,4 @@ export { default as requestReset } from "./requestReset";
 export { default as setPassword } from "./setPassword";
 export { default as getProducts } from "./getProducts";
 export { default as getProductDetail } from "./getProductDetail";
+export { default as getProductType } from "./getProductType";

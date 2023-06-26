@@ -7,3 +7,6 @@ export { default as deleteWarehouse } from "./deleteWarehouse";
 export { default as newProduct } from "./newProduct";
 export { default as editProduct } from "./editProduct";
 export { default as deleteProduct } from "./deleteProduct";
+export { default as newProductType } from "./newProductType";
+export { default as editProductType } from "./editProductType";
+export { default as deleteProductType } from "./deleteProductType";

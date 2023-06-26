@@ -3,6 +3,7 @@ import { FaTrash, FaPencilAlt, FaChevronLeft, FaChevronRight } from "react-icons
 import Loading from "./Loading";
 import NoContent from "./NoContent";
 import usePageStore from "@/hooks/store/usePageStore";
+import cropText from "@/libs/cropText";
 
 /**
  * Template Table Untuk Data
@@ -67,7 +68,7 @@ export default function Datas(props) {
                       "(empty)";
                     return (
                       <td key={ind} id={`${val.id}-${key[0]}`}>
-                        {value}
+                        {cropText(value)}
                       </td>
                     );
                   })}
