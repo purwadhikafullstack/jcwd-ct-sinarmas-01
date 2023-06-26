@@ -3,7 +3,7 @@ import { newProduct, editProduct, deleteProduct } from "@/api/super";
 
 export default function useProductMutations() {
 	const client = useQueryClient();
-	const onSuccess = client.invalidateQueries({ queryKey: ["products"] });
+	const onSuccess = () => client.invalidateQueries({ queryKey: ["products"] });
 
 	const useAddMutation = () => useMutation({
 		mutationFn: async (data) => await newProduct(data), onSuccess
