@@ -10,8 +10,9 @@ export default function Super () {
           Superadmin Menu
         </Card.Title>
         <div className="flex flex-wrap gap-3">
-          <Button onClick={() => navigate("warehouses")} fullWidth>Warehouses Management</Button>
-          <Button onClick={() => navigate("users")} fullWidth>Users Management</Button>
+          <Button onClick={() => navigate("warehouses")} fullWidth>Manage Warehouses</Button>
+          <Button onClick={() => navigate("users")} fullWidth>Manage Users</Button>
+          <Button onClick={() => navigate("products")} fullWidth>Manage Products</Button>
         </div>
       </Card.Body>
     </Card>

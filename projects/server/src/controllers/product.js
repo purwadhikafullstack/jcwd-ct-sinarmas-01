@@ -10,7 +10,8 @@ const productController = {
 	addProduct: async function (req, res) {
 		try {
 			const { product_name, desc } = req.body;
-			const { path } = req.file;
+			const path = req.file?.path || "";
+			console.log(path);
 			const dest = path ? path
 				.replace(/\\/g, "/")
 				.replace("public/", "") : null;
@@ -22,7 +23,7 @@ const productController = {
 			});
 			return res.status(201).json({ message: "Product Added", product });
 		} catch (e) {
-			return res.status(500).json({ message: e.message });
+			return res.status(500).json({ message: e.errors[0]?.message || e.message });
 		}
 	},
 	/**
@@ -33,16 +34,16 @@ const productController = {
 		try {
 			const { id } = req.params;
 			const { product_name, desc } = req.body;
-			const { path } = req.file;
+			const path = req?.file?.path || "";
 			const dest = path ? path
 				.replace(/\\/g, "/")
 				.replace("public/", "") : null;
-			const product_image = path && `${req.protocol}://${req.headers.host}/${dest}`;
-			const product = await Products.update({
-				product_name, desc, product_image
-			}, {
-				where: { id }
-			});
+			const product = await Products.findOne({ where: { id } });
+			const product_image = (path && dest) ? `${req.protocol}://${req.headers.host}/${dest}` : null;
+			product.product_name = product_name || product.product_name;
+			product.product_image = product_image || product.product_image;
+			product.desc = desc || product.desc;
+			await product.save();
 			return res.status(200).json({ message: "Product Edited", product });
 		} catch (e) {
 			return res.status(500).json({ message: e.message });
@@ -85,8 +86,8 @@ const productController = {
 	getDetail: async function (req, res) {
 		try {
 			const { id } = req.params;
-			const product = await Product.findOne({ where: { id } });
-			return res.status(200).json({ message: "Fetch success", product});
+			const product = await Products.findOne({ where: { id } });
+			return res.status(200).json({ message: "Fetch success", product });
 		} catch (e) {
 			res.status(500).json({ message: e.message });
 		}

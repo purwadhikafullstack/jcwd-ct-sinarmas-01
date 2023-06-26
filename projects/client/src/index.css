@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer components {
-	.swal2-input {
+	.swal2-input, .swal2-textarea {
 		@apply w-auto text-gray-800 placeholder:text-gray-400 dark:text-gray-100;
 	}
 	.swal2-modal {
@@ -16,7 +16,7 @@
 		@apply w-auto text-gray-800 dark:text-gray-300 shadow-md shadow-blue-700;
 	}
 	.swal2-html-container form {
-		@apply -m-5 w-auto;
+		@apply -m-5 w-auto flex flex-col;
 	}
 	.swal2-actions {
 		@apply p-5;
@@ -32,5 +32,8 @@
 	}
 	.card {
 		@apply bg-base-300 shadow-lg shadow-blue-700;
+	}
+	.swal2-textarea {
+		@apply w-auto;
 	}
 }

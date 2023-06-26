@@ -12,7 +12,9 @@ const usePageStore = create((set) => ({
 	prevPage: () => set(state => ({ 
 		page: state.page > 1 ? state.page - 1 : state.page
 	})),
-	setCount: (num) => set({ count: num })
+	setCount: (num) => set({ count: num }),
+	isLoading: true,
+	setLoading: (boo) => set({ isLoading: boo })
 }));
 
 export default usePageStore;

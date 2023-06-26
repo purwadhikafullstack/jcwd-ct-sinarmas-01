@@ -1,14 +1,26 @@
 import Datas from "@/components/Datas";
 import useProductMutations from "@/hooks/mutations/super/useProductMutations";
+import useProductQuery from "@/hooks/queries/common/useProductQuery";
 import Swal from "@/components/Swal";
+import formToObj from "@/libs/formToObj";
+import { FileInput } from "react-daisyui";
 
 const Form = () => {
+	const onSubmit = (e) => e.preventDefault();
 	return (
-		<form encType="multipart/form-data">
-			<input name="product_name" className="swal2-input" />
-			<input name="product_image" className="swal2-file" type="file" />
-			<textarea name="desc" className="swal2-textarea"></textarea>
-			<select name="category_id"></select>
+		<form encType="multipart/form-data" onSubmit={onSubmit}>
+			<input placeholder="Enter Product Name" name="product_name" className="swal2-input" />
+			<div className="my-2">
+				Product Image : {" "}
+				<FileInput
+					placeholder="Drop Product Image Here" 
+					name="product_image" 
+					className="mt-0"
+					id="product_image"
+					type="file"
+				/>
+			</div>
+			<textarea name="desc" className="swal2-textarea" placeholder="Enter Description"></textarea>
 		</form>
 	);
 }
@@ -24,11 +36,15 @@ export default function Products () {
 	const edit = useEditMutation();
 	const del = useDeleteMutation();
 
+	const query = useProductQuery();
 	const newFn = () => {
 		Swal.fire({
 			...modalConfig,
+			didOpen: () => Swal.getPopup().querySelector("form").reset() ,
 			preConfirm: () => new FormData(Swal.getPopup().querySelector("form")),
-		}).then (res => res.isConfirmed && add.mutate(res.value));
+		}).then (res => {
+			res.isConfirmed && add.mutate(formToObj(res.value))
+		});
 	};
 	const editFn = (id) => {
 		Swal.fire({
@@ -36,17 +52,20 @@ export default function Products () {
 			preConfirm: () => {
 				const form = new FormData(Swal.getPopup().querySelector("form"));
 				form.append("id", id);
-				return form;
+				return formToObj(form);
 			},
 			didOpen: () => {
 				const p = Swal.getPopup();
-				p.querySelector("[name='product_name']");
+				const name = document.getElementById(`${id}-product_name`).textContent;
+				const desc = document.getElementById(`${id}-desc`).textContent;
+				p.querySelector("[name='product_name']").value = name;
+				p.querySelector("[name='desc']").value = desc;
 			}
 		}).then (res => {
 			res.isConfirmed && edit.mutate(res.value)
 		});
 	};
-	const delFn = (id) => {
+	const deleteFn = (id) => {
 		Swal.fire({
 			title: "Confirm Delete",
 			showCancelButton: true,
@@ -58,7 +77,14 @@ export default function Products () {
 		<Datas 
 			newFn={newFn}
 			editFn={editFn}
-			delFn={delFn}
+			deleteFn={deleteFn}
+			caption="Product"
+			columns={[
+				["product_name", "Product Name"],
+				["desc", "Description"],
+				["product_image", "Image"]
+			]}
+			data={query?.data?.rows}
 		/>
 	)
 }

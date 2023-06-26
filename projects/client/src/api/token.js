@@ -29,5 +29,6 @@ export function isExpired() {
 
 export function getRole() {
 	const json = decodeToken();
-	return json.role || "";
+	const role = json.role || "";
+	return role.toLowerCase();
 }
