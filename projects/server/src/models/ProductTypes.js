@@ -13,16 +13,17 @@ class ProductTypes extends Sequelize.Model {
       primaryKey: true
     },
     storage: {
-      type: DataTypes.STRING(50),
-      allowNull: true
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
     },
     color: {
       type: DataTypes.STRING(45),
-      allowNull: true
+      allowNull: false
     },
     price: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: false
     },
     product_id: {
       type: DataTypes.INTEGER,

@@ -10,7 +10,9 @@ const Form = () => {
 	return (
 		<form encType="multipart/form-data" onSubmit={onSubmit}>
 			<input placeholder="Enter Product Name" name="product_name" className="swal2-input" />
-			<div className="my-2">
+			<input className="swal2-input" type="number" placeholder="Enter Price (IDR)" name="price" />
+			<textarea name="desc" className="swal2-textarea" placeholder="Enter Description"></textarea>
+			<div className="my-2 text-left mx-10">
 				Product Image : {" "}
 				<FileInput
 					placeholder="Drop Product Image Here" 
@@ -20,7 +22,6 @@ const Form = () => {
 					type="file"
 				/>
 			</div>
-			<textarea name="desc" className="swal2-textarea" placeholder="Enter Description"></textarea>
 		</form>
 	);
 }
@@ -35,7 +36,6 @@ export default function Products () {
 	const add = useAddMutation();
 	const edit = useEditMutation();
 	const del = useDeleteMutation();
-
 	const query = useProductQuery();
 	const newFn = () => {
 		Swal.fire({
@@ -56,10 +56,12 @@ export default function Products () {
 			},
 			didOpen: () => {
 				const p = Swal.getPopup();
-				const name = document.getElementById(`${id}-product_name`).textContent;
-				const desc = document.getElementById(`${id}-desc`).textContent;
+				const name = document.getElementById(`${id}-product_name`).dataset.value;
+				const desc = document.getElementById(`${id}-desc`).dataset.value;
+				const price = document.getElementById(`${id}-price`).dataset.value;
 				p.querySelector("[name='product_name']").value = name;
 				p.querySelector("[name='desc']").value = desc;
+				p.querySelector("[name='price']").value = price;
 			}
 		}).then (res => {
 			res.isConfirmed && edit.mutate(res.value)
@@ -80,8 +82,10 @@ export default function Products () {
 			deleteFn={deleteFn}
 			caption="Product"
 			columns={[
+				["id", "Product ID", true],
 				["product_name", "Product Name"],
 				["desc", "Description"],
+				["price", "Price (IDR)"],
 				["product_image", "Image"]
 			]}
 			data={query?.data?.rows}

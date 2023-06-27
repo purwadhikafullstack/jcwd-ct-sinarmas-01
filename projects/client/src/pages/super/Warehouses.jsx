@@ -18,7 +18,7 @@ export default function ManageWareHouses() {
   const add = useAddMutation();
   const edit = useEditMutation();
   const del = useDeleteMutation();
-  const WarehouseForm = (props) =>  (
+  const WarehouseForm = (props) => (
     <form onSubmit={(e) => e.preventDefault()}>
       <input
         name="warehouse_name"
@@ -58,9 +58,7 @@ export default function ManageWareHouses() {
         const latlng = toLatLng(geo);
         setMapPos(latlng.lat, latlng.lng);
         const popup = Swal.getPopup();
-        const name = document.getElementById(
-          `${id}-warehouse_name`
-        ).textContent;
+        const name = document.getElementById(`${id}-warehouse_name`).dataset.value;
         popup.querySelector('[name="warehouse_name"]').value = name;
       },
       preConfirm: () => {
@@ -69,7 +67,7 @@ export default function ManageWareHouses() {
       showCancelButton: true,
     }).then((result) => {
       const form = new FormData(result.value);
-      const addressId = document.getElementById(`${id}-address.id`).textContent;
+      const addressId = document.getElementById(`${id}-address.id`).dataset.value;
       form.append("q", `${mapPos.lat}, ${mapPos.lng}`);
       form.append("address_id", addressId);
       form.append("id", id);
@@ -89,10 +87,11 @@ export default function ManageWareHouses() {
     <>
       <Datas
         columns={[
+          ["id", "warehouse id", true],
           ["warehouse_name", "warehouse name"],
           ["address.address_name", "address"],
           ["address.geolocation", "Geo"],
-          ["address.id", "Address ID"],
+          ["address.id", "Address ID", true],
           ["user.username", "username"],
         ]}
         data={query.data?.rows}

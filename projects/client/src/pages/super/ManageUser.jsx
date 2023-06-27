@@ -41,9 +41,9 @@ export default function ManageUser() {
     }).then (res => res.isConfirmed && del.mutate(id));
   };
   const editFn = (id) => {
-    const email = document.getElementById(`${id}-email`).textContent;
-    const fullname = document.getElementById(`${id}-fullname`).textContent;
-    const username = document.getElementById(`${id}-username`).textContent;
+    const email = document.getElementById(`${id}-email`).dataset.value;
+    const fullname = document.getElementById(`${id}-fullname`).dataset.value;
+    const username = document.getElementById(`${id}-username`).dataset.value;
     Swal.fire({
       title: "Edit Form",
       html: <UserForm id={id} />,
@@ -68,6 +68,7 @@ export default function ManageUser() {
     <div className="text-center">
       <Datas 
         columns={[
+          ["id", "User ID", true],
           ["email", "email"], 
           ["fullname", "Full name"],
           ["username", "username"], 

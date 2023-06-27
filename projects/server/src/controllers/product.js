@@ -9,7 +9,7 @@ const productController = {
 	 * */
 	addProduct: async function (req, res) {
 		try {
-			const { product_name, desc } = req.body;
+			const { product_name, desc, price } = req.body;
 			const path = req.file?.path || "";
 			console.log(path);
 			const dest = path ? path
@@ -20,10 +20,12 @@ const productController = {
 				product_name,
 				desc,
 				product_image,
+				price
 			});
 			return res.status(201).json({ message: "Product Added", product });
 		} catch (e) {
-			return res.status(500).json({ message: e.errors[0]?.message || e.message });
+			console.log(e);
+			return res.status(500).json({ message: e.errors ? e.errors[0].message : e.message });
 		}
 	},
 	/**
@@ -33,7 +35,7 @@ const productController = {
 	editProduct: async function (req, res) {
 		try {
 			const { id } = req.params;
-			const { product_name, desc } = req.body;
+			const { product_name, desc, price } = req.body;
 			const path = req?.file?.path || "";
 			const dest = path ? path
 				.replace(/\\/g, "/")
@@ -43,6 +45,7 @@ const productController = {
 			product.product_name = product_name || product.product_name;
 			product.product_image = product_image || product.product_image;
 			product.desc = desc || product.desc;
+			product.price = price || product.price;
 			await product.save();
 			return res.status(200).json({ message: "Product Edited", product });
 		} catch (e) {

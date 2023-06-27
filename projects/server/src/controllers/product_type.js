@@ -1,5 +1,6 @@
 const { models } = require("../models");
 const { ProductTypes } = models;
+const { paginate } = require("../lib");
 
 const productTypeController = {
 	/**
@@ -52,6 +53,24 @@ const productTypeController = {
 			return res.status(200).json({ message: "Delete Success", productType });
 		} catch (err) {
 			return res.status(500).json({ message: err.message, err });
+		}
+	},
+	/**
+	 * Mengambil semua tipe produk
+	 * @param {import("express").Request} req 
+	 * @param {import("express").Response} res 
+	 */
+	getTypes: async function (req, res) {
+		try {
+			const page = Number(req.params?.page);
+			const { offset, limit } = paginate(page);
+			const productTypes = await ProductTypes.findAndCountAll({
+				limit, offset
+			});
+			
+			return res.status(200).json({ message: "Fetch Success", ...productTypes });
+		} catch (error) {
+			return res.status(500).json({ message: error.message, error });
 		}
 	}
 };

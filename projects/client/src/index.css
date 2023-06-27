@@ -16,13 +16,13 @@
 		@apply w-auto text-gray-800 dark:text-gray-300 shadow-md shadow-blue-700;
 	}
 	.swal2-html-container form {
-		@apply -m-5 w-auto flex flex-col;
+		@apply -m-5 text-left w-auto flex flex-col;
 	}
 	.swal2-actions {
 		@apply p-5;
 	}
 	div:where(.swal2-container) .swal2-html-container {
-		@apply w-auto p-5 h-fit text-center text-gray-800 dark:text-gray-300 overflow-y-auto overflow-x-hidden !important;
+		@apply w-auto p-5 h-fit text-gray-800 dark:text-gray-300 overflow-y-auto overflow-x-hidden !important;
 	}
 	.swal2-html-container .leaflet-container {
 		@apply mt-4 w-[30rem] mx-5 h-[50vh] !important;

@@ -41,7 +41,7 @@ function App() {
   const queryClient = new QueryClient({
     defaultOptions: {
       mutations: mutateConfig,
-      queries: settings,
+      queries: settings
     },
   });
 

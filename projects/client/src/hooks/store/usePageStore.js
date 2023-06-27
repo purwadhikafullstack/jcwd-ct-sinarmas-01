@@ -14,7 +14,8 @@ const usePageStore = create((set) => ({
 	})),
 	setCount: (num) => set({ count: num }),
 	isLoading: true,
-	setLoading: (boo) => set({ isLoading: boo })
+	setLoading: (bool) => set({ isLoading: bool }),
+	toggleLoading: () => set(state => ({ isLoading: !state.isLoading }))
 }));
 
 export default usePageStore;
