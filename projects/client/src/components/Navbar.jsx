@@ -1,29 +1,25 @@
 import {
   Navbar,
-  Button,
-  Dropdown,
-  Indicator,
-  Badge,
+  Button
 } from "react-daisyui";
-import { useNavigate } from "react-router-dom";
-import { FaUserCircle, FaShoppingCart } from "react-icons/fa";
+import { useNavigate, Link } from "react-router-dom";
+import { FaUserCircle } from "react-icons/fa";
 import DarkButton from "@/components/DarkButton";
+import { getRole, getToken } from "@/api/token";
 export default function NavComponents() {
   const navigate = useNavigate();
+  const role = getToken() ? getRole().toLowerCase() : "";
   return (
     <Navbar className='bg-base-300 py-3 px-1'>
       <Navbar.Start>
-        <Button
-          onClick={() => navigate("/")}
-          className='upper-case'
-          color='ghost'>
-          Multi-Warehouse E-commerce
-        </Button>
+        <Link to="/" className="p-4">
+          Multi-warehouse shop
+        </Link>
       </Navbar.Start>
       <Navbar.End className="gap-1">
         <DarkButton />
         <Button
-          onClick={() => navigate("/register")}
+          onClick={() => navigate(`/${role || "register"}`)}
           shape="circle"
           color="ghost">
           <FaUserCircle />

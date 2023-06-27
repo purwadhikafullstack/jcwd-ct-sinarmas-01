@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 
 export function updateToken(token) {
-	Cookies.set("login", token, process.env.COOKIE_EXPIRE);
+	Cookies.set("login", token, { expires: 7 });
 }
 
 export function removeToken() {
@@ -12,6 +12,23 @@ export function getToken() {
 	return Cookies.get("login");
 }
 
-export default {
-	updateToken, removeToken, getToken
+export function decodeToken() {
+	const token = getToken() || "";
+	const json = token ? JSON.parse(atob(token.split(".")[1])) : {};
+	return json;
+}
+
+export function isExpired() {
+	const json = decodeToken();
+	if (json?.exp * 1000 < Date.now()) {
+		removeToken();
+		return true;
+	}
+	return false;
+}
+
+export function getRole() {
+	const json = decodeToken();
+	const role = json.role || "";
+	return role.toLowerCase();
 }

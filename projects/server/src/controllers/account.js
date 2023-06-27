@@ -21,6 +21,15 @@ const accountController = {
       return res.status(500).json(error);
     }
   },
+  getRole: async function (req, res) {
+    try {
+      const { user } = req;
+      const role = user.role || null;
+      return res.status(200).json({ message: `The role is ${role}`, role: role.toLowerCase() });
+    } catch (e) {
+      return res.status(500).json({ message: e.message });
+    }
+  }
 };
 
 module.exports = accountController;

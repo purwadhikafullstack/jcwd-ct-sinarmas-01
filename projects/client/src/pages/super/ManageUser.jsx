@@ -1,12 +1,10 @@
-import { useState } from "react";
 import Swal from "@/components/Swal";
 import Datas from "@/components/Datas";
 import useUserMutations from "@/hooks/mutations/super/useUserMutations";
-import useUserQuery from "@/hooks/queries/useUserQuery";
+import useUserQuery from "@/hooks/queries/common/useUserQuery";
 import formToObj from "@/libs/formToObj";
-import countToArr from "@/libs/countToArr";
 
-const UserForm = (props) => (
+const UserForm = () => (
   <form onSubmit={() => false}>
     <input className="swal2-input" name="email" placeholder="Enter E-mail" />
     <input className="swal2-input" name="fullname" placeholder="Enter Full Name" />
@@ -15,22 +13,19 @@ const UserForm = (props) => (
 );
 
 export default function ManageUser() {
-  const [editId, setEditId] = useState(0);
-
   const users = useUserQuery();
-  const { goToPage, nextPage, prevPage, pagesCount, page } = users;
   const { useAddMutation, useDeleteMutation, useEditMutation } = useUserMutations();
   const add = useAddMutation();
   const edit = useEditMutation();
   const del = useDeleteMutation();
-  const pages = countToArr(pagesCount);
   const newFn = () => {
     Swal.fire({
       title: "New Warehouse Admin",
       html: <UserForm id={0} />,
       preConfirm: () => {
         return Swal.getPopup().querySelector("form");
-      }
+      },
+      showCancelButton: true
     }).then(res => {
       const form = new FormData(res.value);
       console.log(formToObj(form));
@@ -46,10 +41,9 @@ export default function ManageUser() {
     }).then (res => res.isConfirmed && del.mutate(id));
   };
   const editFn = (id) => {
-    setEditId(id);
-    const email = document.getElementById(`${id}-email`).textContent;
-    const fullname = document.getElementById(`${id}-fullname`).textContent;
-    const username = document.getElementById(`${id}-username`).textContent;
+    const email = document.getElementById(`${id}-email`).dataset.value;
+    const fullname = document.getElementById(`${id}-fullname`).dataset.value;
+    const username = document.getElementById(`${id}-username`).dataset.value;
     Swal.fire({
       title: "Edit Form",
       html: <UserForm id={id} />,
@@ -74,7 +68,7 @@ export default function ManageUser() {
     <div className="text-center">
       <Datas 
         columns={[
-          ["id", "User ID"], 
+          ["id", "User ID", true],
           ["email", "email"], 
           ["fullname", "Full name"],
           ["username", "username"], 
@@ -85,12 +79,6 @@ export default function ManageUser() {
         deleteFn={deleteFn}
         newFn={newFn}
         caption="User"
-        goToPage={goToPage}
-        nextPage={nextPage}
-        prevPage={prevPage}
-        page={page}
-        pagesCount={users?.data?.pages}
-        pages={pages}
       />
     </div>
   )

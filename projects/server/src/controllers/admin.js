@@ -1,31 +1,9 @@
 const { models } = require("../models");
 const { Users, Warehouses } = models;
-const transporter = require("../lib/transporter");
 const crypto = require("crypto");
 const { mailsend } = require("../lib");
 
 const adminController = {
-  /**
-   * Menambah user baru dari halaman admin
-   * @param {import("express").Request} req
-   * @param {import("express").Response} res
-   */
-  addUser: async function (req, res) {
-    try {
-      const { email, username, fullname } = req.body;
-      const password = crypto.randomBytes(8).toString('hex');
-      const user = await Users.create({ email, password, username, fullname, role: "Admin" });
-      mailsend.compose("Verification", email, `
-        <h1>Welcome to Multi-Warehouse E-Commerce. Hello ${username}, please confirm your account 
-        <a href="${process.env.WHITELISTED_DOMAIN}/account/verify/${token}">here</a>
-        </h1>
-      `);
-      return res.status(201).json({ message: "User added", user });
-    } catch (error) {
-      return res.status(500).json(error);
-    }
-  },
-
   /**
    * Admin mengubah data user
    * @param {import("express").Request} req
