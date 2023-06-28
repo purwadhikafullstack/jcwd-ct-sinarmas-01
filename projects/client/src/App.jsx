@@ -16,6 +16,7 @@ const Super = lazy(() => import("./pages/super/Super"));
 const Admin = lazy(() => import("./pages/admin/Admin"));
 const ManageProducts = lazy(() => import("./pages/super/Products"));
 const UserPage = lazy(() => import("./pages/user/User"));
+const Explore = lazy(() => import("./pages/user/Explore"));
 
 function App() {
   const settings = {
@@ -49,6 +50,7 @@ function App() {
         </Route>
         <Route path="/user" element={<Layout role="user" />}>
           <Route index element={<Suspensed><UserPage /></Suspensed>} />
+          <Route path="explore" element={<Suspensed><Explore /></Suspensed>} />
         </Route>
         <Route path="*" element={<Error404 />} />
       </Routes>

@@ -15,20 +15,24 @@ export default function Item(props) {
 	const navigate = useNavigate();
 	return (
 		<Card className="w-full mb-4">
-			<Card.Image src={product_image} alt={"Product Image"} />
+			<Card.Image 
+				src={product_image} 
+				alt={"Product Image"}
+				className="max-w-full max-h-[400px]"
+		  />
 			<Card.Body>
 				<Card.Title className="font-bold">
 					{product_name}
 				</Card.Title>
-				<div className="mb-1">
-					{cropText(desc)}
-				</div>
-				<div>
-					<b>Price : </b>
-					<div>Rp{price}</div>
+				<div className="mb-1 text-left">
+					{cropText(desc, 100)}
+					<div>
+						<b>Price : </b>
+						<span>Rp{price}</span>
+					</div>
 				</div>
 			</Card.Body>
-			<Card.Actions className="p-4 flex flex-wrap gap-3">
+			<Card.Actions className="p-5 flex justify-end flex-wrap gap-3">
 				<Button color="info" onClick={() => navigate(`detail/${id}`)}>
 					More Info
 				</Button>

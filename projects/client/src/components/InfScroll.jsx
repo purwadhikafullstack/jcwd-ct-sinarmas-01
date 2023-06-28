@@ -35,9 +35,9 @@ export default function InfScroll(props) {
     <>Error : {error.message}</>
   ) : (
     <>
-      {data.pages.map((group, i) => (
+      {data && data?.pages?.map((group, i) => (
         <Fragment key={i}>
-          {group.data.map((value, key) => (
+          {group?.rows?.map((value, key) => (
             <Item key={key} {...value} />
           ))}
         </Fragment>
@@ -47,7 +47,6 @@ export default function InfScroll(props) {
           fullWidth
           onClick={fetchNextPage}
           color="info"
-          className="mx-4"
           ref={ref}
           disabled={!hasNextPage || isFetchingNextPage}
         >
