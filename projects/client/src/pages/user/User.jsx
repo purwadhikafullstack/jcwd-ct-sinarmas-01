@@ -13,8 +13,8 @@ export default function User () {
           </Card.Title>
           <div className="flex flex-wrap gap-3">
             <LogoutBtn />
-            <Button onClick={() => navigate("/")} fullWidth>
-              Go To Home
+            <Button onClick={() => navigate("explore")} fullWidth>
+              Explore Shop
             </Button>
           </div>
         </Card.Body>
