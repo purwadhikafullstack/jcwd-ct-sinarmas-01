@@ -32,3 +32,15 @@ export function getRole() {
 	const role = json.role || "";
 	return role.toLowerCase();
 }
+
+export function getUsername() {
+	const json = decodeToken();
+	const username = json.username || "";
+	return username;
+}
+
+export function getEmail() {
+	const json = decodeToken();
+	const email = json.email || "";
+	return email;
+}

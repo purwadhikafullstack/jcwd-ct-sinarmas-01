@@ -2,7 +2,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Layout from "./layout/Layout";
 import { Routes, Route } from "react-router-dom";
 import Error404 from "./pages/error/Error404";
-import Swal from "@/components/Swal";
 import { lazy } from "react";
 import Suspensed from "./components/Suspensed";
 
@@ -16,31 +15,15 @@ const Reset = lazy(() => import("./pages/common/Reset"));
 const Super = lazy(() => import("./pages/super/Super"));
 const Admin = lazy(() => import("./pages/admin/Admin"));
 const ManageProducts = lazy(() => import("./pages/super/Products"));
+const UserPage = lazy(() => import("./pages/user/User"));
 
 function App() {
   const settings = {
     networkMode: "always",
   };
-  const mutateConfig = {
-    ...settings,
-    onError: (err) => {
-      Swal.fire({
-        title: "Error",
-        text: err.response?.data?.message || err.message,
-        icon: "error"
-      });
-    },
-    onSuccess: (data) => {
-      Swal.fire({
-        title: "Success",
-        text: data.message || "Action Success",
-        icon: "success"
-      });
-    }
-  };
   const queryClient = new QueryClient({
     defaultOptions: {
-      mutations: mutateConfig,
+      mutations: settings,
       queries: settings
     },
   });
@@ -63,6 +46,9 @@ function App() {
         </Route>
         <Route path="/admin" element={<Layout role="admin" />}>
           <Route index element={<Suspensed><Admin /></Suspensed>} />
+        </Route>
+        <Route path="/user" element={<Layout role="user" />}>
+          <Route index element={<Suspensed><UserPage /></Suspensed>} />
         </Route>
         <Route path="*" element={<Error404 />} />
       </Routes>

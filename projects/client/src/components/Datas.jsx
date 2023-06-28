@@ -104,8 +104,8 @@ export default function Datas(props) {
             </tfoot>
           </table>
         )}
-        {isLoading ? <Loading /> : null}
-        {isEmpty ? <NoContent /> : null}
+        {isLoading && <Loading />}
+        {isEmpty && <NoContent />}
       </div>
     </>
   );

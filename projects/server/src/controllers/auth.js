@@ -8,14 +8,14 @@ const { hash, mailsend, randomStr } = require("../lib");
 const AuthController = {
   registerUser: async (req, res) => {
     try {
-      const { email, fullname, username } = req.body;
+      const { email, fullname, username, role = "User" } = req.body;
       const token = crypto.randomBytes(20).toString("hex");
       const password = randomStr();
       const user = await Users.create({
         fullname,
         username,
         email,
-        role: "User",
+        role,
         isVerified: 0,
         password,
       });
