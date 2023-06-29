@@ -1,5 +1,5 @@
 const { models } = require("../models");
-const { Users, Warehouses } = models;
+const { Users, Warehouses, Verification } = models;
 const crypto = require("crypto");
 const { mailsend } = require("../lib");
 
@@ -31,6 +31,7 @@ const adminController = {
   removeUser: async function (req, res) {
     try {
       const { user_id } = req.params;
+      await Verification.destroy({ where: { user_id } });
       const user = await Users.destroy({ where: { id: user_id }});
       return res.status(200).json({ message: "Delete Success", user });
     } catch (error) {

@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Error404 from "./pages/error/Error404";
 import { lazy } from "react";
 import Suspensed from "./components/Suspensed";
+import Detail from "./pages/user/Detail";
 
 const Home = lazy(() => import("./pages/Home"));
 const Register = lazy(() => import("./pages/common/Register"));
@@ -50,7 +51,9 @@ function App() {
         </Route>
         <Route path="/user" element={<Layout role="user" />}>
           <Route index element={<Suspensed><UserPage /></Suspensed>} />
-          <Route path="explore" element={<Suspensed><Explore /></Suspensed>} />
+        </Route>
+        <Route path="/explore" element={<Suspensed><Explore /></Suspensed>}>
+          <Route path="detail/:id" element={<Detail />} /> 
         </Route>
         <Route path="*" element={<Error404 />} />
       </Routes>

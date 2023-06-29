@@ -69,7 +69,7 @@ function initModels(sequelize) {
   StockMutations.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasMany(StockMutations, { as: "stock_mutations", foreignKey: "user_id"});
   Verification.belongsTo(Users, { as: "user", foreignKey: "user_id"});
-  Users.hasMany(Verification, { as: "verifications", foreignKey: "user_id"});
+  Users.hasOne(Verification, { as: "verification", foreignKey: "user_id", onDelete: "CASCADE" });
   Warehouses.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasMany(Warehouses, { as: "warehouses", foreignKey: "user_id"});
   StockJurnals.belongsTo(Warehouses, { as: "warehouse", foreignKey: "warehouse_id"});

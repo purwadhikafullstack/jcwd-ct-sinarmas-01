@@ -1,10 +1,8 @@
 import { Button } from "react-daisyui"
 import { removeToken } from "@/api/token";
-import { useNavigate } from "react-router-dom";
 import Swal from "./Swal";
 
 export default function LogoutBtn() {
-  const navigate = useNavigate();
   const logout = () => {
     Swal.fire({
       title: "Confirm",
@@ -14,7 +12,7 @@ export default function LogoutBtn() {
     }).then (res => {
       if(res.isConfirmed) {
         removeToken();
-        navigate("/");
+        window.location.href = "/";
       }
     })
   }

@@ -90,7 +90,7 @@ const productController = {
 		try {
 			const { id } = req.params;
 			const product = await Products.findOne({ where: { id } });
-			return res.status(200).json({ message: "Fetch success", product });
+			return res.status(200).json({ message: "Fetch success", ...product.dataValues });
 		} catch (e) {
 			res.status(500).json({ message: e.message });
 		}

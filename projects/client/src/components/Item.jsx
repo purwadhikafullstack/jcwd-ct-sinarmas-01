@@ -1,5 +1,6 @@
 import { Button, Card } from "react-daisyui";
 import cropText from "@/libs/cropText";
+import formatRp from "@/libs/formatRp";
 import { useNavigate } from "react-router-dom";
 
 /**
@@ -14,27 +15,28 @@ export default function Item(props) {
 	const { product_name, product_image, price, desc, id } = props;
 	const navigate = useNavigate();
 	return (
-		<Card className="w-full mb-4">
-			<Card.Image 
-				src={product_image} 
-				alt={"Product Image"}
-				className="max-w-full max-h-[400px]"
-		  />
+		<Card className="w-full h-[50%] mb-4">
 			<Card.Body>
-				<Card.Title className="font-bold">
-					{product_name}
-				</Card.Title>
-				<div className="mb-1 text-left">
-					{cropText(desc, 100)}
-					<div>
-						<b>Price : </b>
-						<span>Rp{price}</span>
+				<div className="flex justify-start flex-wrap gap-6">
+					<div className="ml-3 w-[100px] h-[100px]">
+						<img src={product_image} alt={product_name + " Image"} className="aspect-square max-w-[100px] max-h-[100px]" />
+					</div>
+					<div className="text-left">
+						<Card.Title className="font-bold text-3xl">
+							{product_name} <br />
+						</Card.Title>
+						<div className="font-extrabold text-lg">
+							{formatRp(price)}
+						</div>
+						<div className="mb-1 text-left text-sm">
+							{cropText(desc, 100)}
+						</div>
 					</div>
 				</div>
 			</Card.Body>
 			<Card.Actions className="p-5 flex justify-end flex-wrap gap-3">
-				<Button color="info" onClick={() => navigate(`detail/${id}`)}>
-					More Info
+				<Button color="info" onClick={() => navigate(`detail/${id}`)} fullWidth>
+					Details
 				</Button>
 			</Card.Actions>
 		</Card>
