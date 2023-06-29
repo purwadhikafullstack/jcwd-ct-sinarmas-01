@@ -1,3 +1,4 @@
+import LogoutBtn from "@/components/LogoutBtn";
 import { Card, Button } from "react-daisyui";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +11,7 @@ export default function Super () {
           Superadmin Menu
         </Card.Title>
         <div className="flex flex-wrap gap-3">
+          <LogoutBtn />
           <Button onClick={() => navigate("warehouses")} fullWidth>Manage Warehouses</Button>
           <Button onClick={() => navigate("users")} fullWidth>Manage Users</Button>
           <Button onClick={() => navigate("products")} fullWidth>Manage Products</Button>

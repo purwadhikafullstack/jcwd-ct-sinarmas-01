@@ -4,7 +4,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import { decodeToken } from "@/api/token";
 
 function Layout (props) {
-  const { role } = props;
+  const { role, children } = props;
   const token = decodeToken();
   const myrole = !token.role ? "" : token.role.toLowerCase();
 
@@ -14,7 +14,7 @@ function Layout (props) {
       <div className="text-center p-5 mb-5">
         {
           !role ? 
-            <Outlet /> :
+            (children || <Outlet />) :
             ((role === myrole) ? <Outlet /> : <Navigate to={`/${myrole}`} replace />)
         }
       </div>
