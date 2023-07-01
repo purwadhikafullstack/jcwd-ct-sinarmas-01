@@ -24,11 +24,11 @@ class Stocks extends Sequelize.Model {
         key: 'id'
       }
     },
-    product_type_id: {
+    product_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'product_types',
+        model: 'products',
         key: 'id'
       }
     }
@@ -52,10 +52,10 @@ class Stocks extends Sequelize.Model {
         ]
       },
       {
-        name: "fk_stock_product_type1_idx",
+        name: "product_id",
         using: "BTREE",
         fields: [
-          { name: "product_type_id" },
+          { name: "product_id" },
         ]
       },
     ]

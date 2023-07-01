@@ -36,8 +36,6 @@ function initModels(sequelize) {
   const Verification = _Verification(sequelize, DataTypes);
   const Warehouses = _Warehouses(sequelize, DataTypes);
 
-  Profiles.belongsTo(Addresses, { as: "address", foreignKey: "address_id"});
-  Addresses.hasMany(Profiles, { as: "profiles", foreignKey: "address_id"});
   Warehouses.belongsTo(Addresses, { as: "address", foreignKey: "address_id"});
   Addresses.hasMany(Warehouses, { as: "warehouses", foreignKey: "address_id"});
   CartItems.belongsTo(Carts, { as: "cart", foreignKey: "cart_id"});
@@ -46,10 +44,12 @@ function initModels(sequelize) {
   Categories.hasMany(Products, { as: "products", foreignKey: "category_id"});
   Checkouts.belongsTo(CheckoutItems, { as: "checkout_item", foreignKey: "checkout_items_id"});
   CheckoutItems.hasMany(Checkouts, { as: "checkouts", foreignKey: "checkout_items_id"});
-  Stocks.belongsTo(ProductTypes, { as: "product_type", foreignKey: "product_type_id"});
-  ProductTypes.hasMany(Stocks, { as: "stocks", foreignKey: "product_type_id"});
   ProductTypes.belongsTo(Products, { as: "product", foreignKey: "product_id"});
   Products.hasMany(ProductTypes, { as: "product_types", foreignKey: "product_id"});
+  Stocks.belongsTo(Products, { as: "product", foreignKey: "product_id"});
+  Products.hasMany(Stocks, { as: "stocks", foreignKey: "product_id"});
+  Addresses.belongsTo(Profiles, { as: "address", foreignKey: "address_id"});
+  Profiles.hasMany(Addresses, { as: "addresses", foreignKey: "address_id"});
   Carts.belongsTo(Profiles, { as: "profile", foreignKey: "profile_id"});
   Profiles.hasMany(Carts, { as: "carts", foreignKey: "profile_id"});
   CartItems.belongsTo(Stocks, { as: "stock", foreignKey: "stock_id"});
@@ -60,8 +60,6 @@ function initModels(sequelize) {
   Stocks.hasMany(StockJurnals, { as: "stock_jurnals", foreignKey: "stock_id"});
   StockMutations.belongsTo(Stocks, { as: "stock", foreignKey: "stock_id"});
   Stocks.hasMany(StockMutations, { as: "stock_mutations", foreignKey: "stock_id"});
-  StockJurnals.belongsTo(TipeJurnals, { as: "tipe_jurnal", foreignKey: "tipe_jurnal_id"});
-  TipeJurnals.hasMany(StockJurnals, { as: "stock_jurnals", foreignKey: "tipe_jurnal_id"});
   Profiles.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasMany(Profiles, { as: "profiles", foreignKey: "user_id"});
   Reset.belongsTo(Users, { as: "user", foreignKey: "user_id"});
@@ -69,7 +67,7 @@ function initModels(sequelize) {
   StockMutations.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasMany(StockMutations, { as: "stock_mutations", foreignKey: "user_id"});
   Verification.belongsTo(Users, { as: "user", foreignKey: "user_id"});
-  Users.hasOne(Verification, { as: "verification", foreignKey: "user_id", onDelete: "CASCADE" });
+  Users.hasMany(Verification, { as: "verifications", foreignKey: "user_id"});
   Warehouses.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasMany(Warehouses, { as: "warehouses", foreignKey: "user_id"});
   StockJurnals.belongsTo(Warehouses, { as: "warehouse", foreignKey: "warehouse_id"});

@@ -19,16 +19,9 @@ class Profiles extends Sequelize.Model {
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
       references: {
         model: 'users',
-        key: 'id'
-      }
-    },
-    address_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'addresses',
         key: 'id'
       }
     }
@@ -42,6 +35,7 @@ class Profiles extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "id" },
+          { name: "user_id" },
         ]
       },
       {
@@ -49,13 +43,6 @@ class Profiles extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "user_id" },
-        ]
-      },
-      {
-        name: "fk_profile_address1_idx",
-        using: "BTREE",
-        fields: [
-          { name: "address_id" },
         ]
       },
     ]

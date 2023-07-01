@@ -20,6 +20,7 @@ class Reset extends Sequelize.Model {
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
       references: {
         model: 'users',
         key: 'id'
@@ -35,6 +36,7 @@ class Reset extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "id" },
+          { name: "user_id" },
         ]
       },
       {

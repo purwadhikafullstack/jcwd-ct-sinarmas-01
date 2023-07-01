@@ -27,6 +27,14 @@ class Addresses extends Sequelize.Model {
     geolocation: {
       type: DataTypes.STRING(50),
       allowNull: true
+    },
+    address_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'profiles',
+        key: 'id'
+      }
     }
   }, {
     tableName: 'addresses',
@@ -38,6 +46,13 @@ class Addresses extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "id" },
+        ]
+      },
+      {
+        name: "address_id",
+        using: "BTREE",
+        fields: [
+          { name: "address_id" },
         ]
       },
     ]

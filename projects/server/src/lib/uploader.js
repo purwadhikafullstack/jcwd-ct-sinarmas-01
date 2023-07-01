@@ -8,7 +8,7 @@ const fs = require("fs");
 function uploader(directory, fileNamePrefix) {
   // parameter pertama file deriktori dan kedua file name prefixnya
   // lokasi penyimpanan file
-  let defaultDir = "./public";
+  let defaultDir = "./public/images";
   // diskStorage: untuk menyimpan file dari FE ke directory BE
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -28,7 +28,7 @@ function uploader(directory, fileNamePrefix) {
     },
   });
   const fileFilter = (req, file, cb) => {
-    const ext = /\.(jpg|jpeg|png|JPG|PNG|JPEG)/;
+    const ext = /\.(jpg|jpeg|png|JPG|PNG|JPEG|webp|WEBP)/;
     if (!file.originalname.match(ext)) {
       return cb(new Error("Invalid file type"), false);
     }
