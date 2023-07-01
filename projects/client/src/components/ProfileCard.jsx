@@ -1,13 +1,8 @@
-import { Button, Card } from "react-daisyui";
-import { removeToken, getEmail } from "@/api/token";
-import { useNavigate } from "react-router-dom";
+import { Card } from "react-daisyui";
+import { getEmail } from "@/api/token";
+import LogoutBtn from "./LogoutBtn";
 
-export default function ProfileCard () {
-  const navigate = useNavigate();
-  const logout = () => {
-    removeToken();
-    navigate("/");
-  }
+export default function ProfileCard() {
   return (
     <Card className="mx-5 mb-3">
       <Card.Body>
@@ -15,9 +10,9 @@ export default function ProfileCard () {
           <b>{getEmail()}</b>
         </Card.Title>
         <div className="flex flex-wrap gap-2">
-          <Button onClick={logout} fullWidth>Logout</Button>
+          <LogoutBtn />
         </div>
       </Card.Body>
     </Card>
-  )
+  );
 }

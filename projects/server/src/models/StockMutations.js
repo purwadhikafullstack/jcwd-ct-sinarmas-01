@@ -34,7 +34,8 @@ class StockMutations extends Sequelize.Model {
     },
     isApproved: {
       type: DataTypes.TINYINT,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     stock_id: {
       type: DataTypes.INTEGER,

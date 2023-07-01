@@ -6,11 +6,16 @@ const crypto = require("crypto");
 const { hash, mailsend, randomStr } = require("../lib");
 
 const AuthController = {
+  /**
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * */
   registerUser: async (req, res) => {
     try {
       const { email, fullname, username, role = "User" } = req.body;
       const token = crypto.randomBytes(20).toString("hex");
       const password = randomStr();
+      const profile_pic = `${req.protocol}://${req.headers.host}/default-avatar.png`;
       const user = await Users.create({
         fullname,
         username,
@@ -18,6 +23,7 @@ const AuthController = {
         role,
         isVerified: 0,
         password,
+        profile_pic
       });
       await Verification.create({
         token,
