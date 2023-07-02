@@ -107,7 +107,6 @@ export default function Products() {
         ["product_name", "Product Name"],
         ["desc", "Description"],
         ["price", "Price (IDR)"],
-        ["product_image", "Image"],
       ]}
       data={query?.data?.rows}
     />
