@@ -6,7 +6,30 @@ const cartController = {
 	 * @param {import("express").Request} req
 	 * @param {import("express").Response} res
 	 * */
-	addToCart: async (req, res) => {
+	addToCart: async function (req, res) {
+		try {
+			
+		} catch (e) {
+			return res.status(500).json({ message: e.message, error: e });
+		}
+	},
+	/**
+	 * @param {import("express").Request} req
+	 * @param {import("express").Response} res
+	 * */
+	deleteFromCart: async function (req, res) {
+		try {
+			const { id } = req.params;
+			await CartItems.destroy({ where: { id } });
+		} catch (e) {
+			return res.status(500).json({ message: e.message, error: e });
+		}
+	},
+	/**
+	 * @param {import("express").Request} req
+	 * @param {import("express").Response} res
+	 * */
+	increase: async function (req, res) {
 		try {
 
 		} catch (e) {
@@ -17,21 +40,13 @@ const cartController = {
 	 * @param {import("express").Request} req
 	 * @param {import("express").Response} res
 	 * */
-	deleteFromCart: async (req, res) => {
+	getContents: async function (req, res) {
 		try {
-
-		} catch (e) {
-			return res.status(500).json({ message: e.message, error: e });
+			const { user_id } = req.params;
+			const cart = await Carts.findAndCountAll({ where: { user_id } });
+			return res.status(200).json({ message: "Fetch Success", ...cart });
 		}
-	},
-	/**
-	 * @param {import("express").Request} req
-	 * @param {import("express").Response} res
-	 * */
-	increase: async (req, res) => {
-		try {
-
-		} catch (e) {
+		catch (e) {
 			return res.status(500).json({ message: e.message, error: e });
 		}
 	}

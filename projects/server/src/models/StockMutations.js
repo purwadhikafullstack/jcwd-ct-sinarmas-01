@@ -24,14 +24,6 @@ class StockMutations extends Sequelize.Model {
         key: 'id'
       }
     },
-    user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'users',
-        key: 'id'
-      }
-    },
     isApproved: {
       type: DataTypes.TINYINT,
       allowNull: true,
@@ -62,13 +54,6 @@ class StockMutations extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "warehouse_id" },
-        ]
-      },
-      {
-        name: "fk_stock_mutation_user1_idx",
-        using: "BTREE",
-        fields: [
-          { name: "user_id" },
         ]
       },
       {

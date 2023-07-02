@@ -20,7 +20,6 @@ class Verification extends Sequelize.Model {
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
       references: {
         model: 'users',
         key: 'id'
@@ -36,7 +35,6 @@ class Verification extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "id" },
-          { name: "user_id" },
         ]
       },
       {

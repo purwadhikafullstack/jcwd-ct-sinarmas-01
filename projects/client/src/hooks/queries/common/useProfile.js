@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import getProfile from "@/api/common/getProfile";
 
-export default function useProfile(username) {
+export default function useProfile(email) {
 	const { data, isLoading, isError } = useQuery({
-		queryFn: async () => await getProfile(username),
-		queryKey: ["users", username],
+		queryFn: async () => await getProfile(email),
+		queryKey: ["users", email],
 	});
 
 	return {

@@ -28,11 +28,11 @@ class Addresses extends Sequelize.Model {
       type: DataTypes.STRING(50),
       allowNull: true
     },
-    address_id: {
+    user_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
-        model: 'profiles',
+        model: 'users',
         key: 'id'
       }
     }
@@ -49,10 +49,10 @@ class Addresses extends Sequelize.Model {
         ]
       },
       {
-        name: "address_id",
+        name: "fk_addresses_users1_idx",
         using: "BTREE",
         fields: [
-          { name: "address_id" },
+          { name: "user_id" },
         ]
       },
     ]

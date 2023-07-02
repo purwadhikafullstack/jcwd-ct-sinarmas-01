@@ -37,8 +37,8 @@ const accountController = {
    * */
   userDetail: async function (req, res) {
     try {
-      const { username } = req.params;
-      const user = await Users.findOne({ where: { username } });
+      const { email } = req.params;
+      const user = await Users.findOne({ where: { email } });
       if (!user) return res.status(404).json({ message: "Account not found" });
       return res.status(200).json({ message: "Fetch Success", ...user.dataValues });
     } catch (e) {

@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import useResetPass from "@/hooks/mutations/common/useResetPass";
 import { useState, useEffect } from "react";
 
-export default function Forgot() {
+export default function Forgot(props) {
 	const mutation = useResetPass();
 	const [cooldown, setCooldown] = useState(0);
 	const formik = useFormik({
@@ -15,6 +15,11 @@ export default function Forgot() {
 			setCooldown(30);
 		}
 	});
+
+	useEffect(() => {
+		props.timer > 0 && setCooldown(Number(props.timer));
+	}, [props.timer]);
+	
 	useEffect(() => {
 		let interval;
 		if(cooldown) {
@@ -42,7 +47,7 @@ export default function Forgot() {
 						</Button>
 					</form>
 					<div>
-						We will send you a reset password link to your e-mail
+						Please check your e-mail inbox and spam box
 					</div>
 				</Card.Body>
 			</Card>

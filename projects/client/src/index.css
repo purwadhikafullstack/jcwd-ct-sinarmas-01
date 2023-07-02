@@ -39,4 +39,7 @@
 	.table thead, .table tfoot {
 		@apply bg-base-300;
 	}
+	.card figure {
+		@apply p-5;
+	}
 }
