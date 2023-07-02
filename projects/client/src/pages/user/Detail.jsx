@@ -37,7 +37,7 @@ export default function Detail(props) {
                   alt={data.product_name}
                 />
               </figure>
-              <div>
+              <div className="w-full">
                 <b className="text-3xl font-extrabold mb-3">
                   {data.product_name}
                 </b>

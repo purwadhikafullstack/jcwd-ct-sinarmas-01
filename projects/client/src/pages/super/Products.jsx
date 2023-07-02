@@ -1,12 +1,15 @@
 import Datas from "@/components/Datas";
 import useProductMutations from "@/hooks/mutations/super/useProductMutations";
 import useProductQuery from "@/hooks/queries/common/useProductQuery";
+import CurrencyInput from "react-currency-input-field";
 import Swal from "@/components/Swal";
 import formToObj from "@/libs/formToObj";
 import { FileInput } from "react-daisyui";
+import { useState } from "react";
 
 const Form = () => {
   const onSubmit = (e) => e.preventDefault();
+  const [price, setPrice] = useState(0);
   return (
     <form encType="multipart/form-data" onSubmit={onSubmit}>
 			<label htmlFor="product_name">Product Name :</label>
@@ -17,12 +20,12 @@ const Form = () => {
 				id="product_name"
       />
 			<label htmlFor="price">Price :</label>
-      <input
-        className="swal2-input"
-        type="number"
-        placeholder="Enter Price (IDR)"
-        name="price"
-				id="price"
+      <input type="hidden" name="price" id="price" value={price} readOnly />
+      <CurrencyInput 
+        className="swal2-input" 
+        placeholder="Enter Price (Rp)"
+        intlConfig={{ locale: "id-ID", currency: "IDR" }}
+        onValueChange={(e) => setPrice(e)}
       />
 			<label htmlFor="desc">Description :</label>
       <textarea

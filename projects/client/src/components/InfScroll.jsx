@@ -20,9 +20,9 @@ export default function InfScroll(props) {
     isLoading,
     isError,
   } = useInfiniteQuery({
-    queryFn: async ({ pageParam = 1 }) => await queryFn(pageParam),
+    queryFn: async ({ pageParam = 1 }) => await (queryFn)(pageParam),
     queryKey: ["products"],
-    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    getNextPageParam: (lastPage) => lastPage.nextPage ?? undefined,
   });
 
   useEffect(() => {
