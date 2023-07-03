@@ -1,100 +1,12 @@
-const mysql = require("mysql2");
-const { faker } = require("@faker-js/faker");
-const { hash } = require("./lib");
+const child = require("child_process");
 
-class Seeder {
-  constructor(limit, host, user, password, database) {
-    faker.seed(this.getRandomInt(100000000, 999999999));
-    this.connection = mysql.createPool({
-      connectionLimit: limit, // default = 10
-      host: host,
-      user: user,
-      password: password,
-      database: database
-    });
-  }
+console.log(process.argv);
+const file = process.argv[2];
 
-  /**
-   * @author Sigkar <github.com/sigkar>
-   * @param {int} rounds
-   * @param {string} table
-   * @param {object} sqlObject
-   * @example
-   *    await seed.seed(
-   *      10,
-   *      'users',
-   *      {
-   *        email: () => someValueCallback(),
-   *        username: "someString",
-   *        unixTimestamp: 9018490124,
-   *      }
-   *    )
-   */
-  async seed(rounds = 1, table, sqlObject) {
-    process.stdout.write(`\nSeeding ${table}\n`);
-    let keys, values, id;
-    let ids = [];
-    for (let i = 0; i <= rounds; i++) {
-      process.stdout.write(".");
-      values = Object.values(sqlObject).map(value => {
-        if (typeof value === "function") {
-          return value();
-        }
-        return value;
-      });
-      keys = Object.keys(sqlObject).map(val => `\`${val}\``).join(", ");
-
-      id = await new Promise(resolve => {
-        this.connection.query(
-          `INSERT INTO \`${table}\` (${keys}) VALUES (?)`,
-          [values],
-          (err, results, fields) => {
-            if (err) {
-              this.handleError(err);
-              return;
-            }
-            resolve(results.insertId);
-          }
-        );
-      }).catch(err => {
-        this.handleError(err);
-      });
-      ids.push(id);
-    }
-    return ids;
-  }
-
-  getRandom(ids, percentChoice) {
-    return ids.filter(id => {
-      if (this.getRandomInt(1, 100) > percentChoice) return id;
-    });
-  }
-
-  getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
-
-  nativeTimestamp() {
-    return {
-      toSqlString: function() {
-        return "CURRENT_TIMESTAMP()";
-      }
-    };
-  }
-
-  exit() {
-    process.stdout.write("\nExiting gracefully\n");
-    this.connection.end();
-    process.exit();
-  }
-
-  handleError(err) {
-    process.stdout.write("An internal error occured");
-    console.error(err);
-    process.exit(1);
-  }
-}
-
-module.exports = Seeder;
+(() => {
+	child.exec(`node ./seeders/${file}.js`, (err) => {
+		if(err) console.log(err);
+	});
+	console.log("Seeded");
+	process.exit();
+})();

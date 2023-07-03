@@ -7,6 +7,7 @@ const _CheckoutItems = require("./CheckoutItems");
 const _Checkouts = require("./Checkouts");
 const _ProductTypes = require("./ProductTypes");
 const _Products = require("./Products");
+const _Profiles = require("./Profiles");
 const _Reset = require("./Reset");
 const _StockJurnals = require("./StockJurnals");
 const _StockMutations = require("./StockMutations");
@@ -25,6 +26,7 @@ function initModels(sequelize) {
   const Checkouts = _Checkouts(sequelize, DataTypes);
   const ProductTypes = _ProductTypes(sequelize, DataTypes);
   const Products = _Products(sequelize, DataTypes);
+  const Profiles = _Profiles(sequelize, DataTypes);
   const Reset = _Reset(sequelize, DataTypes);
   const StockJurnals = _StockJurnals(sequelize, DataTypes);
   const StockMutations = _StockMutations(sequelize, DataTypes);
@@ -60,6 +62,8 @@ function initModels(sequelize) {
   Users.hasMany(Addresses, { as: "addresses", foreignKey: "user_id"});
   Carts.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasMany(Carts, { as: "carts", foreignKey: "user_id"});
+  Profiles.belongsTo(Users, { as: "user", foreignKey: "user_id"});
+  Users.hasMany(Profiles, { as: "profiles", foreignKey: "user_id"});
   Reset.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasMany(Reset, { as: "resets", foreignKey: "user_id"});
   Verification.belongsTo(Users, { as: "user", foreignKey: "user_id"});
@@ -82,6 +86,7 @@ function initModels(sequelize) {
     Checkouts,
     ProductTypes,
     Products,
+    Profiles,
     Reset,
     StockJurnals,
     StockMutations,

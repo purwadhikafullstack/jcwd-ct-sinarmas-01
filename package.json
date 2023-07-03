@@ -12,7 +12,7 @@
     "install:client:dev": "lerna add --scope=client --dev",
     "server": "lerna exec --scope server yarn",
     "client": "lerna exec --scope client yarn",
-    "seed": "lerna exec --scope server \"cross-env FILE=$TABLE.js npm run seed\""
+    "seed": "cross-env lerna exec --scope server \"cross-env FILE=$TABLE.js npm run seed\""
   },
   "private": true,
   "devDependencies": {

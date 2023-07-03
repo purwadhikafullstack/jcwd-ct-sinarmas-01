@@ -1,5 +1,5 @@
 require("dotenv/config");
-const Seeder = require("../seed");
+const Seeder = require("../seeder");
 const { faker } = require("@faker-js/faker");
 
 // Generate a new Seeder instance
