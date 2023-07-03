@@ -64,8 +64,8 @@ const AuthController = {
         return res.status(422).json({ message: "User not registered" });
       const match = await hash.verify(password, user.password);
       if (!match) return res.status(409).json({ message: "Wrong Password" });
-      const { id, role } = user;
-      const token = createToken({ id, email, role });
+      const { id, role, isVerified } = user;
+      const token = createToken({ id, email, role, isVerified });
       return res.status(200).json({
         message: "Login Success",
         token,

@@ -5,12 +5,10 @@ export default function Error (props) {
 
 	return (
 		<div className="bg-error p-6 text-white">
-			<span>
-				<FaTimesCircle />
-			</span>{" "}
-			<span className="text-3xl font-extrabold">
-				Error
-			</span>
+			<div className="text-3xl font-extrabold flex flex-col">
+				<FaTimesCircle className="text-3xl" />
+				<b>Error</b>
+			</div>
 			<div className="text-xl">
 				{message}
 			</div>

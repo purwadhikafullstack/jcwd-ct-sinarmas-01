@@ -31,10 +31,11 @@ const verifyToken = (req, res, next) => {
  */
 function checkRole (roles) {
   return function (req, res, next) {
+    const { isVerified } = req.user;
     const userRole = req.user.role.toLowerCase();
     const found = roles.findIndex((a) => a.toLowerCase() === userRole);
 
-    if (found < 0) {
+    if (found < 0 || !isVerified) {
       return res.status(401).json({ 
         message: "Unauthorized", 
         role: req?.user?.role || null,

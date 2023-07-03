@@ -20,11 +20,11 @@ class CartItems extends Sequelize.Model {
         key: 'id'
       }
     },
-    stock_id: {
+    product_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'stocks',
+        model: 'products',
         key: 'id'
       }
     },
@@ -56,7 +56,7 @@ class CartItems extends Sequelize.Model {
         name: "fk_cart_items_stocks1_idx",
         using: "BTREE",
         fields: [
-          { name: "stock_id" },
+          { name: "product_id" },
         ]
       },
     ]

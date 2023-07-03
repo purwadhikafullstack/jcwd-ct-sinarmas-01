@@ -12,6 +12,7 @@ export default function ProfileCard() {
       <Card.Image
         src={data && data.profile_pic}
         className="w-[250px] h-[250px] rounded-full"
+        alt={data ? data?.username : "Avatar Image"}
       />
       <Card.Body>
         {!isLoading ? (

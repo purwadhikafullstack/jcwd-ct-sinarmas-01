@@ -5,9 +5,7 @@ const _Carts = require("./Carts");
 const _Categories = require("./Categories");
 const _CheckoutItems = require("./CheckoutItems");
 const _Checkouts = require("./Checkouts");
-const _ProductTypes = require("./ProductTypes");
 const _Products = require("./Products");
-const _Profiles = require("./Profiles");
 const _Reset = require("./Reset");
 const _StockJurnals = require("./StockJurnals");
 const _StockMutations = require("./StockMutations");
@@ -24,9 +22,7 @@ function initModels(sequelize) {
   const Categories = _Categories(sequelize, DataTypes);
   const CheckoutItems = _CheckoutItems(sequelize, DataTypes);
   const Checkouts = _Checkouts(sequelize, DataTypes);
-  const ProductTypes = _ProductTypes(sequelize, DataTypes);
   const Products = _Products(sequelize, DataTypes);
-  const Profiles = _Profiles(sequelize, DataTypes);
   const Reset = _Reset(sequelize, DataTypes);
   const StockJurnals = _StockJurnals(sequelize, DataTypes);
   const StockMutations = _StockMutations(sequelize, DataTypes);
@@ -44,12 +40,10 @@ function initModels(sequelize) {
   Categories.hasMany(Products, { as: "products", foreignKey: "category_id"});
   Checkouts.belongsTo(CheckoutItems, { as: "checkout_item", foreignKey: "checkout_items_id"});
   CheckoutItems.hasMany(Checkouts, { as: "checkouts", foreignKey: "checkout_items_id"});
-  ProductTypes.belongsTo(Products, { as: "product", foreignKey: "product_id"});
-  Products.hasMany(ProductTypes, { as: "product_types", foreignKey: "product_id"});
+  CartItems.belongsTo(Products, { as: "product", foreignKey: "product_id"});
+  Products.hasMany(CartItems, { as: "cart_items", foreignKey: "product_id"});
   Stocks.belongsTo(Products, { as: "product", foreignKey: "product_id"});
   Products.hasMany(Stocks, { as: "stocks", foreignKey: "product_id"});
-  CartItems.belongsTo(Stocks, { as: "stock", foreignKey: "stock_id"});
-  Stocks.hasMany(CartItems, { as: "cart_items", foreignKey: "stock_id"});
   CheckoutItems.belongsTo(Stocks, { as: "stock", foreignKey: "stock_id"});
   Stocks.hasMany(CheckoutItems, { as: "checkout_items", foreignKey: "stock_id"});
   StockJurnals.belongsTo(Stocks, { as: "stock", foreignKey: "stock_id"});
@@ -62,8 +56,6 @@ function initModels(sequelize) {
   Users.hasMany(Addresses, { as: "addresses", foreignKey: "user_id"});
   Carts.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasMany(Carts, { as: "carts", foreignKey: "user_id"});
-  Profiles.belongsTo(Users, { as: "user", foreignKey: "user_id"});
-  Users.hasMany(Profiles, { as: "profiles", foreignKey: "user_id"});
   Reset.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasMany(Reset, { as: "resets", foreignKey: "user_id"});
   Verification.belongsTo(Users, { as: "user", foreignKey: "user_id"});
@@ -84,9 +76,7 @@ function initModels(sequelize) {
     Categories,
     CheckoutItems,
     Checkouts,
-    ProductTypes,
     Products,
-    Profiles,
     Reset,
     StockJurnals,
     StockMutations,

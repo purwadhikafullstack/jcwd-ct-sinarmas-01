@@ -5,7 +5,7 @@ export default function MyCart () {
 		<>
 			<Card>
 				<Card.Body>
-					<Card.Title>
+					<Card.Title className="mb-3">
 						My Cart
 					</Card.Title>
 					<div>
