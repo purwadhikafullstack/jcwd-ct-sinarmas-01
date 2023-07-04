@@ -103,8 +103,15 @@ const cartController = {
 		try {
 			const { user_id } = req.params;
 			const cart = await Carts.findOne({ where: { user_id } });
-			const item = await CartItems.findAndCountAll({ where: { cart_id: cart.id }, include: ["cart", "product"] });
-			return res.status(200).json({ message: "Fetch Success", ...item });
+			const where = { 
+				cart_id: cart.id 
+			}
+			const item = await CartItems.findAndCountAll({ 
+				where, 
+				include: ["cart", "product"],
+			});
+			const quantity = await CartItems.sum("qty", { where });
+			return res.status(200).json({ message: "Fetch Success", ...item, quantity });
 		}
 		catch (e) {
 			return res.status(500).json({ message: e.message, error: e });

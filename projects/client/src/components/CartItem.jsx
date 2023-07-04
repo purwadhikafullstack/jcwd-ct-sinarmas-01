@@ -26,18 +26,16 @@ export default function CartItem(props) {
 	};
 	const total = amount * price;
 	return (
-		<div className="flex flex-wrap p-5 gap-3 mb-4 bg-base-100 border-2 border-base-300 rounded-xl">
+		<div className="flex flex-col p-5 gap-3 mb-4 bg-base-100 border-2 border-base-300 rounded-xl">
 			<div className="flex-1 flex flex-wrap gap-3 text-left">
-				<div className="text-center">
-					<img
-						className="w-[150px] h-[150px]"
-						src={image}
-						alt={`${name} Product`}
-					/>
-				</div>
-				<div className="flex flex-wrap justify-center items-center">
-					<div className="text-2xl">{name}</div>
-					<b className="text-3xl">{formatRp(total)}</b>
+				<img
+					className="w-[150px] h-[150px] flex-1"
+					src={image}
+					alt={`${name} Product`}
+				/>
+				<div className="flex flex-col flex-wrap flex-1 justify-center items-center">
+					<div className="text-lg">{name}</div>
+					<b className="text-xl">{formatRp(total)}</b>
 				</div>
 			</div>
 			<div className="flex flex-0 justify-center items-center">

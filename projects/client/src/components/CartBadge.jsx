@@ -20,7 +20,7 @@ export default function CartBadge() {
 			<FaShoppingCart />
 			<sup>
 				<Badge>
-					{!isLoading && !isError && data && data.count}
+					{!isLoading && !isError && data && (data.quantity || 0)}
 				</Badge>
 			</sup>
 		</Button>

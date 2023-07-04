@@ -21,21 +21,26 @@ export default function MyCart () {
 						{isLoading && <Loading />}
 						{isError && <Error message="Something is wrong" />}
 						{(!isLoading && !isError && data) && (
-							data?.rows?.map((val, key) => (
-								<CartItem 
-									key={key} 
-									userId={userId} 
-									productId={val.product_id} 
-									amount={val.qty}
-									price={val.product.price}
-									name={val.product.product_name}
-									image={val.product.product_image}
-								/>
-							))
+							data?.rows?.map((val, key) => {
+								return (	
+									<CartItem 
+										key={key} 
+										userId={userId} 
+										productId={val.product_id} 
+										amount={val.qty}
+										price={val.product.price}
+										name={val.product.product_name}
+										image={val.product.product_image}
+									/>
+								)
+							})
 						)}
 						{data && data.count === 0 && <NoContent />}
 					</div>
 				</Card.Body>
+				<Card.Actions className="p-5">
+					
+				</Card.Actions>
 			</Card>
 		</>
 	)
