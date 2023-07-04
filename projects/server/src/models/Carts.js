@@ -12,11 +12,11 @@ class Carts extends Sequelize.Model {
       allowNull: false,
       primaryKey: true
     },
-    profile_id: {
+    user_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
-        model: 'profiles',
+        model: 'users',
         key: 'id'
       }
     }
@@ -33,10 +33,10 @@ class Carts extends Sequelize.Model {
         ]
       },
       {
-        name: "fk_cart_profile1_idx",
+        name: "fk_carts_users1_idx",
         using: "BTREE",
         fields: [
-          { name: "profile_id" },
+          { name: "user_id" },
         ]
       },
     ]

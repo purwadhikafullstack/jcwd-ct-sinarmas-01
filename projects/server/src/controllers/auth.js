@@ -1,16 +1,21 @@
 const { models } = require("../models");
-const { Users, Verification, Reset } = models;
+const { Users, Verification, Reset, Carts } = models;
 require("dotenv").config();
 const { createToken } = require("../lib/createToken");
 const crypto = require("crypto");
 const { hash, mailsend, randomStr } = require("../lib");
 
 const AuthController = {
+  /**
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * */
   registerUser: async (req, res) => {
     try {
       const { email, fullname, username, role = "User" } = req.body;
       const token = crypto.randomBytes(20).toString("hex");
       const password = randomStr();
+      const profile_pic = `${req.protocol}://${req.headers.host}/default-avatar.png`;
       const user = await Users.create({
         fullname,
         username,
@@ -18,11 +23,13 @@ const AuthController = {
         role,
         isVerified: 0,
         password,
+        profile_pic,
       });
       await Verification.create({
         token,
         user_id: user.id,
       });
+      await Carts.create({ user_id: user.id });
       mailsend.compose(
         "Verification",
         email,
@@ -57,8 +64,8 @@ const AuthController = {
         return res.status(422).json({ message: "User not registered" });
       const match = await hash.verify(password, user.password);
       if (!match) return res.status(409).json({ message: "Wrong Password" });
-      const { id, role } = user;
-      const token = createToken({ id, email, role });
+      const { id, role, isVerified } = user;
+      const token = createToken({ id, email, role, isVerified });
       return res.status(200).json({
         message: "Login Success",
         token,
@@ -80,8 +87,10 @@ const AuthController = {
     try {
       const { mode, token } = req.params;
       const { password } = req.body;
-      const Target = mode === "reset" ? Reset : (mode === "verify" ? Verification : null);
-      if (!Target) return res.status(422).json({ message: "Invalid Request URL" });
+      const Target =
+        mode === "reset" ? Reset : mode === "verify" ? Verification : null;
+      if (!Target)
+        return res.status(422).json({ message: "Invalid Request URL" });
       const result = await Target.findOne({
         where: { token },
       });
@@ -106,23 +115,29 @@ const AuthController = {
   requestReset: async function (req, res) {
     try {
       const { email } = req.body;
-      if (!email) return res.status(422).json({ message: "E-mail is required" });
+      if (!email)
+        return res.status(422).json({ message: "E-mail is required" });
       const user = await Users.findOne({ where: { email } });
-      if (!user) return res.status(404).json({ message: "E-mail not registered yet" });
+      if (!user)
+        return res.status(404).json({ message: "E-mail not registered yet" });
       const token = randomStr(20);
       const reset = await Reset.create({
         token,
         user_id: user.id,
       });
-      mailsend.compose("Password Reset", email, `
+      mailsend.compose(
+        "Set your Password",
+        email,
+        `
         <h1>Hello, ${email}. Here is your reset code<br/>
         <a href="${process.env.WHITELISTED_DOMAIN}/account/reset/${token}">Reset Password</a>
         </h1>
-      `);
+      `
+      );
 
       return res.status(200).json({
         message: "Reset Link Sent",
-        reset
+        reset,
       });
     } catch (e) {
       return res.status(500).json({ message: e.message });

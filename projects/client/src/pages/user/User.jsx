@@ -1,18 +1,18 @@
 import { Button, Card } from "react-daisyui";
 import { useNavigate } from "react-router-dom";
-import LogoutBtn from "@/components/LogoutBtn";
+import ProfileCard from "@/components/ProfileCard";
 
 export default function User () {
   const navigate = useNavigate();
   return (
     <>
-      <Card className="mx-5">
+      <ProfileCard />
+      <Card>
         <Card.Body>
           <Card.Title>
             User Menu
           </Card.Title>
           <div className="flex flex-wrap gap-3">
-            <LogoutBtn />
             <Button onClick={() => navigate("/explore")} fullWidth>
               Explore Shop
             </Button>

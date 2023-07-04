@@ -1,23 +1,34 @@
-import { Button, Card } from "react-daisyui";
-import { removeToken, getEmail } from "@/api/token";
-import { useNavigate } from "react-router-dom";
+import { Card } from "react-daisyui";
+import { getEmail } from "@/api/token";
+import LogoutBtn from "./LogoutBtn";
+import useProfile from "@/hooks/queries/common/useProfile";
+import Loading from "@/components/Loading";
+import Error from "@/pages/error/Error";
 
-export default function ProfileCard () {
-  const navigate = useNavigate();
-  const logout = () => {
-    removeToken();
-    navigate("/");
-  }
+export default function ProfileCard() {
+  const { data, isLoading, isError } = useProfile(getEmail());
   return (
-    <Card className="mx-5 mb-3">
+    <Card className="mx-3 mb-6">
+      <Card.Image
+        src={data && data.profile_pic}
+        className="w-[250px] h-[250px] rounded-full"
+        alt={data ? data?.username : "Avatar Image"}
+      />
       <Card.Body>
-        <Card.Title className="mb-3">
-          <b>{getEmail()}</b>
-        </Card.Title>
-        <div className="flex flex-wrap gap-2">
-          <Button onClick={logout} fullWidth>Logout</Button>
-        </div>
+        {!isLoading ? (
+          <>
+            <Card.Title className="mb-3">
+              <b>{data?.username}</b>
+            </Card.Title>
+            <div className="flex flex-wrap gap-2">
+              <LogoutBtn />
+            </div>
+          </>
+        ) : (
+          <Loading />
+        )}
+        {isError && <Error />}
       </Card.Body>
     </Card>
-  )
+  );
 }

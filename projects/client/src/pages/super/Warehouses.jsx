@@ -92,7 +92,7 @@ export default function ManageWareHouses() {
           ["address.address_name", "address"],
           ["address.geolocation", "Geo"],
           ["address.id", "Address ID", true],
-          ["user.username", "username"],
+          ["user.username", "Admin"],
         ]}
         data={query.data?.rows}
         editFn={editFn}

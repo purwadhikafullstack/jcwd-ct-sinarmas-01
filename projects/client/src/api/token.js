@@ -44,3 +44,9 @@ export function getEmail() {
 	const email = json.email || "";
 	return email;
 }
+
+export function getId() {
+	const json = decodeToken();
+	const id = json.id || null;
+	return id;
+}

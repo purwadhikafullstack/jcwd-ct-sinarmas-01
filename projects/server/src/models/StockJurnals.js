@@ -28,15 +28,6 @@ class StockJurnals extends Sequelize.Model {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    tipe_jurnal_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'tipe_jurnals',
-        key: 'id'
-      }
-    },
     warehouse_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -52,6 +43,14 @@ class StockJurnals extends Sequelize.Model {
         model: 'stocks',
         key: 'id'
       }
+    },
+    tipe_jurnals_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'tipe_jurnals',
+        key: 'id'
+      }
     }
   }, {
     tableName: 'stock_jurnals',
@@ -63,14 +62,6 @@ class StockJurnals extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "id" },
-          { name: "tipe_jurnal_id" },
-        ]
-      },
-      {
-        name: "fk_stock_jurnal_tipe_jurnal1_idx",
-        using: "BTREE",
-        fields: [
-          { name: "tipe_jurnal_id" },
         ]
       },
       {
@@ -85,6 +76,13 @@ class StockJurnals extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "stock_id" },
+        ]
+      },
+      {
+        name: "fk_stock_jurnals_tipe_jurnals1_idx",
+        using: "BTREE",
+        fields: [
+          { name: "tipe_jurnals_id" },
         ]
       },
     ]

@@ -18,7 +18,7 @@ import NoContent from "./NoContent";
  * }} props
  */
 export default function Datas(props) {
-  const { columns, data, deleteFn, editFn, newFn, caption, readOnly } = props;
+  const { columns, data, deleteFn, editFn, newFn, caption, readOnly, onClickRow } = props;
   const { page, nextPage, prevPage, count, isLoading } = usePageStore();
   const isEmpty = data && !data.length;
 
@@ -63,7 +63,7 @@ export default function Datas(props) {
             </thead>
             <tbody>
               {data?.map((val, index) => (
-                <tr key={val.id}>
+                <tr key={val.id} onClick={onClickRow}>
                   <td>{index + 1}</td>
                   {columns.map((key, ind) => {
                     const [parent, child] = key[0].split(".");
@@ -85,10 +85,16 @@ export default function Datas(props) {
                   {!readOnly && (
                     <td>
                       <ButtonGroup>
-                        <Button color="warning" onClick={() => editFn(val.id)}>
+                        <Button color="warning" onClick={(e) => {
+                          e.stopPropagation();
+                          editFn(val.id);
+                        }}>
                           <FaPencilAlt />
                         </Button>
-                        <Button color="error" onClick={() => deleteFn(val.id)}>
+                        <Button color="error" onClick={(e) => {
+                          e.stopPropagation();
+                          deleteFn(val.id);
+                        }}>
                           <FaTrash />
                         </Button>
                       </ButtonGroup>

@@ -9,12 +9,13 @@ const {
   addressRoutes, 
   warehouseRoutes, 
   userRoutes,
-  productRoutes
+  productRoutes,
+  cartRoutes
 } = require("./routes");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-sequelize.sync({ alter: false });
+sequelize.sync();
 
 app.use(cors({
   origin: process.env.WHITELISTED_DOMAIN
@@ -42,6 +43,7 @@ app.use("/api/addresses", addressRoutes);
 app.use("/api/warehouses", warehouseRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/cart", cartRoutes);
 
 // ===========================
 

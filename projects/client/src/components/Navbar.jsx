@@ -6,6 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import DarkButton from "@/components/DarkButton";
 import { getRole, getToken } from "@/api/token";
+import CartBadge from "./CartBadge";
 export default function NavComponents() {
   const navigate = useNavigate();
   const role = getToken() ? getRole().toLowerCase() : "";
@@ -17,6 +18,7 @@ export default function NavComponents() {
         </Link>
       </Navbar.Start>
       <Navbar.End className="gap-1">
+        <CartBadge />
         <DarkButton />
         <Button
           onClick={() => navigate(`/${role || "register"}`)}

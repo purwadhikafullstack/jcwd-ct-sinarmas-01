@@ -4,6 +4,7 @@ import { Fragment, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Item from "./Item";
 import { Button } from "react-daisyui";
+import Error from "@/pages/error/Error";
 
 export default function InfScroll(props) {
   const { inView, ref } = useInView();
@@ -19,9 +20,9 @@ export default function InfScroll(props) {
     isLoading,
     isError,
   } = useInfiniteQuery({
-    queryFn: async ({ pageParam = 1 }) => await queryFn(pageParam),
+    queryFn: async ({ pageParam = 1 }) => await (queryFn)(pageParam),
     queryKey: ["products"],
-    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    getNextPageParam: (lastPage) => lastPage.nextPage ?? undefined,
   });
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export default function InfScroll(props) {
   return isLoading ? (
     <Loading />
   ) : isError ? (
-    <>Error : {error.message}</>
+    <Error message={error.message} />
   ) : (
     <>
       {data && data?.pages?.map((group, i) => (

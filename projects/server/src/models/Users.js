@@ -30,6 +30,10 @@ class Users extends Sequelize.Model {
       type: DataTypes.STRING(255),
       allowNull: false
     },
+    profile_pic: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
     isVerified: {
       type: DataTypes.TINYINT,
       allowNull: true

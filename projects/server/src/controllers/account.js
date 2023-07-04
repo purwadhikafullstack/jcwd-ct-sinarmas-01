@@ -29,6 +29,21 @@ const accountController = {
     } catch (e) {
       return res.status(500).json({ message: e.message });
     }
+  },
+  /**
+   * Mendapatkan detail user
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * */
+  userDetail: async function (req, res) {
+    try {
+      const { email } = req.params;
+      const user = await Users.findOne({ where: { email } });
+      if (!user) return res.status(404).json({ message: "Account not found" });
+      return res.status(200).json({ message: "Fetch Success", ...user.dataValues });
+    } catch (e) {
+      return res.status(500).json({ message: e.message, error: e });
+    }
   }
 };
 
