@@ -24,6 +24,7 @@ const Form = () => {
       <CurrencyInput 
         className="swal2-input" 
         placeholder="Enter Price (Rp)"
+        id="priceinput"
         intlConfig={{ locale: "id-ID", currency: "IDR" }}
         onValueChange={(e) => setPrice(e)}
       />

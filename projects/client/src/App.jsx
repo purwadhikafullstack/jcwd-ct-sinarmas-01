@@ -3,7 +3,7 @@ import Layout from "./layout/Layout";
 import { Routes, Route } from "react-router-dom";
 import Error404 from "./pages/error/Error404";
 import { lazy } from "react";
-import Suspensed from "./components/Suspensed";
+import Suspense from "./components/Suspensed";
 import Detail from "./pages/user/Detail";
 
 const Home = lazy(() => import("./pages/Home"));
@@ -18,6 +18,7 @@ const Admin = lazy(() => import("./pages/admin/Admin"));
 const ManageProducts = lazy(() => import("./pages/super/Products"));
 const UserPage = lazy(() => import("./pages/user/User"));
 const Explore = lazy(() => import("./pages/user/Explore"));
+const MyCart = lazy(() => import("./pages/user/MyCart"));
 
 function App() {
   const settings = {
@@ -34,25 +35,27 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Routes>
         <Route path="/" element={<Layout role="" />}>
-          <Route index element={<Suspensed><Home /></Suspensed>} />
-          <Route path="register" element={<Suspensed><Register/></Suspensed>} />
-          <Route path="login" element={<Suspensed><Login /></Suspensed>} />
-          <Route path="forgot" element={<Suspensed><Forgot /></Suspensed>} />
-          <Route path="account/:mode/:token" element={<Suspensed><Reset /></Suspensed>} />
+          <Route index element={<Suspense><Home /></Suspense>} />
+          <Route path="register" element={<Suspense><Register/></Suspense>} />
+          <Route path="login" element={<Suspense><Login /></Suspense>} />
+          <Route path="forgot" element={<Suspense><Forgot /></Suspense>} />
+          <Route path="account/:mode/:token" element={<Suspense><Reset /></Suspense>} />
         </Route>
         <Route path="/super" element={<Layout role="super" />}>
-          <Route index element={<Suspensed><Super /></Suspensed>} />
-          <Route path="users" element={<Suspensed><ManageUser /></Suspensed>} />
-          <Route path="warehouses" element={<Suspensed><ManageWarehouses /></Suspensed>} />
-          <Route path="products" element={<Suspensed><ManageProducts /></Suspensed>} />
+          <Route index element={<Suspense><Super /></Suspense>} />
+          <Route path="users" element={<Suspense><ManageUser /></Suspense>} />
+          <Route path="warehouses" element={<Suspense><ManageWarehouses /></Suspense>} />
+          <Route path="products" element={<Suspense><ManageProducts /></Suspense>} />
         </Route>
         <Route path="/admin" element={<Layout role="admin" />}>
-          <Route index element={<Suspensed><Admin /></Suspensed>} />
+          <Route index element={<Suspense><Admin /></Suspense>} />
         </Route>
         <Route path="/user" element={<Layout role="user" />}>
-          <Route index element={<Suspensed><UserPage /></Suspensed>} />
+          <Route index element={<Suspense><UserPage /></Suspense>} />
+          <Route path="cart" element={<Suspense><MyCart /></Suspense>} />
         </Route>
-        <Route path="/explore" element={<Suspensed><Explore /></Suspensed>}>
+        <Route path="/explore" element={<Layout />}>
+          <Route index element={<Suspense><Explore /></Suspense>}/>
           <Route path="detail/:id" element={<Detail />} /> 
         </Route>
         <Route path="*" element={<Error404 />} />

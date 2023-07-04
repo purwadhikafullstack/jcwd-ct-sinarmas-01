@@ -86,8 +86,10 @@ const cartController = {
 					}
 			 	} 
 			});
-			item.qty = item.qty + amount;
+			const empty = (item.qty + amount) === 0;
+			item.qty = !empty ? (item.qty + amount) : item.qty;
 			await item.save();
+			console.log(item.qty);
 			return res.status(200).json({ message: "Amount Changed", ...item.dataValues });
 		} catch (e) {
 			return res.status(500).json({ message: e.message, error: e });
@@ -101,7 +103,7 @@ const cartController = {
 		try {
 			const { user_id } = req.params;
 			const cart = await Carts.findOne({ where: { user_id } });
-			const item = await CartItems.findAndCountAll({ where: { cart_id: cart.id } });
+			const item = await CartItems.findAndCountAll({ where: { cart_id: cart.id }, include: ["cart", "product"] });
 			return res.status(200).json({ message: "Fetch Success", ...item });
 		}
 		catch (e) {
@@ -144,6 +146,20 @@ const cartController = {
 			const cart = await Carts.destroy({ where: { user_id } });
 			console.log({...cart});
 			return res.status(200).json({ message: "Cart Deleted", ...cart });
+		} catch (e) {
+			return res.status(500).json({ message: e.message, error: e });
+		}
+	},
+	/**
+	 * @param {import("express").Request} req
+	 * @param {import("express").Response} res
+	 * */
+	countCart: async function (req, res) {
+		try {
+			const { user_id } = req.params;
+			const cart = await Carts.findOne({ where: { user_id } });
+			const count = await CartItems.sum("qty", { where: { cart_id: cart.id } });
+			return res.status(200).json({ message: "Fetch Success", ...count });
 		} catch (e) {
 			return res.status(500).json({ message: e.message, error: e });
 		}

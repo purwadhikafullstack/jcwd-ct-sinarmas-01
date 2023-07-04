@@ -1,10 +1,13 @@
-import { Button, Modal } from "react-daisyui";
+import { Button, Card } from "react-daisyui";
 import { FaTimes, FaCartPlus } from "react-icons/fa";
 import { useNavigate, useParams, Outlet } from "react-router-dom";
 import useGetDetail from "@/hooks/queries/common/useGetDetail";
 import Loading from "@/components/Loading";
 import formatRp from "@/libs/formatRp";
 import { Fragment } from "react";
+import useCartMutations from "@/hooks/mutations/common/useCartMutations";
+import { getId } from "@/api/token";
+import Swal from "@/components/Swal";
 
 export default function Detail(props) {
   const { id } = useParams();
@@ -12,20 +15,27 @@ export default function Detail(props) {
   const navigate = useNavigate();
   const goBack = () => navigate("/explore");
   const { data, isLoading, isError } = useGetDetail(id);
+  const { useAddMutation } = useCartMutations();
+  const add = useAddMutation();
+  const addToCart = (obj) => {
+    Swal.fire("Item added to cart");
+    add.mutate(obj)
+  };
+  const user_id = getId();
 
   return (
     <>
       <Outlet />
-      <Modal open onClickBackdrop={goBack}>
-        <Modal.Header className="flex">
-          <div className="flex-1 text-3xl font-bold">Product Detail</div>
-          <div className="flex-0">
-            <Button color="ghost" onClick={goBack}>
-              <FaTimes />
-            </Button>
-          </div>
-        </Modal.Header>
-        <Modal.Body className="p-5 text-left">
+      <Card>
+        <Card.Body className="p-5 text-left">
+          <Card.Title className="flex">
+            <div className="flex-1 text-3xl font-bold">Product Detail</div>
+            <div className="flex-0">
+              <Button color="ghost" onClick={goBack}>
+                <FaTimes />
+              </Button>
+            </div>
+          </Card.Title>
           {isLoading ? (
             <Loading />
           ) : (
@@ -45,18 +55,29 @@ export default function Detail(props) {
               </div>
             </Fragment>
           )}
-        </Modal.Body>
-        <Modal.Actions className={`p-5 ${disableActions && "hidden"}`}>
-          {(!isLoading && !isError) && (
+        </Card.Body>
+        <Card.Actions
+          className={`p-5 ${
+            disableActions && "hidden"
+          } flex`}
+        >
+          {!isLoading && !isError && (
             <>
-              <Button color="success">Buy {formatRp(data.price)}</Button>
-              <Button color="warning" startIcon={<FaCartPlus />}>
+              <b className="text-3xl font-extrabold underline flex-1">
+                {formatRp(data.price)}
+              </b>
+              <Button
+                className="flex-0"
+                color="warning"
+                startIcon={<FaCartPlus />}
+                onClick={() => addToCart({ user_id, product_id: data.id })}
+              >
                 Add to Cart
               </Button>
             </>
           )}
-        </Modal.Actions>
-      </Modal>
+        </Card.Actions>
+      </Card>
     </>
   );
 }

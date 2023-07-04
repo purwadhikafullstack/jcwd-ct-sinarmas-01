@@ -41,7 +41,7 @@ instance.interceptors.response.use(
       updateToken(token);
       window.location.href = `/${role}`;
     }
-    if (url.indexOf("/auth") < 0 && res.config.method.toLowerCase() !== 'get') {
+    if (url.indexOf("/auth") < 0 && res.config.method.toLowerCase() !== 'get' && url.indexOf("/cart") < 0) {
       Swal.fire({
         icon: "success",
         title: "Success",
