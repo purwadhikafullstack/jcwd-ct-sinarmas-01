@@ -111,7 +111,7 @@ export default function Datas(props) {
           </table>
         )}
         {isLoading && <Loading />}
-        {isEmpty && <NoContent />}
+        {isEmpty && !isLoading && <NoContent />}
       </div>
     </>
   );

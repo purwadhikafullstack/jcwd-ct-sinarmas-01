@@ -28,11 +28,13 @@ export default function CartItem(props) {
 	return (
 		<div className="flex flex-col p-5 gap-3 mb-4 bg-base-100 border-2 border-base-300 rounded-xl">
 			<div className="flex-1 flex flex-wrap gap-3 text-left">
-				<img
-					className="w-[150px] h-[150px] flex-1"
-					src={image}
-					alt={`${name} Product`}
-				/>
+				<div className="flex-1 flex justify-center items-center">
+					<img
+						className="w-[150px] h-[150px] "
+						src={image}
+						alt={`${name} Product`}
+					/>
+				</div>
 				<div className="flex flex-col flex-wrap flex-1 justify-center items-center">
 					<div className="text-lg">{name}</div>
 					<b className="text-xl">{formatRp(total)}</b>

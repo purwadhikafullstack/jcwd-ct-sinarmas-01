@@ -8,8 +8,9 @@ export default function CartBadge() {
 	const navigate = useNavigate();
 	const userId = getId();
 	const role = getRole();
-	const hide = (!userId && role !== "user") ? "hidden" : "";
-	const { data, isLoading, isError } = useCart(userId);
+	const hide = (!userId || role !== "user") ? "hidden" : "";
+	const query = useCart(userId || 0);
+	const { data = {}, isLoading = true, isError = true } = query;
 	return (
 		<Button
 			color="ghost"
@@ -20,7 +21,7 @@ export default function CartBadge() {
 			<FaShoppingCart />
 			<sup>
 				<Badge>
-					{!isLoading && !isError && data && (data.quantity || 0)}
+					{!isLoading && !isError && data && ((data.quantity > 10 ? "10+" : String(data.quantity)) || "0")}
 				</Badge>
 			</sup>
 		</Button>

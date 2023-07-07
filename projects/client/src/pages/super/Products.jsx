@@ -1,15 +1,14 @@
 import Datas from "@/components/Datas";
 import useProductMutations from "@/hooks/mutations/super/useProductMutations";
 import useProductQuery from "@/hooks/queries/common/useProductQuery";
-import CurrencyInput from "react-currency-input-field";
+import CurrencyInput, { formatValue } from "react-currency-input-field";
 import Swal from "@/components/Swal";
 import formToObj from "@/libs/formToObj";
 import { FileInput } from "react-daisyui";
-import { useState } from "react";
 
+const intlConfig = { locale: "id-ID", currency: "IDR" };
 const Form = () => {
   const onSubmit = (e) => e.preventDefault();
-  const [price, setPrice] = useState(0);
   return (
     <form encType="multipart/form-data" onSubmit={onSubmit}>
 			<label htmlFor="product_name">Product Name :</label>
@@ -20,13 +19,12 @@ const Form = () => {
 				id="product_name"
       />
 			<label htmlFor="price">Price :</label>
-      <input type="hidden" name="price" id="price" value={price} readOnly />
       <CurrencyInput 
         className="swal2-input" 
         placeholder="Enter Price (Rp)"
+        name="price"
         id="priceinput"
-        intlConfig={{ locale: "id-ID", currency: "IDR" }}
-        onValueChange={(e) => setPrice(e)}
+        intlConfig={intlConfig}
       />
 			<label htmlFor="desc">Description :</label>
       <textarea
@@ -48,19 +46,18 @@ const Form = () => {
     </form>
   );
 };
-const modalConfig = {
-  title: "Product",
-  html: <Form />,
-  showCancelButton: true,
-};
 
 export default function Products() {
-  const { useAddMutation, useEditMutation, useDeleteMutation } =
-    useProductMutations();
+  const { useAddMutation, useEditMutation, useDeleteMutation } = useProductMutations();
   const add = useAddMutation();
   const edit = useEditMutation();
   const del = useDeleteMutation();
   const query = useProductQuery();
+  const modalConfig = {
+    title: "Product",
+    html: <Form />,
+    showCancelButton: true,
+  };
   const newFn = () => {
     Swal.fire({
       ...modalConfig,
@@ -86,7 +83,7 @@ export default function Products() {
         const price = document.getElementById(`${id}-price`).dataset.value;
         p.querySelector("[name='product_name']").value = name;
         p.querySelector("[name='desc']").value = desc;
-        p.querySelector("[name='price']").value = price;
+        p.querySelector("[name='price']").value = formatValue({ value: price, intlConfig });
       },
     }).then((res) => {
       res.isConfirmed && edit.mutate(res.value);

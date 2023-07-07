@@ -1,4 +1,5 @@
 const DataTypes = require("sequelize").DataTypes;
+const _AddressOwners = require("./AddressOwners");
 const _Addresses = require("./Addresses");
 const _CartItems = require("./CartItems");
 const _Carts = require("./Carts");
@@ -16,6 +17,7 @@ const _Verification = require("./Verification");
 const _Warehouses = require("./Warehouses");
 
 function initModels(sequelize) {
+  const AddressOwners = _AddressOwners(sequelize, DataTypes);
   const Addresses = _Addresses(sequelize, DataTypes);
   const CartItems = _CartItems(sequelize, DataTypes);
   const Carts = _Carts(sequelize, DataTypes);
@@ -32,6 +34,8 @@ function initModels(sequelize) {
   const Verification = _Verification(sequelize, DataTypes);
   const Warehouses = _Warehouses(sequelize, DataTypes);
 
+  AddressOwners.belongsTo(Addresses, { as: "address", foreignKey: "address_id"});
+  Addresses.hasMany(AddressOwners, { as: "address_owners", foreignKey: "address_id"});
   Warehouses.belongsTo(Addresses, { as: "address", foreignKey: "address_id"});
   Addresses.hasMany(Warehouses, { as: "warehouses", foreignKey: "address_id"});
   CartItems.belongsTo(Carts, { as: "cart", foreignKey: "cart_id"});
@@ -52,8 +56,8 @@ function initModels(sequelize) {
   Stocks.hasMany(StockMutations, { as: "stock_mutations", foreignKey: "stock_id"});
   StockJurnals.belongsTo(TipeJurnals, { as: "tipe_jurnal", foreignKey: "tipe_jurnals_id"});
   TipeJurnals.hasMany(StockJurnals, { as: "stock_jurnals", foreignKey: "tipe_jurnals_id"});
-  Addresses.belongsTo(Users, { as: "user", foreignKey: "user_id"});
-  Users.hasMany(Addresses, { as: "addresses", foreignKey: "user_id"});
+  AddressOwners.belongsTo(Users, { as: "user", foreignKey: "user_id"});
+  Users.hasMany(AddressOwners, { as: "address_owners", foreignKey: "user_id"});
   Carts.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasMany(Carts, { as: "carts", foreignKey: "user_id"});
   Reset.belongsTo(Users, { as: "user", foreignKey: "user_id"});
@@ -70,6 +74,7 @@ function initModels(sequelize) {
   Warehouses.hasMany(Stocks, { as: "stocks", foreignKey: "warehouse_id"});
 
   return {
+    AddressOwners,
     Addresses,
     CartItems,
     Carts,
