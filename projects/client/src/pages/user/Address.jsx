@@ -22,7 +22,7 @@ const config = {
 	confirmButtonText: "Yes"
 };
 
-const Form = ({ geo }) => {
+const Form = () => {
 	const onSubmit = (e) => e.preventDefault();
 	return (
 		<form onSubmit={onSubmit}>
