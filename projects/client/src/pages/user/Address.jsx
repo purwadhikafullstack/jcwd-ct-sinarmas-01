@@ -14,7 +14,6 @@ const center = { lat: -6.3021366, lng: 106.6439783 };
 const setCenter = (lat, lng) => {
 	center.lat = lat;
 	center.lng = lng;
-	console.log({ lat, lng });
 }
 const config = {
 	title: "Addresses",
@@ -23,7 +22,7 @@ const config = {
 	confirmButtonText: "Yes"
 };
 
-const Form = () => {
+const Form = ({ geo }) => {
 	const onSubmit = (e) => e.preventDefault();
 	return (
 		<form onSubmit={onSubmit}>
@@ -41,12 +40,12 @@ const Form = () => {
 	)
 }
 export default function Address() {
-	const html = <Form />;
 	const { data, isLoading, isError } = useAddresses();
 	const { useAddMutation, useDeleteMutation, useEditMutation } = useAddressMutations();
 	const add = useAddMutation();
 	const edit = useEditMutation();
 	const del = useDeleteMutation();
+	const html = <Form />;
 	const newFn = () => {
 		Swal.fire({
 			...config,
@@ -64,16 +63,17 @@ export default function Address() {
 		});
 	}
 	const editFn = (id) => {
+		const geoStr = document.getElementById(`${id}-address.geolocation`).dataset.value;
+		const { lat, lng } = toLatLng(geoStr);
+		setCenter(lat, lng);
+		console.log({ lat, lng });
 		Swal.fire({
 			...config,
 			html,
 			didOpen: () => {
 				const p = Swal.getPopup();
 				const name = document.getElementById(`${id}-address.address_name`).dataset.value;
-				const geoStr = document.getElementById(`${id}-address.geolocation`).dataset.value;
 				p.querySelector("#address_name").value = name;
-				const { lat, lng } = toLatLng(geoStr);
-				setCenter(lat, lng);
 			},
 			preConfirm: () => {
 				const form = Swal.getPopup().querySelector("form");
