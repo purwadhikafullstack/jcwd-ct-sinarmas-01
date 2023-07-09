@@ -10,7 +10,8 @@ const {
   warehouseRoutes, 
   userRoutes,
   productRoutes,
-  cartRoutes
+  cartRoutes,
+  categoryRoutes
 } = require("./routes");
 
 const PORT = process.env.PORT || 8000;
@@ -44,6 +45,7 @@ app.use("/api/warehouses", warehouseRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/categories", categoryRoutes);
 
 // ===========================
 

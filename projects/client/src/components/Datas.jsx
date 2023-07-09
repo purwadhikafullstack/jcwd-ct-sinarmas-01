@@ -24,7 +24,7 @@ export default function Datas(props) {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-3 text-center">{caption}s</h1>
+      <h1 className="text-2xl font-bold mb-3 text-center">{caption}</h1>
       <div className="mb-5 p-5">
         <Button color="primary" onClick={newFn} fullWidth>
           New {caption}
@@ -83,7 +83,7 @@ export default function Datas(props) {
                     );
                   })}
                   {!readOnly && (
-                    <td>
+                    <td className="text-center">
                       <ButtonGroup>
                         <Button color="warning" onClick={(e) => {
                           e.stopPropagation();

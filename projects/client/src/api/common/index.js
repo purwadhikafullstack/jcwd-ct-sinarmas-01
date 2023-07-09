@@ -14,3 +14,4 @@ export { default as addToCart } from "./addToCart";
 export { default as decreaseCartItem } from "./decreaseCartItem";
 export { default as deleteCartItem } from "./deleteCartItem"
 export { default as getCartItem } from "./getCartItem";
+export { default as getCategories } from "./getCategories";

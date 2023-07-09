@@ -20,6 +20,7 @@ const UserPage = lazy(() => import("./pages/user/User"));
 const Explore = lazy(() => import("./pages/user/Explore"));
 const MyCart = lazy(() => import("./pages/user/MyCart"));
 const Address = lazy(() => import("./pages/user/Address"));
+const ManageCategories = lazy(() => import("./pages/super/Categories"));
 
 function App() {
   const settings = {
@@ -47,6 +48,7 @@ function App() {
           <Route path="users" element={<Suspense><ManageUser /></Suspense>} />
           <Route path="warehouses" element={<Suspense><ManageWarehouses /></Suspense>} />
           <Route path="products" element={<Suspense><ManageProducts /></Suspense>} />
+          <Route path="categories" element={<Suspense><ManageCategories /></Suspense>} />
         </Route>
         <Route path="/admin" element={<Layout role="admin" />}>
           <Route index element={<Suspense><Admin /></Suspense>} />

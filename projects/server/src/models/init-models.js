@@ -6,6 +6,7 @@ const _Carts = require("./Carts");
 const _Categories = require("./Categories");
 const _CheckoutItems = require("./CheckoutItems");
 const _Checkouts = require("./Checkouts");
+const _Orders = require("./Orders");
 const _Products = require("./Products");
 const _Reset = require("./Reset");
 const _StockJurnals = require("./StockJurnals");
@@ -24,6 +25,7 @@ function initModels(sequelize) {
   const Categories = _Categories(sequelize, DataTypes);
   const CheckoutItems = _CheckoutItems(sequelize, DataTypes);
   const Checkouts = _Checkouts(sequelize, DataTypes);
+  const Orders = _Orders(sequelize, DataTypes);
   const Products = _Products(sequelize, DataTypes);
   const Reset = _Reset(sequelize, DataTypes);
   const StockJurnals = _StockJurnals(sequelize, DataTypes);
@@ -44,6 +46,8 @@ function initModels(sequelize) {
   Categories.hasMany(Products, { as: "products", foreignKey: "category_id"});
   Checkouts.belongsTo(CheckoutItems, { as: "checkout_item", foreignKey: "checkout_items_id"});
   CheckoutItems.hasMany(Checkouts, { as: "checkouts", foreignKey: "checkout_items_id"});
+  Orders.belongsTo(Checkouts, { as: "checkout", foreignKey: "checkout_id"});
+  Checkouts.hasMany(Orders, { as: "orders", foreignKey: "checkout_id"});
   CartItems.belongsTo(Products, { as: "product", foreignKey: "product_id"});
   Products.hasMany(CartItems, { as: "cart_items", foreignKey: "product_id"});
   Stocks.belongsTo(Products, { as: "product", foreignKey: "product_id"});
@@ -81,6 +85,7 @@ function initModels(sequelize) {
     Categories,
     CheckoutItems,
     Checkouts,
+    Orders,
     Products,
     Reset,
     StockJurnals,

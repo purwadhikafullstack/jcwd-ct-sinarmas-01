@@ -1,5 +1,6 @@
 const { models } = require("../models");
 const { Categories } = models;
+const { paginate } = require("../lib");
 
 const categoryController = {
 	/**
@@ -42,5 +43,21 @@ const categoryController = {
 		} catch (e) {
 			return res.status(500).json({ message: e.message, error: e });
 		}
+	},
+	/**
+	 * @param {import("express").Request} req
+	 * @param {import("express").Response} res
+	 * */
+	getList: async function (req, res) {
+		try {
+			const { page } = req.query;
+			const { offset, limit } = paginate(Number(page));
+			const categories = await Categories.findAndCountAll({ offset, limit });
+			return res.status(200).json({ message: "Fetch Success", ...categories });
+		} catch (e) {
+			return res.status(500).json({ message: e.message, error: e });
+		}
 	}
 }
+
+module.exports = categoryController;
