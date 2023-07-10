@@ -5,6 +5,8 @@ import CurrencyInput, { formatValue } from "react-currency-input-field";
 import Swal from "@/components/Swal";
 import formToObj from "@/libs/formToObj";
 import { FileInput } from "react-daisyui";
+import Loading from "@/components/Loading";
+import Error from "../error/Error";
 
 const intlConfig = { locale: "id-ID", currency: "IDR" };
 const Form = () => {
@@ -52,7 +54,7 @@ export default function Products() {
   const add = useAddMutation();
   const edit = useEditMutation();
   const del = useDeleteMutation();
-  const query = useProductQuery();
+  const { data, isLoading, isError, error } = useProductQuery();
   const modalConfig = {
     title: "Product",
     html: <Form />,
@@ -98,18 +100,24 @@ export default function Products() {
   };
 
   return (
-    <Datas
-      newFn={newFn}
-      editFn={editFn}
-      deleteFn={deleteFn}
-      caption="Product"
-      columns={[
-        ["id", "Product ID", true],
-        ["product_name", "Product Name"],
-        ["desc", "Description"],
-        ["price", "Price (IDR)"],
-      ]}
-      data={query?.data?.rows}
-    />
+    <>
+      {isLoading && <Loading />}
+      {isError && <Error message={error.message} />}
+      {!isLoading && !isError && (
+        <Datas
+          newFn={newFn}
+          editFn={editFn}
+          deleteFn={deleteFn}
+          caption="Product"
+          columns={[
+            ["id", "Product ID", true],
+            ["product_name", "Product Name"],
+            ["desc", "Description"],
+            ["price", "Price (IDR)"],
+          ]}
+          data={data?.rows}
+        />
+      )}
+    </>
   );
 }

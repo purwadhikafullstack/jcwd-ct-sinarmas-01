@@ -46,7 +46,7 @@ export default function Datas(props) {
         </Button>
       </div>
       <div className="overflow-x-auto mb-5">
-        {!isEmpty && (
+        {!isEmpty && !isLoading && (
           <table className="table w-full">
             <thead className="text-center">
               <tr>

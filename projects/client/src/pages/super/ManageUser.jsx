@@ -3,6 +3,8 @@ import Datas from "@/components/Datas";
 import useUserMutations from "@/hooks/mutations/super/useUserMutations";
 import useUserQuery from "@/hooks/queries/common/useUserQuery";
 import formToObj from "@/libs/formToObj";
+import Loading from "@/components/Loading";
+import Error from "../error/Error";
 
 const UserForm = () => (
   <form onSubmit={() => false}>
@@ -13,7 +15,7 @@ const UserForm = () => (
 );
 
 export default function ManageUser() {
-  const users = useUserQuery();
+  const { data, isError, isLoading, error } = useUserQuery();
   const { useAddMutation, useDeleteMutation, useEditMutation } = useUserMutations();
   const add = useAddMutation();
   const edit = useEditMutation();
@@ -65,21 +67,25 @@ export default function ManageUser() {
   }
 
   return (
-    <div className="text-center">
-      <Datas 
-        columns={[
-          ["id", "User ID", true],
-          ["email", "email"], 
-          ["fullname", "Full name"],
-          ["username", "username"], 
-          ["role", "role"]
-        ]} 
-        editFn={editFn} 
-        data={users?.data?.rows} 
-        deleteFn={deleteFn}
-        newFn={newFn}
-        caption="User"
-      />
-    </div>
+    <>
+      {isLoading && <Loading />}
+      {isError && <Error message={error.message} />}
+      {!isLoading && !isError && (
+        <Datas 
+          columns={[
+            ["id", "User ID", true],
+            ["email", "email"], 
+            ["fullname", "Full name"],
+            ["username", "username"], 
+            ["role", "role"]
+          ]} 
+          editFn={editFn} 
+          data={data?.rows} 
+          deleteFn={deleteFn}
+          newFn={newFn}
+          caption="User"
+        />
+      )}
+    </>
   )
 }
