@@ -1,36 +1,43 @@
 require("dotenv/config");
 const opencage = require("opencage-api-client");
 const { models } = require("../models");
-const { Addresses } = models;
+const { Addresses, AddressOwners } = models;
+
+/**
+ * @param {string} q
+ * */
+async function searchGeo (q) {
+  const data = await opencage.geocode({ q });
+  return data.results;
+}
 
 const addressController = {
-  /**
-   * @param {string} q
-   * */
-  searchGeo: async function (q) {
-    const data = await opencage.geocode({ q });
-    return data.results;
-  },
   /**
    * Menambah alamat baru
    * @param {import("express").Request} req
    * @param {import("express").Response} res
    */
-  newAddress: async function (req, res) {
+  newAddress: async (req, res) => {
     try {
-      const { q } = req.body;
-      const [place] = await this.searchGeo(q);
+      const { q, address_name = "", user_id } = req.body;
+      const [place] = await searchGeo(q);
+      console.log(`ID : ${user_id}`);
       const address = await Addresses.create({
-        address_name: place.formatted,
+        address_name: address_name || place.formatted,
         city: place.components?.city || place.components?.county,
         province: place.components.state,
         geolocation: q,
       });
+      if (user_id) {
+        await AddressOwners.create({
+          user_id, address_id: address.id
+        });
+      }
       return res
         .status(201)
-        .json({ message: "Successfully Added Address", address });
+        .json({ message: "Successfully Added Address", ...address, user_id });
     } catch (error) {
-      return res.status(500).json(error);
+      return res.status(500).json({ message: error.message, error });
     }
   },
   /**
@@ -56,7 +63,7 @@ const addressController = {
     try {
       const { q } = req.body;
       /** @type {any[]} */
-      const results = await search(q);
+      const results = await searchGeo(q);
       return res.status(200).json({ count: results.length, results });
     } catch (error) {
       return res.status(500).json(error);
@@ -69,11 +76,11 @@ const addressController = {
    */
   removeAddress: async function (req, res) {
     try {
-      const { address_id } = req.params;
-      const address = await Addresses.destroy({ where: { id: address_id } });
+      const { id } = req.params;
+      const address = await Addresses.destroy({ where: { id } });
       return res.status(200).json({ message: "Address deleted", address });
     } catch (error) {
-      return res.status(500).json(error);
+      return res.status(500).json({ message: error.message, error });
     }
   },
   /**
@@ -82,9 +89,14 @@ const addressController = {
    */
   editAddress: async function (req, res) {
     try {
-      const { address_id } = req.params;
-      const { address_name } = req.body;
-      await Addresses.update({ address_name }, { where: { address_id } });
+      const { id } = req.params;
+      const { address_name, q } = req.body;
+      // await Addresses.update({ address_name, geolocation: q }, { where: { id } });
+      const address = await Addresses.findOne({ where: { id } });
+      console.log(address);
+      address.address_name = address_name || address.address_name;
+      address.geolocation = q || address.geolocation;
+      await address.save();
       return res.status(200).json({ message: "Address Updated" });
     } catch (e) {
       console.log(e);
@@ -93,6 +105,28 @@ const addressController = {
         .json({ message: e.message, err: e });
     }
   },
+  getUserAddresses: async function (req, res) {
+    try {
+      const user_id = req.user?.id;
+      const addresses = await AddressOwners.findAndCountAll({
+        where: { user_id },
+        include: ["address"]
+      });
+
+      return res.status(200).json({ message: "Fetch Success", ...addresses });
+    } catch (e) {
+      return res.status(500).json({ message: e.message, error: e });
+    }
+  },
+  addressDetail: async function (req, res) {
+    try {
+      const { id } = req.params;
+      const address = await Addresses.findOne({ where: { id } });
+      return res.status(200).json({ message: "Fetch Success", ...address.dataValues });
+    } catch (e) {
+      return res.status(500).json({ message: e.message, error: e });
+    }
+  }
 };
 
-module.exports = addressController;
+module.exports = {...addressController, searchGeo};

@@ -32,15 +32,20 @@ function LocationMarker(props) {
 			console.log(e.latlng);
 		},
 		load() {
-			map.flyTo(position, map.getZoom());
+			map.locate();
+		},
+		locationfound(e) {
+			setPos(e.latlng);
+			map.flyTo(e.latlng, map.getZoom());
 		}
 	});
 	useEffect(() => {
 		setTimeout(() => {
 			map.invalidateSize();
 		}, 0);
-		// map.flyTo(position, map.getZoom());
+		map.flyTo(position, map.getZoom());
 		setPos(map.getCenter());
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	useEffect(() => {
 		console.log(`Lat: ${pos?.lat}, Lng: ${pos?.lng}`);

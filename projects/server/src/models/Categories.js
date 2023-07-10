@@ -7,6 +7,7 @@ class Categories extends Sequelize.Model {
   static init(sequelize, DataTypes) {
   return sequelize.define('Categories', {
     id: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true

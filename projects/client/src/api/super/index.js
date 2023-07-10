@@ -10,3 +10,6 @@ export { default as deleteProduct } from "./deleteProduct";
 export { default as newProductType } from "./newProductType";
 export { default as editProductType } from "./editProductType";
 export { default as deleteProductType } from "./deleteProductType";
+export { default as newCategory } from "./newCategory";
+export { default as editCategory } from "./editCategory";
+export { default as deleteCategory } from "./deleteCategory";

@@ -73,7 +73,7 @@ const AuthController = {
       });
     } catch (error) {
       return res.status(error.statusCode || 500).json({
-        message: error?.errors[0]?.message || error.message,
+        message: error?.errors[0] && (error?.errors[0]?.message || error.message),
       });
     }
   },

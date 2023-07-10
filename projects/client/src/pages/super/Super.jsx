@@ -16,6 +16,7 @@ export default function Super () {
             <Button onClick={() => navigate("warehouses")} fullWidth>Manage Warehouses</Button>
             <Button onClick={() => navigate("users")} fullWidth>Manage Users</Button>
             <Button onClick={() => navigate("products")} fullWidth>Manage Products</Button>
+            <Button onClick={() => navigate("categories")} fullWidth>Manage Categories</Button>
           </div>
         </Card.Body>
       </Card>

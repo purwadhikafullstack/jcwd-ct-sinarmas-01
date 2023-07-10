@@ -16,6 +16,9 @@ export default function User () {
             <Button onClick={() => navigate("/explore")} fullWidth>
               Explore Shop
             </Button>
+            <Button onClick={() => navigate("address")} fullWidth>
+              My Addresses
+            </Button>
           </div>
         </Card.Body>
       </Card>
