@@ -25,6 +25,10 @@ class Products extends Sequelize.Model {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    weight: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     desc: {
       type: DataTypes.TEXT,
       allowNull: true

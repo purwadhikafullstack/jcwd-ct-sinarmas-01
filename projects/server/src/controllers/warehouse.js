@@ -10,13 +10,14 @@ const warehouseController = {
    */
   addWarehouse: async function (req, res) {
     try {
-      const { warehouse_name, q } = req.body;
+      const { warehouse_name, q, user_id } = req.body;
       const [place] = await searchGeo(q);
       const address = await Addresses.create({
         address_name: place.formatted,
         city: place.components?.city || place.components?.county,
         province: place.components.state,
         geolocation: q,
+        user_id: user_id || null
       });
       console.log(address);
       const warehouse = await Warehouses.create({ warehouse_name, address_id: address.id });

@@ -1,39 +1,28 @@
 const Sequelize = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  return Addresses.init(sequelize, DataTypes);
+  return Cities.init(sequelize, DataTypes);
 }
 
-class Addresses extends Sequelize.Model {
+class Cities extends Sequelize.Model {
   static init(sequelize, DataTypes) {
-  return sequelize.define('Addresses', {
+  return sequelize.define('Cities', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    address_name: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    city: {
+    city_name: {
       type: DataTypes.STRING(70),
-      allowNull: true
-    },
-    province: {
-      type: DataTypes.STRING(60),
-      allowNull: true
-    },
-    geolocation: {
-      type: DataTypes.STRING(50),
-      allowNull: false
+      allowNull: false,
+      defaultValue: "0"
     },
     type: {
       type: DataTypes.STRING(15),
-      allowNull: false
+      allowNull: true
     }
   }, {
-    tableName: 'addresses',
+    tableName: 'cities',
     timestamps: true,
     indexes: [
       {

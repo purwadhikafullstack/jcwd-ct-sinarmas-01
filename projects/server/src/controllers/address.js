@@ -7,7 +7,7 @@ const { Addresses, AddressOwners } = models;
  * @param {string} q
  * */
 async function searchGeo (q) {
-  const data = await opencage.geocode({ q });
+  const data = await opencage.geocode({ q, language: "id" });
   return data.results;
 }
 
@@ -21,10 +21,11 @@ const addressController = {
     try {
       const { q, address_name = "", user_id } = req.body;
       const [place] = await searchGeo(q);
-      console.log(`ID : ${user_id}`);
+      const county = place.components?.county ? place.components?.county?.replace("Kabupaten ", "") : "";
       const address = await Addresses.create({
         address_name: address_name || place.formatted,
-        city: place.components?.city || place.components?.county,
+        city: place.components?.city || county,
+        type: place.components?.city ? "Kota" : "Kabupaten",
         province: place.components.state,
         geolocation: q,
       });

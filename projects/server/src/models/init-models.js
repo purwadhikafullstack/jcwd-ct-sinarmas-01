@@ -6,6 +6,7 @@ const _Carts = require("./Carts");
 const _Categories = require("./Categories");
 const _CheckoutItems = require("./CheckoutItems");
 const _Checkouts = require("./Checkouts");
+const _Cities = require("./Cities");
 const _Orders = require("./Orders");
 const _Products = require("./Products");
 const _Reset = require("./Reset");
@@ -25,6 +26,7 @@ function initModels(sequelize) {
   const Categories = _Categories(sequelize, DataTypes);
   const CheckoutItems = _CheckoutItems(sequelize, DataTypes);
   const Checkouts = _Checkouts(sequelize, DataTypes);
+  const Cities = _Cities(sequelize, DataTypes);
   const Orders = _Orders(sequelize, DataTypes);
   const Products = _Products(sequelize, DataTypes);
   const Reset = _Reset(sequelize, DataTypes);
@@ -85,6 +87,7 @@ function initModels(sequelize) {
     Categories,
     CheckoutItems,
     Checkouts,
+    Cities,
     Orders,
     Products,
     Reset,

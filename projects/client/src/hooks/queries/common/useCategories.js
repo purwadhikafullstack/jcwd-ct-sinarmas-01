@@ -1,6 +1,7 @@
 import { getCategories } from "@/api/common";
 import usePageStore from "@/hooks/store/usePageStore";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export default function useCategories () {
 	const page = usePageStore(state => state.page);
@@ -8,13 +9,15 @@ export default function useCategories () {
 	const setCount = usePageStore(state => state.setCount);
 	const { data, isLoading, isError, error } = useQuery({
 		queryFn: async () => await getCategories(page),
-		queryKey: ["categories"],
+		queryKey: ["categories", page],
 	});
 
-	if(!isLoading) {
-		setLoading(false);
-		setCount(data.pages);
-	}
+	useEffect(() => {
+		if(!isLoading && data) {
+			setLoading(false);
+			setCount(data.pages);
+		}
+	}, [data, isLoading, setCount, setLoading]);
 
 	return {
 		data,

@@ -7,17 +7,16 @@ export default function useProductQuery() {
   const page = usePageStore(state => state.page);
   const setLoading = usePageStore(state => state.setLoading);
   const setCount = usePageStore(state => state.setCount);
-  useEffect(() => {
-    setLoading(true);
-  }, [page, setLoading]);
   const { data, isLoading, isError, error } = useQuery({
     queryFn: async () => await getProducts(page),
     queryKey: ["products", page],
   });
-  if (!isLoading) {
-    setLoading (false);
-    setCount(data.pages);
-  }
+  useEffect(() => {
+    if (!isLoading) {
+      setLoading(false);
+      setCount(data.pages);
+    }
+  }, [isLoading, setLoading, setCount, data]);
 
   return {
     data, isLoading, isError, error

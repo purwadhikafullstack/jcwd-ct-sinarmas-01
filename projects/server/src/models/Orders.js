@@ -26,6 +26,19 @@ class Orders extends Sequelize.Model {
         model: 'checkouts',
         key: 'id'
       }
+    },
+    courier: {
+      type: DataTypes.STRING(20),
+      allowNull: true
+    },
+    shipping_price: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    isCompleted: {
+      type: DataTypes.TINYINT,
+      allowNull: true,
+      defaultValue: 0
     }
   }, {
     tableName: 'orders',

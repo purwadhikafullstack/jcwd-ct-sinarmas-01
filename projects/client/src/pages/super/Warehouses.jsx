@@ -8,31 +8,35 @@ import useWarehouseMutations from "@/hooks/mutations/super/useWarehouseMutations
 
 export default function ManageWareHouses() {
   const defaultPos = { lat: -6.3021366, lng: 106.6439783 };
-  const mapPos = {...defaultPos};
-  const setMapPos = (lat, lng) => {
-    mapPos.lat = lat;
-    mapPos.lng = lng;
+  const center = {...defaultPos};
+  const setCenter = (lat, lng) => {
+    center.lat = lat;
+    center.lng = lng;
   }
   const query = useWarehouseQuery();
   const { useAddMutation, useEditMutation, useDeleteMutation } = useWarehouseMutations();
   const add = useAddMutation();
   const edit = useEditMutation();
   const del = useDeleteMutation();
-  const WarehouseForm = (props) => (
-    <form onSubmit={(e) => e.preventDefault()}>
-      <input
-        name="warehouse_name"
-        className="swal2-input"
-        placeholder="Enter Warehouse Name"
-        defaultValue={props.default}
-      />
-      <Map onChange={setMapPos} center={mapPos} />
-    </form>
-  );
+  const WarehouseForm = (props) => {
+    return (
+      <form onSubmit={(e) => e.preventDefault()}>
+        <input
+          name="warehouse_name"
+          className="swal2-input"
+          placeholder="Enter Warehouse Name"
+          defaultValue={props.default}
+        />
+        <Map onChange={setCenter} center={center} />
+        <input
+          name="user_id"
+        />
+      </form>
+    )
+  };
 
   const newFn = () => {
-    setMapPos(defaultPos.lat, defaultPos.lng);
-    console.log(mapPos);
+    setCenter(defaultPos.lat, defaultPos.lng);
     Swal.fire({
       title: "New Warehouse",
       html: <WarehouseForm id={0} />,
@@ -42,21 +46,19 @@ export default function ManageWareHouses() {
       showCancelButton: true,
     }).then((result) => {
       const form = new FormData(result.value);
-      form.append("q", `${mapPos.lat}, ${mapPos.lng}`);
-      !result.isConfirmed ? setMapPos(defaultPos.lat, defaultPos.lng) : add.mutate(formToObj(form));
+      form.append("q", `${center.lat}, ${center.lng}`);
+      !result.isConfirmed ? setCenter(defaultPos.lat, defaultPos.lng) : add.mutate(formToObj(form));
     });
   };
 
   const editFn = (id) => {
+    const geoStr = document.getElementById(`${id}-address.geolocation`).dataset.value;
+    const { lat, lng } = toLatLng(geoStr);
+    setCenter(lat, lng);
     Swal.fire({
       title: `Edit Warehouse #${id}`,
       html: <WarehouseForm id={id} />,
       didOpen: () => {
-        const geo = document.getElementById(
-          `${id}-address.geolocation`
-        ).textContent;
-        const latlng = toLatLng(geo);
-        setMapPos(latlng.lat, latlng.lng);
         const popup = Swal.getPopup();
         const name = document.getElementById(`${id}-warehouse_name`).dataset.value;
         popup.querySelector('[name="warehouse_name"]').value = name;
@@ -68,10 +70,10 @@ export default function ManageWareHouses() {
     }).then((result) => {
       const form = new FormData(result.value);
       const addressId = document.getElementById(`${id}-address.id`).dataset.value;
-      form.append("q", `${mapPos.lat}, ${mapPos.lng}`);
+      form.append("q", `${center.lat}, ${center.lng}`);
       form.append("address_id", addressId);
       form.append("id", id);
-      !result.isConfirmed ? setMapPos(defaultPos.lat, defaultPos.lng) : edit.mutate(formToObj(form));
+      !result.isConfirmed ? setCenter(defaultPos.lat, defaultPos.lng) : edit.mutate(formToObj(form));
     });
   };
 

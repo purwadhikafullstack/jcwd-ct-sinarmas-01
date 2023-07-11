@@ -4,6 +4,7 @@ const { seed, faker } = require("./");
 	await seed(20,"addresses", {
 		address_name: () => faker.location.streetAddress(),
 		city: () => faker.location.city(),
+		type: () => "Kabupaten",
 		province: () => faker.location.state(),
 		geolocation: () => faker.location.nearbyGPSCoordinate().join(", "),
 		createdAt: () => faker.date.recent(),

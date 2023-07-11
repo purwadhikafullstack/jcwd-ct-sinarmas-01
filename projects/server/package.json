@@ -38,5 +38,9 @@
     "nodemon": "^2.0.19",
     "sequelize-auto": "^0.8.8",
     "sequelize-cli": "^6.6.0"
+  },
+  "nodemonConfig": {
+    "ignore": ["**/test/**", "**/seeders/**"],
+    "delay": 2500
   }
 }

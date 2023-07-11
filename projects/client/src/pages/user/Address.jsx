@@ -66,7 +66,6 @@ export default function Address() {
 		const geoStr = document.getElementById(`${id}-address.geolocation`).dataset.value;
 		const { lat, lng } = toLatLng(geoStr);
 		setCenter(lat, lng);
-		console.log({ lat, lng });
 		Swal.fire({
 			...config,
 			html,
