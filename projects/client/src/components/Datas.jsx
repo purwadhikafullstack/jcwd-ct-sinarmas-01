@@ -4,12 +4,14 @@ import {
   FaPencilAlt,
   FaChevronLeft,
   FaChevronRight,
+  FaSpinner,
 } from "react-icons/fa";
 import Loading from "./Loading";
 import usePageStore from "@/hooks/store/usePageStore";
 import cropText from "@/libs/cropText";
 import NoContent from "./NoContent";
 import { formatValue } from "react-currency-input-field";
+import { useQueryClient } from "@tanstack/react-query";
 
 /**
  * Template Table Untuk Data
@@ -19,7 +21,7 @@ import { formatValue } from "react-currency-input-field";
  * }} props
  */
 export default function Datas(props) {
-  const { columns, data, deleteFn, editFn, newFn, caption, readOnly, onClickRow } = props;
+  const { columns, data, deleteFn, editFn, newFn, caption, readOnly, onClickRow, keys } = props;
   const { page, nextPage, prevPage, count, isLoading } = usePageStore();
   const isEmpty = data && !data.length;
   const format = (value) => !isNaN(Number(value)) ? formatValue({
@@ -27,6 +29,15 @@ export default function Datas(props) {
     decimalSeparator: ",",
     groupSeparator: ".",
   }) : value;
+  const client = useQueryClient();
+  const refresh = () => {
+    client.invalidateQueries({ 
+      queryKey: [keys], 
+      refetchType: "all", 
+      exact: false,
+      type: "all"
+    });
+  }
 
   return (
     <>
@@ -37,18 +48,23 @@ export default function Datas(props) {
         </Button>
       </div>
       <div
-        className={`flex flex-row gap-4 justify-center items-center mb-4 ${
+        className={`flex flex-row gap-6 justify-center items-center mb-4 ${
           isEmpty && "hidden"
         }`}
       >
-        <Button disabled={page === 1} color="ghost" onClick={prevPage}>
-          <FaChevronLeft />
-        </Button>
-        <div className="text-2xl font-bold">
-          {page} of {count || 1}
-        </div>
-        <Button disabled={page === count} color="ghost" onClick={nextPage}>
-          <FaChevronRight />
+        <ButtonGroup>
+          <Button disabled={page === 1} onClick={prevPage}>
+            <FaChevronLeft />
+          </Button>
+          <Button className="text-2xl font-bold">
+            {page} of {count || 1}
+          </Button>
+          <Button disabled={page === count} onClick={nextPage}>
+            <FaChevronRight />
+          </Button>
+        </ButtonGroup>
+        <Button startIcon={<FaSpinner/>} onClick={refresh}>
+          Refresh
         </Button>
       </div>
       <div className="overflow-x-auto mb-5">

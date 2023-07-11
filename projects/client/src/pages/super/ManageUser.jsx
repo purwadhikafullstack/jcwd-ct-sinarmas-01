@@ -84,6 +84,7 @@ export default function ManageUser() {
           deleteFn={deleteFn}
           newFn={newFn}
           caption="User"
+          keys="users"
         />
       )}
     </>

@@ -54,6 +54,7 @@
     ]
   },
   "devDependencies": {
-    "@craco/craco": "^7.1.0"
+    "@craco/craco": "^7.1.0",
+    "@tanstack/react-query-devtools": "^4.29.19"
   }
 }

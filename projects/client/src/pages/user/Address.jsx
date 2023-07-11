@@ -110,6 +110,7 @@ export default function Address() {
 						["address.geolocation", "Geo"],
 						["address.id", "ID", true]
 					]}
+					key="addresses"
 				/>
 			)}
 			{isLoading && <Loading />}

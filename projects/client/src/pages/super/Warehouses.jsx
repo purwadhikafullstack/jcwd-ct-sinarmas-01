@@ -101,6 +101,7 @@ export default function ManageWareHouses() {
         deleteFn={deleteFn}
         newFn={newFn}
         caption="Warehouse"
+        keys="warehouses"
       />
     </>
   );

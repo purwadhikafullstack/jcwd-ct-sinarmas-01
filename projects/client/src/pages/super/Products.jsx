@@ -134,6 +134,7 @@ export default function Products() {
             ["price", "Price (IDR)"],
             ["weight", "Weight (grams)"]
           ]}
+          keys={"products"}
           data={data?.rows}
         />
       )}
