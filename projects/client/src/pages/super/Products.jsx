@@ -7,14 +7,12 @@ import formToObj from "@/libs/formToObj";
 import { FileInput } from "react-daisyui";
 import Loading from "@/components/Loading";
 import Error from "../error/Error";
-import { useState } from "react";
 
 const intlConfig = { locale: "id-ID", currency: "IDR" };
 const configInput = { suffix: " gr", groupSeparator: ".", decimalSeparator: "," };
 
 const Form = (props) => {
   const onSubmit = (e) => e.preventDefault();
-  const { priceChange, weightChange } = props;
   return (
     <form encType="multipart/form-data" onSubmit={onSubmit}>
 			<label htmlFor="product_name">Product Name :</label>
@@ -29,7 +27,7 @@ const Form = (props) => {
         className="swal2-input" 
         placeholder="Enter Price (Rp)"
         id="priceinput"
-        onValueChange={(e) => priceChange(e)}
+        name="price"
         intlConfig={intlConfig}
       />
       <label htmlFor="weight">Weight : </label>
@@ -37,7 +35,7 @@ const Form = (props) => {
         className="swal2-input"
         placeholder="Enter Weight (gram)"
         id="weight"
-        onValueChange={(e) => weightChange(e)}
+        name="weight"
         {...configInput}
       />
 			<label htmlFor="desc">Description :</label>
@@ -66,23 +64,22 @@ export default function Products() {
   const add = useAddMutation();
   const edit = useEditMutation();
   const del = useDeleteMutation();
-  const [price, setPrice] = useState(0);
-  const [weight, setWeight] = useState(0);
   const { data, isLoading, isError, error } = useProductQuery();
   const modalConfig = {
     title: "Product",
-    html: <Form priceChange={setPrice} weightChange={setWeight} />,
+    html: <Form />,
     showCancelButton: true,
   };
   const newFn = () => {
     Swal.fire({
       ...modalConfig,
       didOpen: () => Swal.getPopup().querySelector("form").reset(),
-      preConfirm: () => new FormData(Swal.getPopup().querySelector("form")),
+      preConfirm: () => {
+        const form = new FormData(Swal.getPopup().querySelector("form"));
+        return form;
+      },
     }).then((res) => {
       if (res.isConfirmed) {
-        res.value.append("price", price);
-        res.value.append("weight", weight);
         add.mutate(formToObj(res.value));
       }
     });
@@ -93,12 +90,11 @@ export default function Products() {
       preConfirm: () => {
         const form = new FormData(Swal.getPopup().querySelector("form"));
         form.append("id", id);
-        return form
+        return formToObj(form);
       },
       didOpen: () => {
         const p = Swal.getPopup();
-        const name = document.getElementById(`${id}-product_name`).dataset
-          .value;
+        const name = document.getElementById(`${id}-product_name`).dataset.value;
         const desc = document.getElementById(`${id}-desc`).dataset.value;
         const price = document.getElementById(`${id}-price`).dataset.value;
         const weight = document.getElementById(`${id}-weight`).dataset.value;
@@ -109,9 +105,7 @@ export default function Products() {
       },
     }).then((res) => {
       if (res.isConfirmed) {
-        res.value.append("price", price);
-        res.value.append("weight", weight);
-        edit.mutate(formToObj(res.value));
+        edit.mutate(res.value);
       }
     });
   };
