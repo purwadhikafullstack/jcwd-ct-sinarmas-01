@@ -7,11 +7,14 @@ import formToObj from "@/libs/formToObj";
 import { FileInput } from "react-daisyui";
 import Loading from "@/components/Loading";
 import Error from "../error/Error";
+import { useState } from "react";
 
 const intlConfig = { locale: "id-ID", currency: "IDR" };
 const configInput = { suffix: " gr", groupSeparator: ".", decimalSeparator: "," };
-const Form = () => {
+
+const Form = (props) => {
   const onSubmit = (e) => e.preventDefault();
+  const { priceChange, weightChange } = props;
   return (
     <form encType="multipart/form-data" onSubmit={onSubmit}>
 			<label htmlFor="product_name">Product Name :</label>
@@ -25,16 +28,16 @@ const Form = () => {
       <CurrencyInput 
         className="swal2-input" 
         placeholder="Enter Price (Rp)"
-        name="price"
         id="priceinput"
+        onValueChange={(e) => priceChange(e)}
         intlConfig={intlConfig}
       />
       <label htmlFor="weight">Weight : </label>
       <CurrencyInput
         className="swal2-input"
         placeholder="Enter Weight (gram)"
-        name="weight"
         id="weight"
+        onValueChange={(e) => weightChange(e)}
         {...configInput}
       />
 			<label htmlFor="desc">Description :</label>
@@ -63,10 +66,12 @@ export default function Products() {
   const add = useAddMutation();
   const edit = useEditMutation();
   const del = useDeleteMutation();
+  const [price, setPrice] = useState(0);
+  const [weight, setWeight] = useState(0);
   const { data, isLoading, isError, error } = useProductQuery();
   const modalConfig = {
     title: "Product",
-    html: <Form />,
+    html: <Form priceChange={setPrice} weightChange={setWeight} />,
     showCancelButton: true,
   };
   const newFn = () => {
@@ -75,7 +80,11 @@ export default function Products() {
       didOpen: () => Swal.getPopup().querySelector("form").reset(),
       preConfirm: () => new FormData(Swal.getPopup().querySelector("form")),
     }).then((res) => {
-      res.isConfirmed && add.mutate(formToObj(res.value));
+      if (res.isConfirmed) {
+        res.value.append("price", price);
+        res.value.append("weight", weight);
+        add.mutate(formToObj(res.value));
+      }
     });
   };
   const editFn = (id) => {
@@ -84,7 +93,7 @@ export default function Products() {
       preConfirm: () => {
         const form = new FormData(Swal.getPopup().querySelector("form"));
         form.append("id", id);
-        return formToObj(form);
+        return form
       },
       didOpen: () => {
         const p = Swal.getPopup();
@@ -95,11 +104,15 @@ export default function Products() {
         const weight = document.getElementById(`${id}-weight`).dataset.value;
         p.querySelector("[name='product_name']").value = name;
         p.querySelector("[name='desc']").value = desc;
-        p.querySelector("[name='price']").value = formatValue({ value: price, intlConfig });
+        p.querySelector("#priceinput").value = formatValue({ value: price, intlConfig });
         p.querySelector("#weight").value = formatValue({ value: weight, ...configInput });
       },
     }).then((res) => {
-      res.isConfirmed && edit.mutate(res.value);
+      if (res.isConfirmed) {
+        res.value.append("price", price);
+        res.value.append("weight", weight);
+        edit.mutate(formToObj(res.value));
+      }
     });
   };
   const deleteFn = (id) => {
