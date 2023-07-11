@@ -5,7 +5,7 @@ const { getCities } = require("../lib/ongkir");
 	const { rajaongkir } = await getCities();
 	for (let i = 0; i < rajaongkir.results.length; i++) {
 		await seeder.seed(0, "cities", {
-			city_name: `${rajaongkir.results[i].type} ${rajaongkir.results[i].city_name}`,
+			city_name: rajaongkir.results[i].city_name,
 			type: rajaongkir.results[i].type,
 			createdAt: () => faker.date.recent(),
 			updatedAt: () => faker.date.recent()

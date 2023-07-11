@@ -9,6 +9,7 @@ import Loading from "@/components/Loading";
 import Error from "../error/Error";
 
 const intlConfig = { locale: "id-ID", currency: "IDR" };
+const configInput = { suffix: " gr", groupSeparator: ".", decimalSeparator: "," };
 const Form = () => {
   const onSubmit = (e) => e.preventDefault();
   return (
@@ -27,6 +28,14 @@ const Form = () => {
         name="price"
         id="priceinput"
         intlConfig={intlConfig}
+      />
+      <label htmlFor="weight">Weight : </label>
+      <CurrencyInput
+        className="swal2-input"
+        placeholder="Enter Weight (gram)"
+        name="weight"
+        id="weight"
+        {...configInput}
       />
 			<label htmlFor="desc">Description :</label>
       <textarea
@@ -83,9 +92,11 @@ export default function Products() {
           .value;
         const desc = document.getElementById(`${id}-desc`).dataset.value;
         const price = document.getElementById(`${id}-price`).dataset.value;
+        const weight = document.getElementById(`${id}-weight`).dataset.value;
         p.querySelector("[name='product_name']").value = name;
         p.querySelector("[name='desc']").value = desc;
         p.querySelector("[name='price']").value = formatValue({ value: price, intlConfig });
+        p.querySelector("#weight").value = formatValue({ value: weight, ...configInput });
       },
     }).then((res) => {
       res.isConfirmed && edit.mutate(res.value);
@@ -114,6 +125,7 @@ export default function Products() {
             ["product_name", "Product Name"],
             ["desc", "Description"],
             ["price", "Price (IDR)"],
+            ["weight", "Weight (grams)"]
           ]}
           data={data?.rows}
         />

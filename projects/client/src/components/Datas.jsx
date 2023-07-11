@@ -9,6 +9,7 @@ import Loading from "./Loading";
 import usePageStore from "@/hooks/store/usePageStore";
 import cropText from "@/libs/cropText";
 import NoContent from "./NoContent";
+import { formatValue } from "react-currency-input-field";
 
 /**
  * Template Table Untuk Data
@@ -21,6 +22,11 @@ export default function Datas(props) {
   const { columns, data, deleteFn, editFn, newFn, caption, readOnly, onClickRow } = props;
   const { page, nextPage, prevPage, count, isLoading } = usePageStore();
   const isEmpty = data && !data.length;
+  const format = (value) => !isNaN(Number(value)) ? formatValue({
+    value,
+    decimalSeparator: ",",
+    groupSeparator: ".",
+  }) : value;
 
   return (
     <>
@@ -78,7 +84,7 @@ export default function Datas(props) {
                         id={`${val.id}-${key[0]}`}
                         data-value={value}
                       >
-                        {value ? cropText(value) : "(empty)"}
+                        {value ? cropText(format(String(value))) : "(empty)"}
                       </td>
                     );
                   })}
