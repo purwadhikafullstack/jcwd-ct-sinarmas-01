@@ -33,8 +33,14 @@ export default function CartItem(props) {
 		}).then((res) => res.isConfirmed && del.mutate(obj));
 	};
 	const addToCheck = () => {
-		Swal.fire("Confirm", "Checkout this item?", "question")
-			.then(res => res.isConfirmed && toCheck.mutate(check));
+		Swal.fire({
+			title: "Confirm",
+			text: "Add this to checkout?",
+			icon: "question",
+			showCancelButton: true,
+			cancelButtonText: "No",
+			confirmButtonText: "Yes"
+		}).then(res => res.isConfirmed && toCheck.mutate(check));
 	}
 	const total = amount * price;
 	return (
