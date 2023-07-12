@@ -1,4 +1,4 @@
-import { Card } from "react-daisyui";
+import { Button, Card } from "react-daisyui";
 import { getId } from "@/api/token";
 import useCart from "@/hooks/queries/common/useCart";
 import Loading from "@/components/Loading";
@@ -38,9 +38,6 @@ export default function MyCart () {
 						{data && data.count === 0 && <NoContent />}
 					</div>
 				</Card.Body>
-				<Card.Actions className="p-5">
-					
-				</Card.Actions>
 			</Card>
 		</>
 	)

@@ -2,13 +2,12 @@ const { models } = require("../models");
 const { Checkouts, CheckoutItems, Addresses, Cities, Warehouses } = models;
 const { ongkir, compareDistance, toLatLng } = require("../lib");
 
-/**
- * @param {import("express").Request} req
- * @param {import("express").Response} res
- * */
-async function newCheckout(req, res) {
+async function newCheckout(user_id) {
 	try {
-		const checkout = await Checkouts.findOne({ where: { id } });
+		const checkout = await Checkouts.findOne({ where: { user_id } });
+		if (checkout) return checkout;
+		const newCheckout = await Checkouts.create({ user_id });
+		return newCheckout;
 	} catch (e) {
 		return res.status(500).json({ message: e.message, error: e });
 	}
@@ -21,7 +20,17 @@ const checkoutController = {
 	 * */
 	addItem: async function (req, res) {
 		try {
-
+			const { product_id, user_id, price, qty } = req.body;
+			const checkout = await newCheckout(user_id);
+			const checkout_id = checkout.id;
+			const item = await CheckoutItems.create({
+				user_id, 
+				checkout_id,
+				price,
+				qty,
+				product_id
+			});
+			return res.status(201).json({ message: "Item Added to Checkout", ...item.dataValues });
 		} catch (e) {
 			return res.status(500).json({ message: e.message, error: e });
 		}
@@ -33,7 +42,7 @@ const checkoutController = {
 			return res.status(500).json({ message: e.message, error: e });
 		}
 	},
-	getOngkir: async function (req, res) {
+	calcShipping: async function (req, res) {
 		try {
 			const { address_id } = req.body;
 			const address = await Addresses.findOne({ where: { id: address_id } });

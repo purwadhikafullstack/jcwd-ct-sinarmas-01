@@ -40,7 +40,7 @@ export default function CartItem(props) {
 					<b className="text-xl">{formatRp(total)}</b>
 				</div>
 			</div>
-			<div className="flex flex-0 justify-center items-center">
+			<div className="flex gap-3 flex-wrap justify-center items-center py-3">
 				<ButtonGroup>
 					<Button className="w-auto" color="warning" disabled={amount === 1} onClick={() => decrease.mutate(obj)}>
 						<FaMinus />
@@ -53,6 +53,9 @@ export default function CartItem(props) {
 						<FaTrash />
 					</Button>
 				</ButtonGroup>
+				<Button className="flex-0">
+					Checkout
+				</Button>
 			</div>
 		</div>
 	);
