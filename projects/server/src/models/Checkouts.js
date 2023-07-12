@@ -7,6 +7,7 @@ class Checkouts extends Sequelize.Model {
   static init(sequelize, DataTypes) {
   return sequelize.define('Checkouts', {
     id: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true

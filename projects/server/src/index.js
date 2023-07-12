@@ -11,7 +11,8 @@ const {
   userRoutes,
   productRoutes,
   cartRoutes,
-  categoryRoutes
+  categoryRoutes,
+  checkoutRoutes
 } = require("./routes");
 
 const PORT = process.env.PORT || 8000;
@@ -46,6 +47,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/checkout", checkoutRoutes);
 
 // ===========================
 

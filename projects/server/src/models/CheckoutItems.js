@@ -30,11 +30,11 @@ class CheckoutItems extends Sequelize.Model {
     },
     price: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: false
     },
     qty: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: false
     }
   }, {
     tableName: 'checkout_items',

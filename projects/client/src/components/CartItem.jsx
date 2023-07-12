@@ -3,17 +3,25 @@ import formatRp from "@/libs/formatRp";
 import { Button, ButtonGroup } from "react-daisyui";
 import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
 import Swal from "./Swal";
+import useCheckoutMutations from "@/hooks/mutations/user/useCheckoutMutations";
 
 export default function CartItem(props) {
 	const { useAddMutation, useDecrease, useDeleteItem } = useCartMutations();
-	const { amount, userId, productId, price, name, image } = props;
+	const { amount, userId, productId, price, name, image, itemId } = props;
 	const add = useAddMutation();
 	const del = useDeleteItem();
 	const decrease = useDecrease();
+	const { add: toCheck } = useCheckoutMutations();
 	const obj = {
 		user_id: userId,
 		product_id: productId,
 	};
+	const check = {
+		product_id: productId,
+		price,
+		qty: amount,
+		item_id: itemId
+	}
 	const deleteItem = () => {
 		Swal.fire({
 			title: "Confirm",
@@ -24,6 +32,10 @@ export default function CartItem(props) {
 			text: "Do you want to delete this from cart?",
 		}).then((res) => res.isConfirmed && del.mutate(obj));
 	};
+	const addToCheck = () => {
+		Swal.fire("Confirm", "Checkout this item?", "question")
+			.then(res => res.isConfirmed && toCheck.mutate(check));
+	}
 	const total = amount * price;
 	return (
 		<div className="flex flex-col p-5 gap-3 mb-4 bg-base-100 border-2 border-base-300 rounded-xl">
@@ -53,7 +65,7 @@ export default function CartItem(props) {
 						<FaTrash />
 					</Button>
 				</ButtonGroup>
-				<Button className="flex-0">
+				<Button className="flex-0" onClick={addToCheck}>
 					Checkout
 				</Button>
 			</div>

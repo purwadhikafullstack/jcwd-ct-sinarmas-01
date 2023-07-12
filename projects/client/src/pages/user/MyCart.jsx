@@ -5,17 +5,25 @@ import Loading from "@/components/Loading";
 import Error from "@/pages/error/Error";
 import CartItem from "@/components/CartItem";
 import NoContent from "@/components/NoContent";
+import { useNavigate } from "react-router-dom";
+import { FaTimes } from "react-icons/fa";
 
 export default function MyCart () {
 	const userId = getId();
+	const navigate = useNavigate();
 	const { data, isLoading, isError } = useCart(userId);
 
 	return (
 		<>
 			<Card>
 				<Card.Body>
-					<Card.Title className="mb-3">
-						My Cart
+					<Card.Title className="mb-3 flex">
+						<div className="flex-1">
+							My Cart
+						</div>
+						<Button className="flex-0" color="ghost" onClick={() => navigate("/explore")}>
+							<FaTimes />
+						</Button>
 					</Card.Title>
 					<div>
 						{isLoading && <Loading />}
@@ -25,7 +33,8 @@ export default function MyCart () {
 								return (	
 									<CartItem 
 										key={key} 
-										userId={userId} 
+										userId={userId}
+										itemId={val.id} 
 										productId={val.product_id} 
 										amount={val.qty}
 										price={val.product.price}
