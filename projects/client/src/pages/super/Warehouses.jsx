@@ -21,15 +21,22 @@ export default function ManageWareHouses() {
   const WarehouseForm = (props) => {
     return (
       <form onSubmit={(e) => e.preventDefault()}>
+        <label htmlFor="warehouse_name">Warehouse Name</label>
         <input
           name="warehouse_name"
+          id="warehouse_name"
           className="swal2-input"
           placeholder="Enter Warehouse Name"
           defaultValue={props.default}
         />
+        <label>Warehouse Location : </label>
         <Map onChange={setCenter} center={center} />
+        <label htmlFor="username" className="mt-3">Warehouse Admin Username : </label>
         <input
-          name="user_id"
+          name="username"
+          id="username"
+          className="swal2-input"
+          placeholder="Enter Admin Username"
         />
       </form>
     )
@@ -59,9 +66,11 @@ export default function ManageWareHouses() {
       title: `Edit Warehouse #${id}`,
       html: <WarehouseForm id={id} />,
       didOpen: () => {
-        const popup = Swal.getPopup();
+        const p = Swal.getPopup();
         const name = document.getElementById(`${id}-warehouse_name`).dataset.value;
-        popup.querySelector('[name="warehouse_name"]').value = name;
+        const admin = document.getElementById(`${id}-user.username`).dataset.value;
+        p.querySelector('[name="warehouse_name"]').value = name;
+        p.querySelector("[name='username']").value = admin;
       },
       preConfirm: () => {
         return Swal.getPopup().querySelector("form");
@@ -73,6 +82,7 @@ export default function ManageWareHouses() {
       form.append("q", `${center.lat}, ${center.lng}`);
       form.append("address_id", addressId);
       form.append("id", id);
+      console.log(formToObj(form));
       !result.isConfirmed ? setCenter(defaultPos.lat, defaultPos.lng) : edit.mutate(formToObj(form));
     });
   };

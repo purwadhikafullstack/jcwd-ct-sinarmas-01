@@ -12,11 +12,19 @@ class CheckoutItems extends Sequelize.Model {
       allowNull: false,
       primaryKey: true
     },
-    stock_id: {
+    product_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'stocks',
+        model: 'products',
+        key: 'id'
+      }
+    },
+    checkout_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'checkouts',
         key: 'id'
       }
     },
@@ -44,7 +52,14 @@ class CheckoutItems extends Sequelize.Model {
         name: "fk_checkout_items_stock1_idx",
         using: "BTREE",
         fields: [
-          { name: "stock_id" },
+          { name: "product_id" },
+        ]
+      },
+      {
+        name: "checkout_id",
+        using: "BTREE",
+        fields: [
+          { name: "checkout_id" },
         ]
       },
     ]

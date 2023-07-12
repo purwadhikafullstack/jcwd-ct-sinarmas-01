@@ -11,28 +11,8 @@ class Checkouts extends Sequelize.Model {
       allowNull: false,
       primaryKey: true
     },
-    checkout_items_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'checkout_items',
-        key: 'id'
-      }
-    },
-    status: {
-      type: DataTypes.STRING(45),
-      allowNull: true
-    },
-    struk_image: {
-      type: DataTypes.STRING(45),
-      allowNull: true
-    },
     shipping_price: {
       type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    isCompleted: {
-      type: DataTypes.TINYINT,
       allowNull: true
     },
     total_price: {
@@ -43,9 +23,17 @@ class Checkouts extends Sequelize.Model {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    expiredTime: {
-      type: DataTypes.DATE,
+    courier: {
+      type: DataTypes.STRING(6),
       allowNull: true
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id'
+      }
     }
   }, {
     tableName: 'checkouts',
@@ -60,10 +48,10 @@ class Checkouts extends Sequelize.Model {
         ]
       },
       {
-        name: "fk_checkout_checkout_items1_idx",
+        name: "user_id",
         using: "BTREE",
         fields: [
-          { name: "checkout_items_id" },
+          { name: "user_id" },
         ]
       },
     ]

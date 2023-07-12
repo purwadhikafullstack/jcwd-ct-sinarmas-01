@@ -8,6 +8,10 @@ const transporter = require("./transporter");
 const uploader = require("./uploader");
 const validation = require("./validation");
 const paginate = require("./paginate");
+const ongkir = require("./ongkir");
+const toGeoStr = require("./toGeoStr");
+const toLatLng = require("./toLatLng");
+const compareDistance = require("./compareDistance");
 
 module.exports = {
 	capitalize,
@@ -19,5 +23,9 @@ module.exports = {
 	transporter,
 	uploader,
 	validation,
-	paginate
+	paginate,
+	ongkir,
+	toGeoStr,
+	toLatLng,
+	compareDistance
 }

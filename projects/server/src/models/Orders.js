@@ -12,7 +12,7 @@ class Orders extends Sequelize.Model {
       primaryKey: true
     },
     status: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(30),
       allowNull: true
     },
     payment_proof: {
@@ -27,14 +27,6 @@ class Orders extends Sequelize.Model {
         key: 'id'
       }
     },
-    courier: {
-      type: DataTypes.STRING(20),
-      allowNull: true
-    },
-    shipping_price: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
     isCompleted: {
       type: DataTypes.TINYINT,
       allowNull: true,
@@ -42,7 +34,7 @@ class Orders extends Sequelize.Model {
     }
   }, {
     tableName: 'orders',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",
