@@ -1,5 +1,5 @@
 const { models } = require("../models");
-const { Warehouses, Addresses } = models;
+const { Warehouses, Addresses, Users } = models;
 const { searchGeo } = require("../controllers/address");
 
 const warehouseController = {
@@ -10,16 +10,23 @@ const warehouseController = {
    */
   addWarehouse: async function (req, res) {
     try {
-      const { warehouse_name, q } = req.body;
+      const { warehouse_name, q, username } = req.body;
       const [place] = await searchGeo(q);
+      const admin = await Users.findOne({ where: { username } });
+      if (admin.role !== "Admin") return res.status(400).json({ message: "This account isn't an admin" });
       const address = await Addresses.create({
         address_name: place.formatted,
-        city: place.components?.city || place.components?.county,
+        city: place.components?.city || place.components?.county.replace("Kabupaten ", ""),
         province: place.components.state,
         geolocation: q,
+        type: place.components?.city ? "Kota" : "Kabupaten",
       });
       console.log(address);
-      const warehouse = await Warehouses.create({ warehouse_name, address_id: address.id });
+      const warehouse = await Warehouses.create({ 
+        warehouse_name, 
+        address_id: address.id,
+        user_id: admin.id || null
+      });
       return res.status(201).json({ message: "Warehouse added", warehouse });
     } catch (error) {
       return res.status(500).json({
@@ -35,19 +42,23 @@ const warehouseController = {
   editWarehouse: async function (req, res) {
     try {
       const { warehouse_id } = req.params;
-      const { warehouse_name, q, address_id } = req.body;
+      const { warehouse_name, q, address_id, username } = req.body;
+      const admin = await Users.findOne({ where: { username } });
+      if (admin.role !== "Admin") return res.status(400).json({ message: "This account isn't an admin" });
       const [place] = await searchGeo(q);
       const address = await Addresses.update({
           address_name: place.formatted,
-          city: place.components?.city || place.components?.county,
+          city: place.components?.city || place.components?.county.replace("Kabupaten ", ""),
           province: place.components.state,
           geolocation: q,
+          type: place.components?.city ? "Kota" : "Kabupaten"
         },
         { where: { id: address_id } }
       );
 
       const warehouse = await Warehouses.findOne({ where: { id: warehouse_id } });
       warehouse.warehouse_name = warehouse_name;
+      warehouse.user_id = (admin.id || null) || warehouse.user_id;
       await warehouse.save();
       return res.status(200).json({ message: "Warehouse edited", warehouse, address });
     } catch (error) {

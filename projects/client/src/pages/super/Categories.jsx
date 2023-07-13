@@ -73,6 +73,7 @@ export default function Categories () {
 					newFn={newFn}
 					editFn={editFn}
 					deleteFn={deleteFn}
+					keys="categories"
 				/>	
 			)}
 			{isLoading && <Loading />}

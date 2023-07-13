@@ -9,7 +9,7 @@ const productController = {
 	 * */
 	addProduct: async function (req, res) {
 		try {
-			const { product_name, desc, price } = req.body;
+			const { product_name, desc, price, weight } = req.body;
 			const path = req.file?.path || "";
 			console.log(path);
 			const dest = path ? path
@@ -21,7 +21,8 @@ const productController = {
 				product_name,
 				desc,
 				product_image,
-				price
+				price: price.replace(/[^0-9]/g, ""),
+				weight: weight.replace(/[^0-9]/g, "")
 			});
 			return res.status(201).json({ message: "Product Added", product });
 		} catch (e) {
@@ -36,7 +37,8 @@ const productController = {
 	editProduct: async function (req, res) {
 		try {
 			const { id } = req.params;
-			const { product_name, desc, price } = req.body;
+			const { product_name, desc, price, weight } = req.body;
+			console.log(req.body);
 			const path = req?.file?.path || "";
 			const dest = path ? path
 				.replace(/\\/g, "/")
@@ -46,7 +48,8 @@ const productController = {
 			product.product_name = product_name || product.product_name;
 			product.product_image = product_image || product.product_image;
 			product.desc = desc || product.desc;
-			product.price = price || product.price;
+			product.price = price.replace(/[^0-9]/g, "") || product.price;
+			product.weight = weight.replace(/[^0-9]/g, "") || product.weight;
 			await product.save();
 			return res.status(200).json({ message: "Product Edited", product });
 		} catch (e) {

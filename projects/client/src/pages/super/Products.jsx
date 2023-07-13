@@ -5,9 +5,13 @@ import CurrencyInput, { formatValue } from "react-currency-input-field";
 import Swal from "@/components/Swal";
 import formToObj from "@/libs/formToObj";
 import { FileInput } from "react-daisyui";
+import Loading from "@/components/Loading";
+import Error from "../error/Error";
 
 const intlConfig = { locale: "id-ID", currency: "IDR" };
-const Form = () => {
+const configInput = { suffix: " gr", groupSeparator: ".", decimalSeparator: "," };
+
+const Form = (props) => {
   const onSubmit = (e) => e.preventDefault();
   return (
     <form encType="multipart/form-data" onSubmit={onSubmit}>
@@ -22,9 +26,17 @@ const Form = () => {
       <CurrencyInput 
         className="swal2-input" 
         placeholder="Enter Price (Rp)"
-        name="price"
         id="priceinput"
+        name="price"
         intlConfig={intlConfig}
+      />
+      <label htmlFor="weight">Weight : </label>
+      <CurrencyInput
+        className="swal2-input"
+        placeholder="Enter Weight (gram)"
+        id="weight"
+        name="weight"
+        {...configInput}
       />
 			<label htmlFor="desc">Description :</label>
       <textarea
@@ -52,7 +64,7 @@ export default function Products() {
   const add = useAddMutation();
   const edit = useEditMutation();
   const del = useDeleteMutation();
-  const query = useProductQuery();
+  const { data, isLoading, isError, error } = useProductQuery();
   const modalConfig = {
     title: "Product",
     html: <Form />,
@@ -62,9 +74,14 @@ export default function Products() {
     Swal.fire({
       ...modalConfig,
       didOpen: () => Swal.getPopup().querySelector("form").reset(),
-      preConfirm: () => new FormData(Swal.getPopup().querySelector("form")),
+      preConfirm: () => {
+        const form = new FormData(Swal.getPopup().querySelector("form"));
+        return form;
+      },
     }).then((res) => {
-      res.isConfirmed && add.mutate(formToObj(res.value));
+      if (res.isConfirmed) {
+        add.mutate(formToObj(res.value));
+      }
     });
   };
   const editFn = (id) => {
@@ -77,16 +94,19 @@ export default function Products() {
       },
       didOpen: () => {
         const p = Swal.getPopup();
-        const name = document.getElementById(`${id}-product_name`).dataset
-          .value;
+        const name = document.getElementById(`${id}-product_name`).dataset.value;
         const desc = document.getElementById(`${id}-desc`).dataset.value;
         const price = document.getElementById(`${id}-price`).dataset.value;
+        const weight = document.getElementById(`${id}-weight`).dataset.value;
         p.querySelector("[name='product_name']").value = name;
         p.querySelector("[name='desc']").value = desc;
-        p.querySelector("[name='price']").value = formatValue({ value: price, intlConfig });
+        p.querySelector("#priceinput").value = formatValue({ value: price, intlConfig });
+        p.querySelector("#weight").value = formatValue({ value: weight, ...configInput });
       },
     }).then((res) => {
-      res.isConfirmed && edit.mutate(res.value);
+      if (res.isConfirmed) {
+        edit.mutate(res.value);
+      }
     });
   };
   const deleteFn = (id) => {
@@ -98,18 +118,26 @@ export default function Products() {
   };
 
   return (
-    <Datas
-      newFn={newFn}
-      editFn={editFn}
-      deleteFn={deleteFn}
-      caption="Product"
-      columns={[
-        ["id", "Product ID", true],
-        ["product_name", "Product Name"],
-        ["desc", "Description"],
-        ["price", "Price (IDR)"],
-      ]}
-      data={query?.data?.rows}
-    />
+    <>
+      {isLoading && <Loading />}
+      {isError && <Error message={error.message} />}
+      {!isLoading && !isError && (
+        <Datas
+          newFn={newFn}
+          editFn={editFn}
+          deleteFn={deleteFn}
+          caption="Product"
+          columns={[
+            ["id", "Product ID", true],
+            ["product_name", "Product Name"],
+            ["desc", "Description"],
+            ["price", "Price (IDR)"],
+            ["weight", "Weight (grams)"]
+          ]}
+          keys={"products"}
+          data={data?.rows}
+        />
+      )}
+    </>
   );
 }

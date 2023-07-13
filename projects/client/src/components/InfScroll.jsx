@@ -35,7 +35,7 @@ export default function InfScroll(props) {
   ) : isError ? (
     <Error message={error.message} />
   ) : (
-    <>
+    <div className="grid md:grid-cols-2 col-auto gap-3">
       {data && data?.pages?.map((group, i) => (
         <Fragment key={i}>
           {group?.rows?.map((value, key) => (
@@ -59,6 +59,6 @@ export default function InfScroll(props) {
         </Button>
       </div>
       <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
-    </>
+    </div>
   );
 }

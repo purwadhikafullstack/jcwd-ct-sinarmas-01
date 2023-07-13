@@ -53,7 +53,8 @@ const categoryController = {
 			const { page } = req.query;
 			const { offset, limit } = paginate(Number(page));
 			const categories = await Categories.findAndCountAll({ offset, limit });
-			return res.status(200).json({ message: "Fetch Success", ...categories });
+			const pages = Math.ceil(categories.count / limit);
+			return res.status(200).json({ message: "Fetch Success", ...categories, pages });
 		} catch (e) {
 			return res.status(500).json({ message: e.message, error: e });
 		}

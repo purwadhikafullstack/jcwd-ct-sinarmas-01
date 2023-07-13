@@ -103,9 +103,8 @@ const cartController = {
 		try {
 			const { user_id } = req.params;
 			const cart = await Carts.findOne({ where: { user_id } });
-			const where = { 
-				cart_id: cart.id 
-			}
+			if (!cart) return res.status(204).json({ message: "Empty" });
+			const where = { cart_id: cart.id }
 			const item = await CartItems.findAndCountAll({ 
 				where, 
 				include: ["cart", "product"],

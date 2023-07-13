@@ -1,6 +1,5 @@
 const { seed, faker } = require("./");
 const { hash } = require("../lib");
-console.log(process.argv);
 
 (async () => {
 	const password = await hash.encrypt("Test.1234");

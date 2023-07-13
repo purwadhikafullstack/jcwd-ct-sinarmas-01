@@ -44,6 +44,18 @@ const accountController = {
     } catch (e) {
       return res.status(500).json({ message: e.message, error: e });
     }
+  },
+  /**
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * */
+  getAdmins: async function (req, res) {
+    try {
+      const admins = await Users.findAndCountAll({ where: { role: "Admin" } });
+      return res.status(200).json({ message: "Fetch Success", ...admins });
+    } catch (e) {
+      return res.status(500).json({ message: e.message, error: e });
+    }
   }
 };
 

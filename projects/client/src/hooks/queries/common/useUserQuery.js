@@ -7,7 +7,7 @@ export default function useUserQuery() {
 	const setCount = usePageStore(state => state.setCount);
 	const setLoading = usePageStore(state => state.setLoading);
 	const goToPage = usePageStore(state => state.goToPage);
-	const { data, isError, isLoading } = useQuery({
+	const { data, isError, isLoading, error } = useQuery({
 		queryFn: async () => await getUsers(page),
 		queryKey: ["users", page],
 		onSuccess: data => {
@@ -21,6 +21,7 @@ export default function useUserQuery() {
 		data,
 		isError,
 		isLoading,
-		page
+		page,
+		error
 	};
 };

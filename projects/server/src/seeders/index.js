@@ -18,5 +18,5 @@ async function seed (rounds, name, obj) {
 }
 
 module.exports = { 
-  faker, seed
+  faker, seed, seeder
 };
