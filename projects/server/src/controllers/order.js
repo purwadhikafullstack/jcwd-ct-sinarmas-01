@@ -80,6 +80,12 @@ const orderController = {
       return res.status(500).json({ message: e.message, error: e });
     }
   },
+  /**
+   * 
+   * @param {import("express").Request} req 
+   * @param {import("express").Response} res 
+   * @returns 
+   */
   userOrders: async function (req, res) {
     try {
       const user_id = req.user?.id;
@@ -91,6 +97,17 @@ const orderController = {
         offset
       });
       const pages = Math.ceil(orders.count / limit);
+      return res.status(200).json({ message: "Fetch Success", ...orders, page, pages });
+    } catch (e) {
+      return res.status(500).json({ message: e.message, error: e });
+    }
+  },
+  allOrders: async function (req, res) {
+    try {
+      const page = Number(req.query?.page) || 1;
+      const { limit, offset } = paginate(page);
+      const orders = await Orders.findAndCountAll({ limit, offset });
+      const pages = Math.ceil(orders.count /limit);
       return res.status(200).json({ message: "Fetch Success", ...orders, page, pages });
     } catch (e) {
       return res.status(500).json({ message: e.message, error: e });

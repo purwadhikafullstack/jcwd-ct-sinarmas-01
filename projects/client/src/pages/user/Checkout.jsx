@@ -9,12 +9,15 @@ import formToObj from "@/libs/formToObj";
 import { Button, Card, Select, Table } from "react-daisyui";
 import Swal from "sweetalert2";
 import Error from "../error/Error";
+import { useState } from "react";
 
 export default function Checkout () {
 	const query = useCheckouts();
 	const { data, isLoading, isError, error } = query;
 	const { Option } = Select;
 	const calc = useCalcFees();
+	const [addressId, setAddressId] = useState(0);
+	const [courier, setCourier] = useState("");
 
 	const onSubmit = (e) => {
 		if (isLoading){
@@ -24,10 +27,10 @@ export default function Checkout () {
 		const form = new FormData(e.target);
 		form.append("checkout_id", data.id);
 		const obj = formToObj(form);
-		if (obj.address_id && obj.courier)
-			calc.mutate(obj);
-		if (!obj.address_id || !obj.courier)
-			Swal.fire("", "Fill your data", "warning");
+		setAddressId(obj.address_id);
+		setCourier(obj.courier);
+		if (!obj.address_id || !obj.courier) return Swal.fire("", "Fill your data", "warning");
+		calc.mutate(obj);
 	}
 	const addresses = useAddresses();
 	return (
@@ -83,36 +86,45 @@ export default function Checkout () {
 				</div>
 			</Card.Body>
 			<Card.Actions className="p-5 flex justify-between gap-3 w-full">
-				<Table width="100%">
-					<Table.Head>
-						<span />
-						<span />
-					</Table.Head>
-					<Table.Body>
-						<Table.Row>
-							<span>
-								Items Price
-							</span>
-							<span>
-								<b>{!isLoading && formatRp(data.total_price - data.shipping_price)}</b>
-							</span>
-						</Table.Row>
-						<Table.Row>
-							<span>
-								Shipping Fee @ {!isLoading && data.total_weight} grams
-							</span>
-							<span>
-								<b>{!isLoading && formatRp(data.shipping_price)}</b>
-							</span>
-						</Table.Row>
-						<Table.Row>
+				<div className="overflow-x-auto w-full">
+					<Table width="100%">
+						<Table.Head>
 							<span />
-							<span>
-								<b>{!isLoading && formatRp(data.total_price)}</b>
-							</span>
-						</Table.Row>
-					</Table.Body>
-				</Table>
+							<span />
+							<span />
+						</Table.Head>
+						<Table.Body>
+							<Table.Row>
+								<span />
+								<span>
+									Items Price
+								</span>
+								<span>
+									<b>{!isLoading && formatRp(data.total_price - data.shipping_price)}</b>
+								</span>
+							</Table.Row>
+							<Table.Row>
+								<span />
+								<span>
+									Shipping Fee
+								</span>
+								<span>
+									<b>{!isLoading && formatRp(data.shipping_price)}</b>
+								</span>
+							</Table.Row>
+							<Table.Row>
+								<span />
+								<span />
+								<span>
+									<b>{!isLoading && formatRp(data.total_price)}</b>
+								</span>
+							</Table.Row>
+						</Table.Body>
+					</Table>
+				</div>
+				<Button fullWidth color="primary" disabled={!addressId || !courier}>
+					Create Order
+				</Button>
 			</Card.Actions>
 		</Card>	
 	)
