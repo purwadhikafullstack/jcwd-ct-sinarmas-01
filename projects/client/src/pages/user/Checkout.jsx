@@ -41,8 +41,8 @@ export default function Checkout () {
 				<form onSubmit={onSubmit} className="mb-4">
 					<div className="mb-3 text-left">
 						<label htmlFor="address" className="text-left">Address : </label>
-						<Select className="w-full" id="address" name="address_id">
-							<Option value="">
+						<Select className="w-full" id="address" name="address_id" defaultValue="">
+							<Option value="" disabled>
 								-- Select your address --
 							</Option>
 							{addresses.data && addresses.data?.rows?.map((val, key) => {
@@ -52,8 +52,8 @@ export default function Checkout () {
 					</div>
 					<div className="mb-3 text-left">
 						<label htmlFor="courier" className="text-left">Delivery Service : </label>
-						<Select className="w-full" id="courier" name="courier">
-							<Option value="">-- Select Shipping Service --</Option>
+						<Select className="w-full" id="courier" name="courier" defaultValue="">
+							<Option value="" disabled>-- Select Shipping Service --</Option>
 							<Option value="jne">JNE</Option>
 							<Option value="tiki">TIKI</Option>
 							<Option value="pos">POS</Option>
