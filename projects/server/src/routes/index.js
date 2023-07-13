@@ -17,5 +17,6 @@ module.exports = {
   cartRoutes,
   categoryRoutes,
   checkoutRoutes,
-  orderRoutes
+  orderRoutes,
+  checkoutRoutes
 };

@@ -57,6 +57,12 @@ export default function Checkout () {
 			check.mutate(res.value);
 		})
 	}
+		if (obj.address_id && obj.courier)
+			calc.mutate(obj);
+		if (!obj.address_id || !obj.courier)
+			Swal.fire("", "Fill your data", "warning");
+	}
+	const addresses = useAddresses();
 	return (
 		<Card>
 			<Card.Body>
@@ -154,6 +160,36 @@ export default function Checkout () {
 				>
 					Create Order
 				</Button>
+				<Table width="100%">
+					<Table.Head>
+						<span />
+						<span />
+					</Table.Head>
+					<Table.Body>
+						<Table.Row>
+							<span>
+								Items Price
+							</span>
+							<span>
+								<b>{!isLoading && formatRp(data.total_price - data.shipping_price)}</b>
+							</span>
+						</Table.Row>
+						<Table.Row>
+							<span>
+								Shipping Fee @ {!isLoading && data.total_weight} grams
+							</span>
+							<span>
+								<b>{!isLoading && formatRp(data.shipping_price)}</b>
+							</span>
+						</Table.Row>
+						<Table.Row>
+							<span />
+							<span>
+								<b>{!isLoading && formatRp(data.total_price)}</b>
+							</span>
+						</Table.Row>
+					</Table.Body>
+				</Table>
 			</Card.Actions>
 		</Card>	
 	)
