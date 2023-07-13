@@ -10,6 +10,7 @@ import { Button, Card, Select, Table } from "react-daisyui";
 import Swal from "sweetalert2";
 import Error from "../error/Error";
 import { useState } from "react";
+import useCreateOrder from "@/hooks/mutations/user/useCreateOrder";
 
 export default function Checkout () {
 	const query = useCheckouts();
@@ -18,6 +19,7 @@ export default function Checkout () {
 	const calc = useCalcFees();
 	const [addressId, setAddressId] = useState(0);
 	const [courier, setCourier] = useState("");
+	const check = useCreateOrder();
 
 	const onSubmit = (e) => {
 		if (isLoading){
@@ -33,6 +35,28 @@ export default function Checkout () {
 		calc.mutate(obj);
 	}
 	const addresses = useAddresses();
+
+	const confirmPayment = (id) => {
+		Swal.fire({
+			title: "Payment",
+			input: "file",
+			text: "Upload your payment proof to bank account 9876512345",
+			inputAttributes: {
+				"accept": ".jpg, .png, .jpeg, .webp",
+				"aria-label": "Upload your payment proof to bank account 9876512345"
+			},
+			preConfirm: (value) => {
+				const form = new FormData();
+				form.append("payment", value);
+				form.append("checkout_id", id);
+				return formToObj(form);
+			}
+		}).then (res => {
+			if (!res.isConfirmed) return;
+			if (!res.value?.payment || !res.value?.checkout_id) return Swal.fire("You have to upload your proof");		
+			check.mutate(res.value);
+		})
+	}
 	return (
 		<Card>
 			<Card.Body>
@@ -122,7 +146,12 @@ export default function Checkout () {
 						</Table.Body>
 					</Table>
 				</div>
-				<Button fullWidth color="primary" disabled={!addressId || !courier}>
+				<Button 
+					fullWidth 
+					color="primary" 
+					disabled={!addressId || !courier} 
+					onClick={() => !isLoading && confirmPayment(data.id)}
+				>
 					Create Order
 				</Button>
 			</Card.Actions>

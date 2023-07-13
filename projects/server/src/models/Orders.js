@@ -7,6 +7,7 @@ class Orders extends Sequelize.Model {
   static init(sequelize, DataTypes) {
   return sequelize.define('Orders', {
     id: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true

@@ -12,8 +12,9 @@ const orderController = {
   newOrder: async function (req, res) {
     try {
       const { checkout_id } = req.body;
-      const checkout = await Checkouts.findByPk(checkout);
+      const checkout = await Checkouts.findByPk(checkout_id);
       const path = req.file?.path || "";
+      console.log(req.file);
       const dest = path ? path
         .replace(/\\/g, "/")
         .replace("public/", "") : null;
@@ -28,6 +29,7 @@ const orderController = {
       });
       return res.status(201).json({ message: "Order Created", ...order.dataValues });
     } catch (e) {
+      console.log({ message: e.message, e });
       return res.status(500).json({ message: e.message, error: e });
     }
   },
