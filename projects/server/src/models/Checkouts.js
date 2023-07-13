@@ -24,6 +24,10 @@ class Checkouts extends Sequelize.Model {
       type: DataTypes.INTEGER,
       allowNull: true
     },
+    total_weight: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     courier: {
       type: DataTypes.STRING(6),
       allowNull: true

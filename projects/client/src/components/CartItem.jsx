@@ -7,7 +7,7 @@ import useCheckoutMutations from "@/hooks/mutations/user/useCheckoutMutations";
 
 export default function CartItem(props) {
 	const { useAddMutation, useDecrease, useDeleteItem } = useCartMutations();
-	const { amount, userId, productId, price, name, image, itemId } = props;
+	const { amount, userId, productId, price, name, image, itemId, weight, hideActions } = props;
 	const add = useAddMutation();
 	const del = useDeleteItem();
 	const decrease = useDecrease();
@@ -20,7 +20,8 @@ export default function CartItem(props) {
 		product_id: productId,
 		price,
 		qty: amount,
-		item_id: itemId
+		item_id: itemId,
+		weight
 	}
 	const deleteItem = () => {
 		Swal.fire({
@@ -55,26 +56,29 @@ export default function CartItem(props) {
 				</div>
 				<div className="flex flex-col flex-wrap flex-1 justify-center items-center">
 					<div className="text-lg">{name}</div>
-					<b className="text-xl">{formatRp(total)}</b>
+					<b className="text-xl mb-4">{formatRp(total)}</b>
+					<div className={!hideActions ? "hidden" : ""}>Quantity : {amount}</div>
 				</div>
 			</div>
-			<div className="flex gap-3 flex-wrap justify-center items-center py-3">
-				<ButtonGroup>
-					<Button className="w-auto" color="warning" disabled={amount === 1} onClick={() => decrease.mutate(obj)}>
-						<FaMinus />
-					</Button>
-					<Button>{amount}</Button>
-					<Button className="w-auto" color="warning" onClick={() => add.mutate(obj)}>
-						<FaPlus />
-					</Button>
-					<Button className="w-auto" color="error" onClick={deleteItem}>
-						<FaTrash />
-					</Button>
-				</ButtonGroup>
-				<Button className="flex-0" onClick={addToCheck}>
-					Checkout
-				</Button>
-			</div>
+			{!hideActions && (
+				<div className="flex gap-3 flex-wrap justify-center items-center py-3">
+					<ButtonGroup className="grow">
+						<Button className="w-auto" color="warning" disabled={amount === 1} onClick={() => decrease.mutate(obj)}>
+							<FaMinus />
+						</Button>
+						<Button>{amount}</Button>
+						<Button className="w-auto" color="warning" onClick={() => add.mutate(obj)}>
+							<FaPlus />
+						</Button>
+						<Button className="w-auto" color="error" onClick={deleteItem}>
+							<FaTrash />
+						</Button>
+					</ButtonGroup>
+					<Button className="flex-0 grow" onClick={addToCheck}>
+						Checkout
+					</Button>	
+				</div>
+			)}
 		</div>
 	);
 }

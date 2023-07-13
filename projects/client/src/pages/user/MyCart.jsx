@@ -37,6 +37,7 @@ export default function MyCart () {
 										itemId={val.id} 
 										productId={val.product_id} 
 										amount={val.qty}
+										weight={val.product.weight}
 										price={val.product.price}
 										name={val.product.product_name}
 										image={val.product.product_image}

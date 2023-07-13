@@ -1,7 +1,6 @@
 const { models } = require("../models");
-const { Checkouts, CheckoutItems, Addresses, Cities, Warehouses, CartItems } = models;
+const { Checkouts, CheckoutItems, Addresses, Cities, Warehouses, CartItems, Products } = models;
 const { ongkir, compareDistance, toLatLng } = require("../lib");
-const sequelize = require("sequelize");
 
 async function newCheckout(user_id) {
 	try {
@@ -23,7 +22,7 @@ const checkoutController = {
 	addItem: async function (req, res) {
 		try {
 			const user_id = req.user?.id;
-			const { product_id, price, qty, item_id } = req.body;
+			const { product_id, price, qty, item_id, weight } = req.body;
 			const checkout = await newCheckout(user_id);
 			if (!checkout) return res.status(404).json({ message: "Checkout not found" });
 			await CartItems.destroy({ where: { id: item_id } });
@@ -33,10 +32,12 @@ const checkoutController = {
 				checkout_id,
 				price: price * qty,
 				qty,
+				weight: weight * qty,
 				product_id
 			});
 			checkout.total_price = checkout.total_price + item.price;
 			checkout.total_qty = checkout.total_qty + item.qty;
+			checkout.total_weight = checkout.total_weight + item.weight;
 			await checkout.save();
 			console.log(checkout);
 			return res.status(201).json({ message: "Item Added to Checkout", ...item.dataValues });
@@ -53,10 +54,11 @@ const checkoutController = {
 			return res.status(500).json({ message: e.message, error: e });
 		}
 	},
-	calcShipping: async function (req, res) {
+	calcFees: async function (req, res) {
 		try {
-			const { address_id } = req.body;
+			const { address_id, checkout_id, courier } = req.body;
 			const address = await Addresses.findOne({ where: { id: address_id } });
+			const checkout = await Checkouts.findOne({ where: { id: checkout_id } });
 			if (!address) return res.status(404).json({ message: "Address Not Found" });
 			const warehouses = await Warehouses.findAll({ include: ["address"] });
 			console.log(warehouses);
@@ -76,8 +78,13 @@ const checkoutController = {
 					type: warehouse.address.type 
 				} 
 			});
-			const shipping_fee = await ongkir.countFees(origin.id, dest.id)
-			return res.status(200).json({ message: "Fetch Success" });
+			const { rajaongkir } = await ongkir.countFees(origin.id, dest.id, checkout.total_weight, courier);
+			const shipping = rajaongkir.results[0].costs[0].cost[0].value;
+			checkout.shipping_price = shipping;
+			checkout.total_price = checkout.total_price + shipping;
+			checkout.courier = courier;
+			await checkout.save();
+			return res.status(200).json({ message: "Fees Detail updated", ...checkout.dataValues });
 		} catch (e) {
 			return res.status(500).json({ message: e.message, error: e });
 		}
@@ -91,14 +98,17 @@ const checkoutController = {
 			const user_id = req.user?.id;
 			const checkout = await Checkouts.findOne({ 
 				where: { user_id }, 
-				include: ["checkout_items"],
-				attributes: {
-					include: [
-						[sequelize.fn("SUM", sequelize.col("checkout_items.price")), "total_price"]	
-					]
+				include: {
+					model: CheckoutItems,
+					as: "checkout_items",
+					include: {
+						model: Products,
+						as: "product",
+						attributes: ["product_name", "product_image"]
+					}
 				}
 			});
-			console.log(checkout);
+			if (!checkout) return res.status(204).json({ message: "No Items" });
 			return res.status(200).json({ message: "Fetch Success", ...checkout.dataValues });
 		} catch (e) {
 			return res.status(500).json({ message: e.message, error: e });

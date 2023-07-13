@@ -21,6 +21,7 @@ const Explore = lazy(() => import("./pages/user/Explore"));
 const MyCart = lazy(() => import("./pages/user/MyCart"));
 const Address = lazy(() => import("./pages/user/Address"));
 const ManageCategories = lazy(() => import("./pages/super/Categories"));
+const Checkout = lazy(() => import("./pages/user/Checkout"));
 
 function App() {
   const settings = {
@@ -56,6 +57,7 @@ function App() {
         <Route path="/user" element={<Layout role="user" />}>
           <Route index element={<Suspense><UserPage /></Suspense>} />
           <Route path="cart" element={<Suspense><MyCart /></Suspense>} />
+          <Route path="cart/checkout" element={<Suspense><Checkout /></Suspense>} />
           <Route path="address" element={<Suspense><Address /></Suspense>} />
         </Route>
         <Route path="/explore" element={<Layout />}>

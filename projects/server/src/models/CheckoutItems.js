@@ -32,6 +32,10 @@ class CheckoutItems extends Sequelize.Model {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    weight: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     qty: {
       type: DataTypes.INTEGER,
       allowNull: false
