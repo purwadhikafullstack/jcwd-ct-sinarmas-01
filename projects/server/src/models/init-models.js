@@ -19,43 +19,42 @@ const _Verification = require("./Verification");
 const _Warehouses = require("./Warehouses");
 
 function initModels(sequelize) {
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const AddressOwners = _AddressOwners(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const Addresses = _Addresses(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const CartItems = _CartItems(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const Carts = _Carts(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const Categories = _Categories(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const CheckoutItems = _CheckoutItems(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const Checkouts = _Checkouts(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const Cities = _Cities(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const Orders = _Orders(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const Products = _Products(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const Reset = _Reset(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const StockJurnals = _StockJurnals(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const StockMutations = _StockMutations(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const Stocks = _Stocks(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const TipeJurnals = _TipeJurnals(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const Users = _Users(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const Verification = _Verification(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
+  /**@type {typeof import("sequelize").Model} */
   const Warehouses = _Warehouses(sequelize, DataTypes);
-  /** @type {typeof import("sequelize").Model} */
 
   AddressOwners.belongsTo(Addresses, { as: "address", foreignKey: "address_id"});
   Addresses.hasMany(AddressOwners, { as: "address_owners", foreignKey: "address_id"});
@@ -87,6 +86,8 @@ function initModels(sequelize) {
   Users.hasMany(Carts, { as: "carts", foreignKey: "user_id"});
   Checkouts.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasMany(Checkouts, { as: "checkouts", foreignKey: "user_id"});
+  Orders.belongsTo(Users, { as: "user", foreignKey: "user_id"});
+  Users.hasMany(Orders, { as: "orders", foreignKey: "user_id"});
   Reset.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasMany(Reset, { as: "resets", foreignKey: "user_id"});
   Verification.belongsTo(Users, { as: "user", foreignKey: "user_id"});

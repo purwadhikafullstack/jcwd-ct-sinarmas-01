@@ -27,6 +27,14 @@ class Orders extends Sequelize.Model {
         key: 'id'
       }
     },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id'
+      }
+    },
     isCompleted: {
       type: DataTypes.TINYINT,
       allowNull: true,
@@ -49,6 +57,13 @@ class Orders extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "checkout_id" },
+        ]
+      },
+      {
+        name: "user_id",
+        using: "BTREE",
+        fields: [
+          { name: "user_id" },
         ]
       },
     ]

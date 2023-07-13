@@ -11,7 +11,6 @@ const productController = {
 		try {
 			const { product_name, desc, price, weight } = req.body;
 			const path = req.file?.path || "";
-			console.log(path);
 			const dest = path ? path
 				.replace(/\\/g, "/")
 				.replace("public/", "") : null;
