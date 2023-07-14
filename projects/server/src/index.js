@@ -13,8 +13,7 @@ const {
   cartRoutes,
   categoryRoutes,
   checkoutRoutes,
-  orderRoutes,
-  checkoutRoutes,
+  orderRoutes
 } = require("./routes");
 
 const PORT = process.env.PORT || 8000;

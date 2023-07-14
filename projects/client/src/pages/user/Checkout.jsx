@@ -6,7 +6,7 @@ import useAddresses from "@/hooks/queries/user/useAddresses";
 import useCheckouts from "@/hooks/queries/user/useCheckouts";
 import formatRp from "@/libs/formatRp";
 import formToObj from "@/libs/formToObj";
-import { Button, Card, Select, Table } from "react-daisyui";
+import { Button, Card, Select } from "react-daisyui";
 import Swal from "@/components/Swal";
 import Error from "../error/Error";
 import { useState } from "react";
@@ -55,16 +55,10 @@ export default function Checkout () {
 			}
 		}).then (res => {
 			if (!res.isConfirmed) return;
-			if (!res.value?.payment || !res.value?.checkout_id) return Swal.fire("You have to upload your proof");		
-			check.mutate(res.value);
+			if (!res.value?.payment) return Swal.fire("You have to upload your proof");		
+			if (res.value?.payment) check.mutate(res.value);
 		})
 	}
-		if (obj.address_id && obj.courier)
-			calc.mutate(obj);
-		if (!obj.address_id || !obj.courier)
-			Swal.fire("", "Fill your data", "warning");
-	}
-	const addresses = useAddresses();
 	return (
 		<Card>
 			<Card.Body>
@@ -94,14 +88,14 @@ export default function Checkout () {
 							<Option value="pos">POS</Option>
 						</Select>
 					</div>
-					<Button disabled={calc.isLoading || !data.count} className="my-5" color="primary" fullWidth>
+					<Button disabled={calc.isLoading || (!isLoading && !data)} className="my-5" color="primary" fullWidth>
 						{!calc.isLoading ? <>Check Fees</> : <LoaderText />}
 					</Button>
 				</form>
 				<div className="overflow-y-auto">
 					{isLoading && <Loading />}
 					{isError && <Error message={error.message} />}
-					{!isLoading && !isError && data.count && data.checkout_items?.map((val, key) => {
+					{!isLoading && !isError && data.checkout_items?.map((val, key) => {
 						return (
 							<CartItem
 								key={key}
@@ -120,7 +114,7 @@ export default function Checkout () {
 			</Card.Body>
 			<Card.Actions className="p-5 flex justify-between gap-3 w-full">
 				<div className="overflow-x-auto w-full">
-					{!isLoading && data.count && (
+					{!!addressId && !!courier && !calc.isLoading && data && (
 						<Prices
 							shipping={formatRp(data.shipping_price)}
 							price={formatRp(data.total_price - data.shipping_price)}
@@ -131,41 +125,11 @@ export default function Checkout () {
 				<Button 
 					fullWidth 
 					color="primary" 
-					disabled={!addressId || !courier || !data.count} 
+					disabled={!addressId || !courier || !data} 
 					onClick={() => !isLoading && confirmPayment(data.id)}
 				>
 					Create Order
 				</Button>
-				<Table width="100%">
-					<Table.Head>
-						<span />
-						<span />
-					</Table.Head>
-					<Table.Body>
-						<Table.Row>
-							<span>
-								Items Price
-							</span>
-							<span>
-								<b>{!isLoading && formatRp(data.total_price - data.shipping_price)}</b>
-							</span>
-						</Table.Row>
-						<Table.Row>
-							<span>
-								Shipping Fee @ {!isLoading && data.total_weight} grams
-							</span>
-							<span>
-								<b>{!isLoading && formatRp(data.shipping_price)}</b>
-							</span>
-						</Table.Row>
-						<Table.Row>
-							<span />
-							<span>
-								<b>{!isLoading && formatRp(data.total_price)}</b>
-							</span>
-						</Table.Row>
-					</Table.Body>
-				</Table>
 			</Card.Actions>
 		</Card>	
 	)

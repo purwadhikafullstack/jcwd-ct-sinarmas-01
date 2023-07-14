@@ -4,10 +4,11 @@ const { ongkir, compareDistance, toLatLng } = require("../lib");
 
 async function newCheckout(user_id) {
 	try {
-		const checkout = await Checkouts.findOne({ where: { user_id } });
+		const checkout = await Checkouts.findOne({ where: { user_id, checked: 0 } });
 		if (checkout) return checkout;
 		await Checkouts.create({ user_id });
-		const newCheckout = await Checkouts.findOne({ where: { user_id }});
+		const newCheckout = await Checkouts.findOne({ where: { user_id, checked: 0 }});
+		console.log(newCheckout);
 		return newCheckout;
 	} catch (e) {
 		console.error(e.message);
@@ -97,7 +98,7 @@ const checkoutController = {
 		try {
 			const user_id = req.user?.id;
 			const checkout = await Checkouts.findOne({ 
-				where: { user_id }, 
+				where: { user_id, checked: false }, 
 				include: {
 					model: CheckoutItems,
 					as: "checkout_items",
