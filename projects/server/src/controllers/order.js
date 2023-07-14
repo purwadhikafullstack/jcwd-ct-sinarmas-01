@@ -13,6 +13,8 @@ const orderController = {
     try {
       const { checkout_id } = req.body;
       const checkout = await Checkouts.findByPk(checkout_id);
+      checkout.checked = true;
+      await checkout.save();
       const path = req.file?.path || "";
       console.log(req.file);
       const dest = path ? path

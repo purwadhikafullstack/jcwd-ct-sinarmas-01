@@ -7,10 +7,12 @@ import useCheckouts from "@/hooks/queries/user/useCheckouts";
 import formatRp from "@/libs/formatRp";
 import formToObj from "@/libs/formToObj";
 import { Button, Card, Select, Table } from "react-daisyui";
-import Swal from "sweetalert2";
+import Swal from "@/components/Swal";
 import Error from "../error/Error";
 import { useState } from "react";
 import useCreateOrder from "@/hooks/mutations/user/useCreateOrder";
+import NoContent from "@/components/NoContent";
+import Prices from "@/components/Prices";
 
 export default function Checkout () {
 	const query = useCheckouts();
@@ -86,14 +88,14 @@ export default function Checkout () {
 							<Option value="pos">POS</Option>
 						</Select>
 					</div>
-					<Button disabled={calc.isLoading} className="my-5" color="primary" fullWidth>
+					<Button disabled={calc.isLoading || !data.count} className="my-5" color="primary" fullWidth>
 						{!calc.isLoading ? <>Check Fees</> : <LoaderText />}
 					</Button>
 				</form>
 				<div className="overflow-y-auto">
 					{isLoading && <Loading />}
 					{isError && <Error message={error.message} />}
-					{!isLoading && !isError && data.checkout_items.map((val, key) => {
+					{!isLoading && !isError && data.count && data.checkout_items?.map((val, key) => {
 						return (
 							<CartItem
 								key={key}
@@ -107,49 +109,23 @@ export default function Checkout () {
 							/>	
 						)
 					})}
+					{!data && <NoContent />}
 				</div>
 			</Card.Body>
 			<Card.Actions className="p-5 flex justify-between gap-3 w-full">
 				<div className="overflow-x-auto w-full">
-					<Table width="100%">
-						<Table.Head>
-							<span />
-							<span />
-							<span />
-						</Table.Head>
-						<Table.Body>
-							<Table.Row>
-								<span />
-								<span>
-									Items Price
-								</span>
-								<span>
-									<b>{!isLoading && formatRp(data.total_price - data.shipping_price)}</b>
-								</span>
-							</Table.Row>
-							<Table.Row>
-								<span />
-								<span>
-									Shipping Fee
-								</span>
-								<span>
-									<b>{!isLoading && formatRp(data.shipping_price)}</b>
-								</span>
-							</Table.Row>
-							<Table.Row>
-								<span />
-								<span />
-								<span>
-									<b>{!isLoading && formatRp(data.total_price)}</b>
-								</span>
-							</Table.Row>
-						</Table.Body>
-					</Table>
+					{!isLoading && data.count && (
+						<Prices
+							shipping={formatRp(data.shipping_price)}
+							price={formatRp(data.total_price - data.shipping_price)}
+							total={formatRp(data.total_price)}
+						/>
+					)}
 				</div>
 				<Button 
 					fullWidth 
 					color="primary" 
-					disabled={!addressId || !courier} 
+					disabled={!addressId || !courier || !data.count} 
 					onClick={() => !isLoading && confirmPayment(data.id)}
 				>
 					Create Order
