@@ -32,6 +32,11 @@ class Checkouts extends Sequelize.Model {
       type: DataTypes.STRING(6),
       allowNull: true
     },
+    checked: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: 0
+    },
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

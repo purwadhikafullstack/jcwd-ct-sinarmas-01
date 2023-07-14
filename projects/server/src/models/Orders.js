@@ -7,6 +7,7 @@ class Orders extends Sequelize.Model {
   static init(sequelize, DataTypes) {
   return sequelize.define('Orders', {
     id: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -24,6 +25,14 @@ class Orders extends Sequelize.Model {
       allowNull: true,
       references: {
         model: 'checkouts',
+        key: 'id'
+      }
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
         key: 'id'
       }
     },
@@ -49,6 +58,13 @@ class Orders extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "checkout_id" },
+        ]
+      },
+      {
+        name: "user_id",
+        using: "BTREE",
+        fields: [
+          { name: "user_id" },
         ]
       },
     ]

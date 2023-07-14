@@ -11,7 +11,6 @@ const productController = {
 		try {
 			const { product_name, desc, price, weight } = req.body;
 			const path = req.file?.path || "";
-			console.log(path);
 			const dest = path ? path
 				.replace(/\\/g, "/")
 				.replace("public/", "") : null;
@@ -86,7 +85,7 @@ const productController = {
 				...products, 
 				page: Number(page),
 				pages,
-				nextPage: (next < pages) ? next : null
+				nextPage: (next <= pages) ? next : null
 			}
 			return res.status(200).json({ message: "Fetch success", ...result });
 		} catch (e) {
