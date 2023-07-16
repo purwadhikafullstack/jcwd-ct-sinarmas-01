@@ -2,18 +2,27 @@ require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
+const { sequelize } = require("./models");
+// API Routes
+const { 
+  authRoutes, 
+  addressRoutes, 
+  warehouseRoutes, 
+  userRoutes,
+  productRoutes,
+  cartRoutes,
+  categoryRoutes,
+  checkoutRoutes
+} = require("./routes");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-app.use(
-  cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
-  })
-);
+sequelize.sync();
 
+app.use(cors({
+  origin: process.env.WHITELISTED_DOMAIN
+}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 //#region API ROUTES
@@ -26,10 +35,19 @@ app.get("/api", (req, res) => {
 });
 
 app.get("/api/greetings", (req, res, next) => {
-  res.status(200).json({
+  return res.status(200).json({
     message: "Hello, Student !",
   });
 });
+
+app.use("/api/auth", authRoutes);
+app.use("/api/addresses", addressRoutes);
+app.use("/api/warehouses", warehouseRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/checkout", checkoutRoutes);
 
 // ===========================
 
@@ -57,6 +75,7 @@ app.use((err, req, res, next) => {
 //#region CLIENT
 const clientPath = "../../client/build";
 app.use(express.static(join(__dirname, clientPath)));
+app.use(express.static("public"));
 
 // Serve the HTML page
 app.get("*", (req, res) => {
