@@ -8,7 +8,7 @@ import Error from "@/pages/error/Error";
 
 export default function InfScroll(props) {
   const { inView, ref } = useInView();
-  const { queryFn } = props;
+  const { queryFn, queryKey } = props;
 
   const {
     data,
@@ -21,7 +21,7 @@ export default function InfScroll(props) {
     isError,
   } = useInfiniteQuery({
     queryFn: async ({ pageParam = 1 }) => await (queryFn)(pageParam),
-    queryKey: ["products"],
+    queryKey: [queryKey],
     getNextPageParam: (lastPage) => lastPage.nextPage || undefined,
   });
 
@@ -35,14 +35,17 @@ export default function InfScroll(props) {
   ) : isError ? (
     <Error message={error.message} />
   ) : (
-    <div className="grid md:grid-cols-2 col-auto gap-3">
-      {data && data?.pages?.map((group, i) => (
-        <Fragment key={i}>
-          {group?.rows?.map((value, key) => (
-            <Item key={key} {...value} />
-          ))}
-        </Fragment>
-      ))}
+    <>
+      <div className="grid md:grid-cols-2 col-auto gap-3">
+        {data && data?.pages?.map((group, i) => (
+          <Fragment key={i}>
+            {group?.rows?.map((value, key) => (
+              <Item key={key} {...value} />
+            ))}
+          </Fragment>
+        ))}
+        <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
+      </div>
       <div className="my-3">
         <Button
           fullWidth
@@ -58,7 +61,6 @@ export default function InfScroll(props) {
             : "End of Data"}
         </Button>
       </div>
-      <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
-    </div>
+    </>
   );
 }

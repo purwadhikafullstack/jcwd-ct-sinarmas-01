@@ -98,6 +98,20 @@ const warehouseController = {
       return res.status(500).json({ message: error.message });
     }
   },
+  getWarehouse: async function (req, res) {
+    try {
+      const { user_id } = req.params;
+      const warehouse = await Warehouses.findOne({
+        where: {
+          user_id
+        },
+        include: "user"
+      });
+      return res.status(200).json({ message: "Fetch Success", ...warehouse.dataValues });
+    } catch (e) {
+      return res.status(500).json({ message: e.message, error : e });
+    }
+  }
 };
 
 module.exports = warehouseController;

@@ -13,7 +13,7 @@ export default function Admin () {
 						Warehouse Admin Menu
 					</Card.Title>
 					<div className="flex flex-wrap gap-3">
-						<Button onClick={() => navigate("/")} fullWidth>Transactions</Button>
+						<Button onClick={() => navigate("orders")} fullWidth>Orders</Button>
 					</div>
 				</Card.Body>
 			</Card>

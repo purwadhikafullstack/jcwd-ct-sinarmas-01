@@ -10,6 +10,6 @@ routes.put("/:id", verifyToken, checkRole(["admin"]), acceptOrder);
 routes.patch("/:id", verifyToken, checkRole(["admin"]), completeOrder);
 routes.delete("/:id", verifyToken, cancelOrder);
 routes.get("/", verifyToken, userOrders);
-routes.get("/all", verifyToken, checkRole(["admin"]), allOrders);
+routes.get("/all", verifyToken, checkRole(["admin", "super"]), allOrders);
 
 module.exports = routes;

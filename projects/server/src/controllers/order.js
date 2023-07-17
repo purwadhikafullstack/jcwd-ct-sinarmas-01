@@ -1,5 +1,5 @@
 const { models } = require("../models");
-const { Checkouts, Orders } = models;
+const { Checkouts, Orders, CheckoutItems, Users, Products } = models;
 const { paginate } = require("../lib");
 
 const orderController = {
@@ -110,7 +110,24 @@ const orderController = {
     try {
       const page = Number(req.query?.page) || 1;
       const { limit, offset } = paginate(page);
-      const orders = await Orders.findAndCountAll({ limit, offset });
+      const orders = await Orders.findAndCountAll({ 
+        limit, 
+        offset,
+        include: [
+          {
+            model: Checkouts,
+            as: "checkout",
+            include: [
+              {
+                model: CheckoutItems,
+                as: "checkout_items",
+                include: ["product"]
+              }  
+            ]
+          },
+          "user"
+        ]
+      });
       const pages = Math.ceil(orders.count /limit);
       return res.status(200).json({ message: "Fetch Success", ...orders, page, pages });
     } catch (e) {
@@ -120,3 +137,4 @@ const orderController = {
 }
 
 module.exports = orderController;
+module.exports.default = orderController;

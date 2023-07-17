@@ -1,7 +1,8 @@
 const { seeder, faker } = require("./");
 
 (async () => {
-  for (let i = 21; i < 33; i++) {
+  for (let i = 0; i < 34; i++) {
+    if (i === 20) continue;
     await seeder.seed(0, "stocks", {
       stock: faker.number.int({ min: 4, max: 30 }),
       warehouse_id: faker.number.int({ min: 1, max: 3 }),

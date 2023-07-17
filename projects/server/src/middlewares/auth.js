@@ -1,6 +1,11 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const verifyToken = (req, res, next) => {
+/**
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * */
+function verifyToken (req, res, next) {
   let token = req.headers.authorization; // token yang sudah diambil melalui request headers authorizationnya
   const failMsg = { message: "Unauthorized Request", role: null }
   if (!token) {
@@ -37,7 +42,7 @@ function checkRole (roles) {
 
     if (found < 0 || !isVerified) {
       return res.status(401).json({ 
-        message: "Unauthorized", 
+        message: "Unauthorized Request", 
         role: req?.user?.role || null,
         require: roles
       });

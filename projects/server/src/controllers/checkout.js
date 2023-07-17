@@ -1,14 +1,24 @@
 const { models } = require("../models");
-const { Checkouts, CheckoutItems, Addresses, Cities, Warehouses, CartItems, Products } = models;
+const { 
+	Checkouts, 
+	CheckoutItems, 
+	Addresses, 
+	Cities, 
+	Warehouses, 
+	CartItems, 
+	Products, 
+	Stocks 
+} = models;
 const { ongkir, compareDistance, toLatLng } = require("../lib");
+const { Op } = require("sequelize");
 
 async function newCheckout(user_id) {
 	try {
-		const checkout = await Checkouts.findOne({ where: { user_id, checked: 0 } });
+		const where = { where: { user_id, checked: 0 } };
+		const checkout = await Checkouts.findOne(where);
 		if (checkout) return checkout;
 		await Checkouts.create({ user_id });
-		const newCheckout = await Checkouts.findOne({ where: { user_id, checked: 0 }});
-		console.log(newCheckout);
+		const newCheckout = await Checkouts.findOne(where);
 		return newCheckout;
 	} catch (e) {
 		console.error(e.message);
@@ -24,6 +34,18 @@ const checkoutController = {
 		try {
 			const user_id = req.user?.id;
 			const { product_id, price, qty, item_id, weight } = req.body;
+			const stock = await Stocks.findOne({
+				where: {
+					product_id,
+					stock: {
+						[Op.gte]: Number(qty)
+					}
+				},
+				include: ["warehouse"]
+			});
+			if (!stock) return res.status(404).json({ message: "Insufficient item stocks" });
+			stock.stock = stock.stock - Number(qty);
+			await stock.save();
 			const checkout = await newCheckout(user_id);
 			if (!checkout) return res.status(404).json({ message: "Checkout not found" });
 			await CartItems.destroy({ where: { id: item_id } });

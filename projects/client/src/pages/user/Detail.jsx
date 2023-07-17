@@ -4,7 +4,7 @@ import { useNavigate, useParams, Outlet } from "react-router-dom";
 import useGetDetail from "@/hooks/queries/common/useGetDetail";
 import Loading from "@/components/Loading";
 import formatRp from "@/libs/formatRp";
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import useCartMutations from "@/hooks/mutations/common/useCartMutations";
 import { getId } from "@/api/token";
 import Swal from "@/components/Swal";
@@ -22,11 +22,15 @@ export default function Detail(props) {
     add.mutate(obj)
   };
   const user_id = getId();
+  const top = useRef();
 
+  useEffect(() => {
+    top.current.focus();
+  }, []);
   return (
     <>
       <Outlet />
-      <Card>
+      <Card ref={top}>
         <Card.Body className="p-5 text-left">
           <Card.Title className="flex">
             <div className="flex-1 text-3xl font-bold">Product Detail</div>
