@@ -1,3 +1,4 @@
+import NoContent from "@/components/NoContent";
 import OrderItem from "@/components/OrderItem";
 import useOrderList from "@/hooks/queries/admin/useOrderList"
 import { Button } from "react-daisyui";
@@ -20,18 +21,17 @@ export default function Orders () {
               id={value.id}
               status={value.status}
               proof={value.payment_proof}
-              total={value.checkout.total_price}
+              total={value.checkout?.total_price}
             />
           ))
         })}
+        {!isFetching && !data.pages[0]?.count && <NoContent />}
         <Button fullWidth onClick={fetchNextPage} disabled={!hasNextPage || isFetchingNextPage} className="mt-5">
-          {
-            isFetchingNextPage 
+          {isFetchingNextPage 
             ? "Loading..."
             : hasNextPage
             ? "Load more..."
-            : "End"
-          }
+            : "End"}
         </Button>
       </div>
     </>

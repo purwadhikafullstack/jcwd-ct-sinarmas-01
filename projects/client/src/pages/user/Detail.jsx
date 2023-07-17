@@ -1,6 +1,6 @@
 import { Button, Card } from "react-daisyui";
 import { FaTimes, FaCartPlus } from "react-icons/fa";
-import { useNavigate, useParams, Outlet } from "react-router-dom";
+import { useParams, Outlet } from "react-router-dom";
 import useGetDetail from "@/hooks/queries/common/useGetDetail";
 import Loading from "@/components/Loading";
 import formatRp from "@/libs/formatRp";
@@ -12,8 +12,7 @@ import Swal from "@/components/Swal";
 export default function Detail(props) {
   const { id } = useParams();
   const { disableActions } = props;
-  const navigate = useNavigate();
-  const goBack = () => navigate("/explore");
+  const goBack = () => window.history.back();
   const { data, isLoading, isError } = useGetDetail(id);
   const { useAddMutation } = useCartMutations();
   const add = useAddMutation();

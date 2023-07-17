@@ -36,6 +36,14 @@ class Orders extends Sequelize.Model {
         key: 'id'
       }
     },
+    warehouse_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'warehouses',
+        key: 'id'
+      }
+    },
     isCompleted: {
       type: DataTypes.TINYINT,
       allowNull: true,
@@ -65,6 +73,13 @@ class Orders extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "user_id" },
+        ]
+      },
+      {
+        name: "warehouse_id",
+        using: "BTREE",
+        fields: [
+          { name: "warehouse_id" },
         ]
       },
     ]

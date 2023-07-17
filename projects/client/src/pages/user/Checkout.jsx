@@ -40,13 +40,15 @@ export default function Checkout () {
 
 	const confirmPayment = (id) => {
 		Swal.fire({
-			title: "Payment",
+			title: "Confirm Payment",
 			input: "file",
-			text: "Upload your payment proof to bank account 9876512345",
+			showCloseButton: true,
+			html: "Upload your payment proof to bank account <b>9876512345</b>",
 			inputAttributes: {
 				"accept": ".jpg, .png, .jpeg, .webp",
 				"aria-label": "Upload your payment proof to bank account 9876512345"
 			},
+			confirmButtonText: "Confirm Payment",
 			preConfirm: (value) => {
 				const form = new FormData();
 				form.append("payment", value);
@@ -99,11 +101,11 @@ export default function Checkout () {
 						return (
 							<CartItem
 								key={key}
-								image={val.product.product_image}
-								name={val.product.product_name}
+								image={val.stock?.product?.product_image}
+								name={val.stock?.product?.product_name}
 								price={val.price / val.qty}
 								amount={val.qty}
-								productId={val.product.id}
+								productId={val.stock?.product?.id}
 								weight={val.weight}
 								hideActions
 							/>	
