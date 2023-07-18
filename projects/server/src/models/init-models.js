@@ -43,13 +43,13 @@ function initModels(sequelize) {
   AddressOwners.belongsTo(Addresses, { as: "address", foreignKey: "address_id"});
   Addresses.hasMany(AddressOwners, { as: "address_owners", foreignKey: "address_id"});
   Warehouses.belongsTo(Addresses, { as: "address", foreignKey: "address_id"});
-  Addresses.hasMany(Warehouses, { as: "warehouses", foreignKey: "address_id"});
+  Addresses.hasOne(Warehouses, { as: "warehouse", foreignKey: "address_id"});
   CartItems.belongsTo(Carts, { as: "cart", foreignKey: "cart_id"});
   Carts.hasMany(CartItems, { as: "cart_items", foreignKey: "cart_id"});
   Products.belongsTo(Categories, { as: "category", foreignKey: "category_id"});
   Categories.hasMany(Products, { as: "products", foreignKey: "category_id"});
   CheckoutItems.belongsTo(Checkouts, { as: "checkout", foreignKey: "checkout_id"});
-  Checkouts.hasMany(CheckoutItems, { as: "checkout_items", foreignKey: "checkout_id"});
+  Checkouts.hasOne(CheckoutItems, { as: "checkout_item", foreignKey: "checkout_id"});
   Orders.belongsTo(Checkouts, { as: "checkout", foreignKey: "checkout_id"});
   Checkouts.hasMany(Orders, { as: "orders", foreignKey: "checkout_id"});
   CartItems.belongsTo(Products, { as: "product", foreignKey: "product_id"});
@@ -79,7 +79,7 @@ function initModels(sequelize) {
   Verification.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasMany(Verification, { as: "verifications", foreignKey: "user_id"});
   Warehouses.belongsTo(Users, { as: "user", foreignKey: "user_id"});
-  Users.hasMany(Warehouses, { as: "warehouses", foreignKey: "user_id"});
+  Users.hasOne(Warehouses, { as: "warehouse", foreignKey: "user_id"});
   Orders.belongsTo(Warehouses, { as: "warehouse", foreignKey: "warehouse_id"});
   Warehouses.hasMany(Orders, { as: "orders", foreignKey: "warehouse_id"});
   StockJurnals.belongsTo(Warehouses, { as: "warehouse", foreignKey: "warehouse_id"});

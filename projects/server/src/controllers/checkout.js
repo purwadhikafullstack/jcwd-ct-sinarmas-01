@@ -136,7 +136,7 @@ const checkoutController = {
 				where: { user_id, checked: false }, 
 				include: {
 					model: CheckoutItems,
-					as: "checkout_items",
+					as: "checkout_item",
 					include: {
 						model: Stocks,
 						as: "stock",

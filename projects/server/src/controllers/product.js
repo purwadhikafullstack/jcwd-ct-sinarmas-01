@@ -1,6 +1,16 @@
 const { models } = require("../models");
-const { Products } = models;
+const { Products, Stocks } = models;
 const { paginate } = require("../lib");
+
+async function getStock (product_id) {
+	const stock = await Stocks.sum("stock", { where: { product_id } });
+	return stock;
+}
+
+async function isAvailable (product_id, qty) {
+	const stock = await getStock(product_id);
+	return stock >= qty;
+}
 
 const productController = {
 	/**
@@ -99,12 +109,20 @@ const productController = {
 	getDetail: async function (req, res) {
 		try {
 			const { id } = req.params;
-			const product = await Products.findOne({ where: { id } });
-			return res.status(200).json({ message: "Fetch success", ...product.dataValues });
+			const stock = await getStock(id);
+			const product = await Products.findByPk(id);
+			return res.status(200).json({ 
+				message: "Fetch success",
+				stock,
+				...product.dataValues
+			});
 		} catch (e) {
 			res.status(500).json({ message: e.message });
 		}
 	}
 }
 
-module.exports = productController;
+module.exports = {
+	...productController,
+	isAvailable
+};

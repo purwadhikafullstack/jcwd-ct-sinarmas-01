@@ -69,6 +69,9 @@ export default function Detail(props) {
               <b className="text-3xl font-extrabold underline flex-1">
                 {formatRp(data.price)}
               </b>
+              <div className="flex-1">
+                Available Stock : {data.stock}
+              </div>
               <Button
                 className="flex-0"
                 color="warning"

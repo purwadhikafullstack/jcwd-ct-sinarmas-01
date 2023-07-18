@@ -22,7 +22,8 @@ class Warehouses extends Sequelize.Model {
       references: {
         model: 'users',
         key: 'id'
-      }
+      },
+      unique: "warehouses_ibfk_1"
     },
     address_id: {
       type: DataTypes.INTEGER,
@@ -30,7 +31,8 @@ class Warehouses extends Sequelize.Model {
       references: {
         model: 'addresses',
         key: 'id'
-      }
+      },
+      unique: "warehouses_ibfk_2"
     }
   }, {
     tableName: 'warehouses',
@@ -42,6 +44,22 @@ class Warehouses extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "id" },
+        ]
+      },
+      {
+        name: "unique_user_id",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "user_id" },
+        ]
+      },
+      {
+        name: "unique_addr",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "address_id" },
         ]
       },
       {

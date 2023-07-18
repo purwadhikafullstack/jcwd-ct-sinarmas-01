@@ -1,49 +1,38 @@
 import formatRp from "@/libs/formatRp";
-import { Button, Card, Table } from "react-daisyui";
-import { FaCheck, FaCheckCircle, FaClock, FaTimes } from "react-icons/fa";
+import { Button, Card } from "react-daisyui";
+import { FaCheck, FaTimes } from "react-icons/fa";
 import Swal from "./Swal";
+import useOrderMutations from "@/hooks/mutations/admin/useOrderMutations";
 
 function OrderTable ({ username, total, status }) {
   return (
     <div className="overflow-x-auto">
-      <Table width="100%">
-        <Table.Head>
-          <span />
-          <span />
-          <span />
-        </Table.Head>
-        <Table.Body>
-          <Table.Row>
-            <span />
-            <span>
-              Username
-            </span>
-            <span>
-              {username}
-            </span>
-          </Table.Row>
-          <Table.Row>
-            <span />
-            <span>
-              Total
-            </span>
-            <span>
-              {formatRp(total)}
-            </span>
-          </Table.Row>
-          <Table.Row>
-            <span />
-            <span>
-              Status
-            </span>
-            <span>
-              <b className={`flex items-center gap-3 ${status === "Completed" ? "text-success" : "text-warning"}`}>
-                {status === "Completed" ? <FaCheckCircle /> : <FaClock />}{" "}{status}
+      <table width="100%" className="table">
+        <thead>
+          <tr><th colSpan={3} /></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td />
+            <td>Username</td>
+            <td>{username}</td>
+          </tr>
+          <tr>
+            <td />
+            <td>Total</td>
+            <td>{formatRp(total)}</td>
+          </tr>
+          <tr>
+            <td />
+            <td>Status</td>
+            <td>
+              <b className={`flex items-center gap-3`}>
+                {status}
               </b>
-            </span>
-          </Table.Row>
-        </Table.Body>
-      </Table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -58,9 +47,29 @@ const showProof = (id, imageUrl) => {
 };
 
 export default function OrderItem (props) {
-  const { username, id, total, proof, status } = props;
+  const { username, id, total, proof, status, isCompleted } = props;
+  const { changeStatus } = useOrderMutations();
+  const conf = {
+    confirmButtonText: "Yes",
+    showCancelButton: true,
+    icon: "question"
+  }
+  const reject = async () => {
+    const { isConfirmed } = await Swal.fire({
+      title: "Confirm Reject?",
+      ...conf
+    })
+    if (isConfirmed) changeStatus.mutate({ id, status: "Rejected", rejected: true });
+  } 
+  const accept = async () => {
+    const { isConfirmed } = await Swal.fire({
+      title: "Approve this Order?",
+      ...conf
+    });
+    if (isConfirmed) changeStatus.mutate({ id, status: "Accepted" });
+  }
   return (
-    <Card>
+    <Card className="mb-3">
       <Card.Body>
         <Card.Title>
           Order #{id}
@@ -73,11 +82,11 @@ export default function OrderItem (props) {
             Proof Details
           </Button>
         </div>
-        <div className="flex gap-3 w-full">
-          <Button startIcon={<FaTimes />} className="grow" color="error">
+        <div className={`flex gap-3 w-full ${isCompleted ? "hidden" : ""}`}>
+          <Button onClick={reject} startIcon={<FaTimes />} className="grow" color="error">
             Reject
           </Button>
-          <Button startIcon={<FaCheck />} className="grow" color="success">
+          <Button onClick={accept} startIcon={<FaCheck />} className="grow" color="success">
             Accept
           </Button>
         </div>
