@@ -1,13 +1,11 @@
-import { useInView } from "react-intersection-observer";
 import Loading from "./Loading";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Item from "./Item";
 import { Button } from "react-daisyui";
 import Error from "@/pages/error/Error";
 
 export default function InfScroll(props) {
-  const { inView, ref } = useInView();
   const { queryFn, queryKey } = props;
 
   const {
@@ -25,18 +23,13 @@ export default function InfScroll(props) {
     getNextPageParam: (lastPage) => lastPage.nextPage || undefined,
   });
 
-  useEffect(() => {
-    if (inView) 
-      fetchNextPage();
-  }, [inView, fetchNextPage]);
-
   return isLoading ? (
     <Loading />
   ) : isError ? (
     <Error message={error.message} />
   ) : (
     <>
-      <div className="grid md:grid-cols-2 col-auto gap-3">
+      <div className="flex flex-wrap justify-center items-center max-w-full gap-3">
         {data && data?.pages?.map((group, i) => (
           <Fragment key={i}>
             {group?.rows?.map((value, key) => (
@@ -51,7 +44,6 @@ export default function InfScroll(props) {
           fullWidth
           onClick={fetchNextPage}
           color="info"
-          ref={ref}
           disabled={!hasNextPage || isFetchingNextPage}
         >
           {isFetchingNextPage

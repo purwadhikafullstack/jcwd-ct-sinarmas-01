@@ -25,7 +25,7 @@ export default function Detail(props) {
 
   useEffect(() => {
     top.current.focus();
-  }, []);
+  }, [top]);
   return (
     <>
       <Outlet />
@@ -60,20 +60,20 @@ export default function Detail(props) {
           )}
         </Card.Body>
         <Card.Actions
-          className={`p-5 ${
-            disableActions && "hidden"
-          } flex`}
+          className={`p-5 ${disableActions && "hidden"} flex flex-wrap`}
         >
           {!isLoading && !isError && (
             <>
-              <b className="text-3xl font-extrabold underline flex-1">
-                {formatRp(data.price)}
-              </b>
-              <div className="flex-1">
-                Available Stock : {data.stock}
+              <div className="gap-3 grow">
+                <b className="text-3xl font-extrabold underline">
+                  {formatRp(data.price)}
+                </b>
+                <div className="justify-center items-center">
+                  Available Stock : {data.stock}
+                </div>
               </div>
               <Button
-                className="flex-0"
+                className="grow"
                 color="warning"
                 startIcon={<FaCartPlus />}
                 onClick={() => addToCart({ user_id, product_id: data.id })}

@@ -37,13 +37,16 @@ const cartController = {
 			const { user_id } = req.params;
 			const cart = await newCart(user_id);
 			let item = await CartItems.findOne({ where: { product_id, cart_id: cart.id } });
+			let available;
 			if (item) {
-				const available = await isAvailable(product_id, item.qty + 1);
+				available = await isAvailable(product_id, item.qty + 1);
 				if (!available) return res.status(422).json({ message: "Insufficient Item Stock" });
 				item.qty = item.qty + 1;
 				await item.save();
 			}
 			if (!item) {
+				available = await isAvailable(product_id, 1);
+				if (!available) return res.status(422).json({ message: "Stock is Empty" });
 				item = await CartItems.create({
 					qty: 1,
 					product_id,
