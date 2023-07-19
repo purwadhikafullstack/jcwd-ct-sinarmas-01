@@ -104,7 +104,7 @@ export default function OrderItem (props) {
       title: "Approve this Order?",
       ...conf
     });
-    if (isConfirmed) changeStatus.mutate({ id, status: "Accepted" });
+    if (isConfirmed) changeStatus.mutate({ id, status: "On Delivery" });
   }
   return (
     <Card className="mb-3">

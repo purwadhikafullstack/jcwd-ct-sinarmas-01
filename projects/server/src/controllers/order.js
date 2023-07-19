@@ -60,7 +60,7 @@ const orderController = {
           as: "checkout",
           include: {
             model: CheckoutItems,
-            as: "checkout_item",
+            as: "checkout_items",
             include: ["stock"]
           }
         }

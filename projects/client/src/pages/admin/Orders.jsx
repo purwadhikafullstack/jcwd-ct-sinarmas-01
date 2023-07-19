@@ -25,7 +25,7 @@ export default function Orders (props) {
           </Button>
           <Select onChange={(e) => setFilter(e.target.value)}>
             <Select.Option value="">All</Select.Option>
-            <Select.Option value="Accepted">Accepted</Select.Option>
+            <Select.Option value="On Delivery">On Delivery</Select.Option>
             <Select.Option value="Pending">Pending</Select.Option>
             <Select.Option value="Rejected">Rejected</Select.Option>
           </Select>
