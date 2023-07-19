@@ -26,8 +26,7 @@ class CheckoutItems extends Sequelize.Model {
       references: {
         model: 'checkouts',
         key: 'id'
-      },
-      unique: "FK_checkout_items_checkouts"
+      }
     },
     price: {
       type: DataTypes.INTEGER,
@@ -51,14 +50,6 @@ class CheckoutItems extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "id" },
-        ]
-      },
-      {
-        name: "unique_checkout_id",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "checkout_id" },
         ]
       },
       {

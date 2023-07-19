@@ -12,7 +12,7 @@ const {
 const { ongkir, compareDistance, toLatLng } = require("../lib");
 const { Op } = require("sequelize");
 
-async function checkoutExists (user_id) {
+async function getCheckout (user_id) {
 	try {
 		const where = { where: { user_id, checked: 0 } };
 		const checkout = await Checkouts.findOne(where);
@@ -24,6 +24,8 @@ async function checkoutExists (user_id) {
 
 async function newCheckout(user_id) {
 	try {
+		const check = await getCheckout(user_id);
+		if (check) return check;
 		const where = { user_id, checked: 0 };
 		await Checkouts.create(where);
 		const newCheckout = await Checkouts.findOne({ where });
@@ -31,11 +33,6 @@ async function newCheckout(user_id) {
 	} catch (e) {
 		console.error(e.message);
 	}
-}
-
-
-async function getNearest () {
-
 }
 
 async function calcFees(req, res) {
@@ -94,8 +91,6 @@ const checkoutController = {
 			if (!stock) return res.status(404).json({ message: "Item stock unavailable" });
 			stock.stock = stock.stock - Number(qty);
 			await stock.save();
-			const exists = await checkoutExists(user_id);
-			if (exists) return res.status(400).json({ message: "Complete your last order first" });
 			const checkout = await newCheckout(user_id);
 			await CartItems.destroy({ where: { id: item_id } });
 			const checkout_id = checkout.id;
@@ -136,7 +131,7 @@ const checkoutController = {
 				where: { user_id, checked: false }, 
 				include: {
 					model: CheckoutItems,
-					as: "checkout_item",
+					as: "checkout_items",
 					include: {
 						model: Stocks,
 						as: "stock",

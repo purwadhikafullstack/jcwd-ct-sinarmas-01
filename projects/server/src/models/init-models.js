@@ -7,6 +7,7 @@ const _Categories = require("./Categories");
 const _CheckoutItems = require("./CheckoutItems");
 const _Checkouts = require("./Checkouts");
 const _Cities = require("./Cities");
+const _MutationHeader = require("./MutationHeader");
 const _Orders = require("./Orders");
 const _Products = require("./Products");
 const _Reset = require("./Reset");
@@ -28,6 +29,7 @@ function initModels(sequelize) {
   const CheckoutItems = _CheckoutItems(sequelize, DataTypes);
   const Checkouts = _Checkouts(sequelize, DataTypes);
   const Cities = _Cities(sequelize, DataTypes);
+  const MutationHeader = _MutationHeader(sequelize, DataTypes);
   const Orders = _Orders(sequelize, DataTypes);
   const Products = _Products(sequelize, DataTypes);
   const Reset = _Reset(sequelize, DataTypes);
@@ -49,7 +51,7 @@ function initModels(sequelize) {
   Products.belongsTo(Categories, { as: "category", foreignKey: "category_id"});
   Categories.hasMany(Products, { as: "products", foreignKey: "category_id"});
   CheckoutItems.belongsTo(Checkouts, { as: "checkout", foreignKey: "checkout_id"});
-  Checkouts.hasOne(CheckoutItems, { as: "checkout_item", foreignKey: "checkout_id"});
+  Checkouts.hasMany(CheckoutItems, { as: "checkout_items", foreignKey: "checkout_id"});
   Orders.belongsTo(Checkouts, { as: "checkout", foreignKey: "checkout_id"});
   Checkouts.hasMany(Orders, { as: "orders", foreignKey: "checkout_id"});
   CartItems.belongsTo(Products, { as: "product", foreignKey: "product_id"});
@@ -98,6 +100,7 @@ function initModels(sequelize) {
     CheckoutItems,
     Checkouts,
     Cities,
+    MutationHeader,
     Orders,
     Products,
     Reset,

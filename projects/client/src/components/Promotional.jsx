@@ -19,11 +19,11 @@ export default function Promotional() {
   }, [slide]);
 
   return (
-    <div className="flex flex-row gap-3 justify-center items-center">
+    <div className="flex bg-base-300 flex-row p-6 gap-3 justify-center items-center">
       <Button size="sm" className="rounded-box" onClick={prevSlide}>
         <FaChevronLeft />
       </Button>
-      <div className="carousel w-full mb-5">
+      <div className="carousel w-full">
         <CarouselItem id="slide-1" imgClass="w-full" alt="Banner 1" src="/banner-2.jpg" />
         <CarouselItem id="slide-2" imgClass="w-full" alt="Banner 2" src="/banner-3.jpg" />
         <CarouselItem id="slide-3" imgClass="w-full" alt="Banner 3" src="/banner-4.jpg" />
@@ -31,8 +31,6 @@ export default function Promotional() {
       <Button size="sm" className="rounded-box" onClick={nextSlide}>
         <FaChevronRight />
       </Button>
-      <div className="flex justify-center items-center gap-3">
-      </div>
       <Link ref={link} className="hidden" href={`#slide-${slide}`}>Slide {slide}</Link>
     </div>
   );

@@ -1,5 +1,5 @@
 const { models } = require("../models");
-const { Checkouts, Orders, CheckoutItems, Users, Stocks, Warehouses } = models;
+const { Checkouts, Orders, CheckoutItems, Users, Stocks, Warehouses, Products } = models;
 const { paginate, imageUrl } = require("../lib");
 
 const orderController = {
@@ -76,28 +76,6 @@ const orderController = {
     }
   },
   /**
-   * 
-   * @param {import("express").Request} req 
-   * @param {import("express").Response} res 
-   * @returns 
-   */
-  userOrders: async function (req, res) {
-    try {
-      const user_id = req.user?.id;
-      const page = Number(req.query?.page) || 1;
-      const { limit, offset } = paginate(page);
-      const orders = await Orders.findAndCountAll({
-        where: { user_id },
-        limit,
-        offset
-      });
-      const pages = Math.ceil(orders.count / limit);
-      return res.status(200).json({ message: "Fetch Success", ...orders, page, pages });
-    } catch (e) {
-      return res.status(500).json({ message: e.message, error: e });
-    }
-  },
-  /**
    * @param {import("express").Request} req
    * @param {import("express").Response} res
    * */
@@ -107,8 +85,10 @@ const orderController = {
       const { limit, offset } = paginate(page);
       const orderMode = req.query?.desc ? "DESC" : "ASC";
       const { filter = "" } = req.query;
+      const user_id = req.user.id;
+      const user = req.user.role === "User" ? { user_id } : {};
       const admin = req.user?.role === "Admin" ? ({ id: req.user?.id }) : {};
-      const where = filter ? { status: filter } : {};
+      const where = filter ? { status: filter, ...user } : user;
       const orders = await Orders.findAndCountAll({ 
         limit, 
         offset,
@@ -120,8 +100,16 @@ const orderController = {
             include: [
               {
                 model: CheckoutItems,
-                as: "checkout_item",
-                include: ["stock"]
+                as: "checkout_items",
+                include: {
+                  model: Stocks,
+                  as: "stock",
+                  include: {
+                    model: Products,
+                    as: "product",
+                    attributes: ["product_name", "product_image"]
+                  }
+                }
               }  
             ]
           },

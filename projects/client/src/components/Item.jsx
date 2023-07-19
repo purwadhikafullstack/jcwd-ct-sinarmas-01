@@ -15,7 +15,7 @@ export default function Item(props) {
 	const { product_name, product_image, price, desc, id } = props;
 	const navigate = useNavigate();
 	return (
-		<Card className="mb-4 w-[45%] h-full grow">
+		<Card className="mb-4 h-full">
 			<Card.Body>
 				<div className="flex justify-start flex-col gap-6">
 					<div className="ml-3 w-[100px] h-[100px]">

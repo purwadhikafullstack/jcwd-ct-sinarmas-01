@@ -7,7 +7,7 @@ import { FaSortDown, FaSortUp } from "react-icons/fa";
 import { useState } from "react";
 import Loading from "@/components/Loading";
 
-export default function Orders () {
+export default function Orders (props) {
   const [desc, setDesc] = useState("");
   const [filter, setFilter] = useState("");
   const { isFetching, isFetchingNextPage, isError, error, hasNextPage, data, fetchNextPage } = useOrderList(desc, filter);
@@ -42,6 +42,8 @@ export default function Orders () {
               proof={value.payment_proof}
               total={value.checkout?.total_price}
               isCompleted={value.isCompleted}
+              showActions={props.showActions}
+              checkout={value.checkout}
             />
           ))
         })}

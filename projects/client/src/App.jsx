@@ -54,13 +54,14 @@ function App() {
         </Route>
         <Route path="/admin" element={<Layout role="admin" />}>
           <Route index element={<Suspense><Admin /></Suspense>} />
-          <Route path="orders" element={<Suspense><OrderList /></Suspense>} />
+          <Route path="orders" element={<Suspense><OrderList showActions /></Suspense>} />
         </Route>
         <Route path="/user" element={<Layout role="user" />}>
           <Route index element={<Suspense><UserPage /></Suspense>} />
           <Route path="cart" element={<Suspense><MyCart /></Suspense>} />
           <Route path="cart/checkout" element={<Suspense><Checkout /></Suspense>} />
           <Route path="address" element={<Suspense><Address /></Suspense>} />
+          <Route path="history" element={<Suspense><OrderList /></Suspense>} />
         </Route>
         <Route path="/explore" element={<Layout />}>
           <Route index element={<Suspense><Explore /></Suspense>}/>

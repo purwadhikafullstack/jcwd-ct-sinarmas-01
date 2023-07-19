@@ -29,7 +29,7 @@ export default function InfScroll(props) {
     <Error message={error.message} />
   ) : (
     <>
-      <div className="flex flex-wrap justify-center items-center max-w-full gap-3">
+      <div className="grid md:grid-cols-2 cols-auto max-w-full gap-3">
         {data && data?.pages?.map((group, i) => (
           <Fragment key={i}>
             {group?.rows?.map((value, key) => (
