@@ -105,7 +105,7 @@ const warehouseController = {
         where: {
           user_id
         },
-        include: "user"
+        include: ["user"]
       });
       return res.status(200).json({ message: "Fetch Success", ...warehouse.dataValues });
     } catch (e) {
