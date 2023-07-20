@@ -13,10 +13,22 @@ class MutationHeader extends Sequelize.Model {
       primaryKey: true
     },
     trx_code: {
-      type: DataTypes.STRING(20),
+      type: DataTypes.STRING(45),
       allowNull: false,
       defaultValue: "0",
       unique: "trx_code"
+    },
+    warehouse_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'warehouses',
+        key: 'id'
+      }
+    },
+    stock_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     },
     request_date: {
       type: DataTypes.DATE,
@@ -48,6 +60,13 @@ class MutationHeader extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "trx_code" },
+        ]
+      },
+      {
+        name: "warehouse_id",
+        using: "BTREE",
+        fields: [
+          { name: "warehouse_id" },
         ]
       },
     ]

@@ -12,7 +12,7 @@ const { body } = require("express-validator");
 const { authController } = require("../controllers");
 const { registerUser } = authController;
 
-routes.get("/", verifyToken, checkRole(["super"]), warehouseList);
+routes.get("/", verifyToken, checkRole(["super", "admin"]), warehouseList);
 routes.post("/", verifyToken, checkRole(["super"]), addWarehouse);
 routes.put("/:warehouse_id", verifyToken, checkRole(["super"]), editWarehouse);
 routes.delete("/:warehouse_id", verifyToken, checkRole(["super"]), removeWarehouse);

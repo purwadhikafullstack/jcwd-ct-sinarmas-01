@@ -11,18 +11,38 @@ const { paginate } = require("../lib");
  */
 async function newStock (product_id, warehouse_id, qty) {
   try {
-    const stock = await Stocks.create({
+    await Stocks.create({
       product_id, warehouse_id, stock: qty
     });
+    const stock = await Stocks.findOne({ where: { product_id, warehouse_id } });
     await changeStock(stock.id, qty, 1);
     return stock;
   } catch (e) {
     throw e;
   }
 }
-async function requestStock (product_id, warehouse_id, stock) {
+async function getStock (product_id, warehouse_id) {
   try {
-
+    const stock = await Stocks.findOne({ where: { product_id, warehouse_id } });
+    return stock || null;
+  } catch (e) {
+    throw e;
+  }
+}
+async function requestStock (user_id, product_id, sender_id, qty) {
+  try {
+    const warehouse = await Warehouses.findOne({ where: { user_id } });
+    let stock = await getStock(product_id, warehouse.id);
+    if (!stock) await newStock(product_id, warehouse.id, 0);
+    stock = await getStock(product_id, warehouse.id);
+    const mutation = await StockMutations.create({
+      stock_id: stock.id,
+      warehouse_id: warehouse.id,
+      sender_id,
+      notes: `Stock Mutation Request from ${warehouse.warehouse_name}`,
+      qty: Number(qty)
+    });
+    return mutation;
   } catch (e) {
     throw e;
   }

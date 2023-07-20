@@ -15,6 +15,7 @@ export default function Admin () {
 					<div className="flex flex-wrap gap-3">
 						<Button onClick={() => navigate("orders")} fullWidth>Orders</Button>
 						<Button onClick={() => navigate("stocks")} fullWidth>Warehouse Stocks</Button>
+						<Button onClick={() => navigate("stocks/request")} fullWidth>Request Stock Mutation</Button>
 					</div>
 				</Card.Body>
 			</Card>

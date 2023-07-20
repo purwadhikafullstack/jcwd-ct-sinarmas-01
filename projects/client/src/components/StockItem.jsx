@@ -8,25 +8,27 @@ export default function StockItem (props) {
         <Card.Title>
           {stock.product?.product_name}
         </Card.Title>
-        <table className="table">
-          <thead>
-            <tr>
-              <th colSpan={3} />
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td />
-              <td>Warehouse</td>
-              <td>{stock.warehouse?.warehouse_name}</td>
-            </tr>
-            <tr>
-              <td />
-              <td>Stock Quantity</td>
-              <td>{stock.stock}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="overflow-x-auto w-full">
+          <table className="table w-full">
+            <thead>
+              <tr>
+                <th colSpan={3} />
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td />
+                <td>Warehouse</td>
+                <td>{stock.warehouse?.warehouse_name}</td>
+              </tr>
+              <tr>
+                <td />
+                <td>Stock Quantity</td>
+                <td>{stock.stock}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </Card.Body>
       <Card.Actions className="p-5">
         

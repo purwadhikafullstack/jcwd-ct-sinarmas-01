@@ -8,6 +8,7 @@ const _CheckoutItems = require("./CheckoutItems");
 const _Checkouts = require("./Checkouts");
 const _Cities = require("./Cities");
 const _MutationHeader = require("./MutationHeader");
+const _MutationItem = require("./MutationItem");
 const _Orders = require("./Orders");
 const _Products = require("./Products");
 const _Remarks = require("./Remarks");
@@ -31,6 +32,7 @@ function initModels(sequelize) {
   const Checkouts = _Checkouts(sequelize, DataTypes);
   const Cities = _Cities(sequelize, DataTypes);
   const MutationHeader = _MutationHeader(sequelize, DataTypes);
+  const MutationItem = _MutationItem(sequelize, DataTypes);
   const Orders = _Orders(sequelize, DataTypes);
   const Products = _Products(sequelize, DataTypes);
   const Remarks = _Remarks(sequelize, DataTypes);
@@ -58,6 +60,8 @@ function initModels(sequelize) {
   Checkouts.hasMany(Orders, { as: "orders", foreignKey: "checkout_id"});
   CartItems.belongsTo(Products, { as: "product", foreignKey: "product_id"});
   Products.hasMany(CartItems, { as: "cart_items", foreignKey: "product_id"});
+  MutationItem.belongsTo(Products, { as: "product", foreignKey: "product_id"});
+  Products.hasMany(MutationItem, { as: "mutation_items", foreignKey: "product_id"});
   Sales.belongsTo(Products, { as: "product", foreignKey: "product_id"});
   Products.hasMany(Sales, { as: "sales", foreignKey: "product_id"});
   Stocks.belongsTo(Products, { as: "product", foreignKey: "product_id"});
@@ -86,12 +90,16 @@ function initModels(sequelize) {
   Users.hasMany(Verification, { as: "verifications", foreignKey: "user_id"});
   Warehouses.belongsTo(Users, { as: "user", foreignKey: "user_id"});
   Users.hasOne(Warehouses, { as: "warehouse", foreignKey: "user_id"});
+  MutationHeader.belongsTo(Warehouses, { as: "warehouse", foreignKey: "warehouse_id"});
+  Warehouses.hasMany(MutationHeader, { as: "mutation_headers", foreignKey: "warehouse_id"});
   Orders.belongsTo(Warehouses, { as: "warehouse", foreignKey: "warehouse_id"});
   Warehouses.hasMany(Orders, { as: "orders", foreignKey: "warehouse_id"});
   StockJurnals.belongsTo(Warehouses, { as: "warehouse", foreignKey: "warehouse_id"});
   Warehouses.hasMany(StockJurnals, { as: "stock_jurnals", foreignKey: "warehouse_id"});
+  StockMutations.belongsTo(Warehouses, { as: "sender", foreignKey: "sender_id"});
+  Warehouses.hasMany(StockMutations, { as: "stock_mutations", foreignKey: "sender_id"});
   StockMutations.belongsTo(Warehouses, { as: "warehouse", foreignKey: "warehouse_id"});
-  Warehouses.hasMany(StockMutations, { as: "stock_mutations", foreignKey: "warehouse_id"});
+  Warehouses.hasMany(StockMutations, { as: "warehouse_stock_mutations", foreignKey: "warehouse_id"});
   Stocks.belongsTo(Warehouses, { as: "warehouse", foreignKey: "warehouse_id"});
   Warehouses.hasMany(Stocks, { as: "stocks", foreignKey: "warehouse_id"});
 
@@ -105,6 +113,7 @@ function initModels(sequelize) {
     Checkouts,
     Cities,
     MutationHeader,
+    MutationItem,
     Orders,
     Products,
     Remarks,

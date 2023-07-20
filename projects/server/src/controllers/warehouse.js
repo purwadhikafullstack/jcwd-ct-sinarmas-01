@@ -1,6 +1,7 @@
 const { models } = require("../models");
 const { Warehouses, Addresses, Users } = models;
 const { searchGeo } = require("../controllers/address");
+const { Op } = require("sequelize");
 
 const warehouseController = {
   /**
@@ -88,7 +89,9 @@ const warehouseController = {
     try {
       const page = Number(req.query.page);
       const offset = (page > 0) ? ((page-1) * 5) : 0;
-      const warehouses = await Warehouses.findAndCountAll({ limit: 5, offset, include: ['address', 'user'] });
+      const wh = await Warehouses.findOne({ where: { user_id: req.user?.id } });
+      const query = page > 0 ? { limit: 5, offset } : { where: { [Op.not]: {id: wh.id} }, attributes: ["id", "warehouse_name"] };
+      const warehouses = await Warehouses.findAndCountAll({ ...query, include: ['address', 'user'] });
       return res.status(200).json({
         message: "Fetch Success",
         ...warehouses,

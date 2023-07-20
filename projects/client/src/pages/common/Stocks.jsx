@@ -13,13 +13,11 @@ export default function Stocks (props) {
       </div>
       {isFetching && <Loading />}
       {isError && <Error error={error} />}
-      {data && data.pages?.map((val, key) => (
-        <div key={key}>
-          {val.rows?.map((item, ind) => (
-            <StockItem stock={item} key={ind} />
-          ))}
-        </div>
-      ))}
+      {data && data.pages?.map((group) => {
+        return group.rows?.map((val, key) => {
+          return <StockItem stock={val} key={key} />
+        })
+      })}
       <Button
         color="info"
         onClick={fetchNextPage}

@@ -88,7 +88,8 @@ const productController = {
 		try {
 			const { page } = req.query;
 			const { offset, limit } = paginate(Number(page));
-			const products = await Products.findAndCountAll({ limit, offset });
+			const query = page > 0 ? { limit, offset } : { attributes: ["id", "product_name"] };
+			const products = await Products.findAndCountAll(query);
 			const next = Number(page) + 1;
 			const pages = Math.ceil(products.count / limit);
 			const result = {
