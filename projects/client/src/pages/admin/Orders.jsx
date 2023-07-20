@@ -26,13 +26,14 @@ export default function Orders (props) {
           <Select onChange={(e) => setFilter(e.target.value)}>
             <Select.Option value="">All</Select.Option>
             <Select.Option value="On Delivery">On Delivery</Select.Option>
+            <Select.Option value="Delivered">Delivered</Select.Option>
             <Select.Option value="Pending">Pending</Select.Option>
             <Select.Option value="Rejected">Rejected</Select.Option>
           </Select>
         </div>
         {isError && <Error message={error} />}
         {isFetching && <Loading />}
-        {!isFetching && !isError && data.pages?.map((group) => {
+        {data && data.pages?.map((group) => {
           return group.rows?.map((value, key) => ( 
             <OrderItem
               key={key}

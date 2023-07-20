@@ -1,28 +1,24 @@
 const Sequelize = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  return TipeJurnals.init(sequelize, DataTypes);
+  return Remarks.init(sequelize, DataTypes);
 }
 
-class TipeJurnals extends Sequelize.Model {
+class Remarks extends Sequelize.Model {
   static init(sequelize, DataTypes) {
-  return sequelize.define('TipeJurnals', {
+  return sequelize.define('Remarks', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    name: {
-      type: DataTypes.STRING(45),
-      allowNull: true
-    },
-    add: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-      defaultValue: 1
+    text: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      defaultValue: "0"
     }
   }, {
-    tableName: 'tipe_jurnals',
+    tableName: 'remarks',
     timestamps: false,
     indexes: [
       {

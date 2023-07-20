@@ -10,6 +10,7 @@ const _Cities = require("./Cities");
 const _MutationHeader = require("./MutationHeader");
 const _Orders = require("./Orders");
 const _Products = require("./Products");
+const _Remarks = require("./Remarks");
 const _Reset = require("./Reset");
 const _Sales = require("./Sales");
 const _StockJurnals = require("./StockJurnals");
@@ -32,6 +33,7 @@ function initModels(sequelize) {
   const MutationHeader = _MutationHeader(sequelize, DataTypes);
   const Orders = _Orders(sequelize, DataTypes);
   const Products = _Products(sequelize, DataTypes);
+  const Remarks = _Remarks(sequelize, DataTypes);
   const Reset = _Reset(sequelize, DataTypes);
   const Sales = _Sales(sequelize, DataTypes);
   const StockJurnals = _StockJurnals(sequelize, DataTypes);
@@ -60,6 +62,8 @@ function initModels(sequelize) {
   Products.hasMany(Sales, { as: "sales", foreignKey: "product_id"});
   Stocks.belongsTo(Products, { as: "product", foreignKey: "product_id"});
   Products.hasMany(Stocks, { as: "stocks", foreignKey: "product_id"});
+  StockJurnals.belongsTo(Remarks, { as: "remark", foreignKey: "remark_id"});
+  Remarks.hasMany(StockJurnals, { as: "stock_jurnals", foreignKey: "remark_id"});
   CheckoutItems.belongsTo(Stocks, { as: "stock", foreignKey: "stock_id"});
   Stocks.hasMany(CheckoutItems, { as: "checkout_items", foreignKey: "stock_id"});
   StockJurnals.belongsTo(Stocks, { as: "stock", foreignKey: "stock_id"});
@@ -103,6 +107,7 @@ function initModels(sequelize) {
     MutationHeader,
     Orders,
     Products,
+    Remarks,
     Reset,
     Sales,
     StockJurnals,

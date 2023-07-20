@@ -1,6 +1,7 @@
 const { models } = require("../models");
 const { Checkouts, Orders, CheckoutItems, Users, Stocks, Warehouses, Products } = models;
 const { paginate, imageUrl } = require("../lib");
+const { fn, col } = require("sequelize");
 
 const orderController = {
   /**
@@ -53,7 +54,8 @@ const orderController = {
   changeStatus: async function (req, res) {
     try {
       const { id } = req.params;
-      const { status, rejected } = req.body;
+      const { status } = req.body;
+      const rejected = status === "Rejected";
       const order = await Orders.findByPk(id, {
         include: {
           model: Checkouts,
@@ -66,9 +68,13 @@ const orderController = {
         }
       });
       order.status = status;
-      order.isCompleted = true;
-      if (rejected) 
-        order.checkout.checkout_item.stock.stock = order.checkout?.checkout_item.stock.stock + order.checkout?.total_qty;
+      order.isCompleted = !rejected;
+      if (rejected) {
+        order.checkout.checkout_items.forEach(val => {
+          const where = { id: val.stock.id };
+          (async () => await Stocks.increment({ stock: val.qty }, { where }))();
+        })
+      }
       await order.save();
       return res.status(200).json({ message: "Order Status Changed", ...order.dataValues });
     } catch (e) {
@@ -89,7 +95,8 @@ const orderController = {
       const user = req.user.role === "User" ? { user_id } : {};
       const admin = req.user?.role === "Admin" ? ({ id: req.user?.id }) : {};
       const where = filter ? { status: filter, ...user } : user;
-      const orders = await Orders.findAndCountAll({ 
+      const count = await Orders.count({ where: {...where, ...user} });
+      const orders = await Orders.findAll({ 
         limit, 
         offset,
         where,
@@ -124,10 +131,10 @@ const orderController = {
           },
           "user"
         ],
-        order: [["id", orderMode]]
+        order: [["id", orderMode]],
       });
-      const pages = Math.ceil(orders.count / limit);
-      return res.status(200).json({ message: "Fetch Success", ...orders, page, pages });
+      const pages = Math.ceil(count / limit);
+      return res.status(200).json({ message: "Fetch Success", count, rows: orders, page, pages });
     } catch (e) {
       return res.status(500).json({ message: e.message, error: e });
     }

@@ -11,6 +11,7 @@ const {
 } = models;
 const { ongkir, compareDistance, toLatLng } = require("../lib");
 const { Op } = require("sequelize");
+const { changeStock } = require("./stock");
 
 async function getCheckout (user_id) {
 	try {
@@ -89,8 +90,7 @@ const checkoutController = {
 				include: ["warehouse"]
 			});
 			if (!stock) return res.status(404).json({ message: "Item stock unavailable" });
-			stock.stock = stock.stock - Number(qty);
-			await stock.save();
+			await changeStock(stock.id, -qty, 2);
 			const checkout = await newCheckout(user_id);
 			await CartItems.destroy({ where: { id: item_id } });
 			const checkout_id = checkout.id;

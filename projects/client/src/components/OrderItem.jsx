@@ -5,6 +5,9 @@ import Swal from "./Swal";
 import useOrderMutations from "@/hooks/mutations/admin/useOrderMutations";
 import CartItem from "./CartItem";
 import { useState } from "react";
+import { getRole } from "@/api/token";
+
+const role = getRole();
 
 function OrderDetails ({ checkout }) {
   const [open, setOpen] = useState(false);
@@ -106,6 +109,13 @@ export default function OrderItem (props) {
     });
     if (isConfirmed) changeStatus.mutate({ id, status: "On Delivery" });
   }
+  const markDeliv = async () => {
+    const { isConfirmed } = await Swal.fire({
+      title: "Have you receive the package?",
+      ...conf
+    });
+    if (isConfirmed) changeStatus.mutate({ id, status: "Delivered" });
+  }
   return (
     <Card className="mb-3">
       <Card.Body>
@@ -121,8 +131,13 @@ export default function OrderItem (props) {
             Payment Proof
           </Button>
         </div>
-        {showActions && (
-          <div className={`flex gap-3 w-full ${isCompleted ? "hidden" : ""}`}>
+        {(role === "user" && isCompleted && status !== "Rejected") ? (
+          <Button onClick={markDeliv} fullWidth>
+            I have received the ordered items
+          </Button>
+        ) : null}
+        {showActions && !isCompleted && (
+          <div className={"flex gap-3 w-full"}>
             <Button onClick={reject} startIcon={<FaTimes />} className="grow" color="error">
               Reject
             </Button>

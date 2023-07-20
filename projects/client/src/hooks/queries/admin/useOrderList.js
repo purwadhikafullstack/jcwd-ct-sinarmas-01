@@ -9,7 +9,7 @@ export default function useOrderList (desc = "", filter = "") {
   const { data, isError, isFetching, isFetchingNextPage, error, hasNextPage, fetchNextPage } = useInfiniteQuery({
     queryFn: async ({ pageParam = 1 }) => await orderList(pageParam, desc, filter),
     queryKey: ["orders", desc, filter],
-    getNextPageParam: (data) => (data.page < data.pages) ? data.page + 1 : undefined
+    getNextPageParam: (data) => (data.page < data.pages && data.rows?.length > 0) ? data.pages : undefined
   });
   
   useEffect(() => {

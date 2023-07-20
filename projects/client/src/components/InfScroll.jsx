@@ -37,8 +37,8 @@ export default function InfScroll(props) {
             ))}
           </Fragment>
         ))}
-        <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
       </div>
+      <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
       <div className="my-3">
         <Button
           fullWidth

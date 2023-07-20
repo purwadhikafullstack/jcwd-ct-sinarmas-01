@@ -17,8 +17,9 @@ export default function Detail(props) {
   const { useAddMutation } = useCartMutations();
   const add = useAddMutation();
   const addToCart = (obj) => {
-    Swal.fire("Item added to cart").then(res => res && window.history.back());
     add.mutate(obj)
+    if (add.isError) return;
+    Swal.fire("Item added to cart").then(res => res && window.history.back());
   };
   const user_id = getId();
   const top = useRef();
