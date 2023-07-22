@@ -22,7 +22,6 @@ const warehouseController = {
         geolocation: q,
         type: place.components?.city ? "Kota" : "Kabupaten",
       });
-      console.log(address);
       const warehouse = await Warehouses.create({ 
         warehouse_name, 
         address_id: address.id,
