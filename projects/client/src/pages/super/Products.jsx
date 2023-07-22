@@ -7,12 +7,23 @@ import formToObj from "@/libs/formToObj";
 import { FileInput } from "react-daisyui";
 import Loading from "@/components/Loading";
 import Error from "../error/Error";
+import { useEffect, useState } from "react";
+import { getCategories } from "@/api/common";
 
 const intlConfig = { locale: "id-ID", currency: "IDR" };
 const configInput = { suffix: " gr", groupSeparator: ".", decimalSeparator: "," };
 
-const Form = (props) => {
+const Form = () => {
   const onSubmit = (e) => e.preventDefault();
+  const [categories, setCategories] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      const ct = await getCategories(0);
+      setCategories(ct);
+    })();
+  }, []);
+
   return (
     <form encType="multipart/form-data" onSubmit={onSubmit}>
 			<label htmlFor="product_name">Product Name :</label>
@@ -45,6 +56,12 @@ const Form = (props) => {
         placeholder="Enter Description"
 				id="desc"
       />
+      <label htmlFor="category_id">Category : </label>
+      <select className="swal2-select" name="category_id" id="category_id">
+        {categories.rows?.map((val, key) => (
+          <option value={val.id} key={key}>{val.category_name}</option>
+        ))}
+      </select>
 			<label htmlFor="product_image">
 				Product Image :{" "}
 			</label>
@@ -98,8 +115,10 @@ export default function Products() {
         const desc = document.getElementById(`${id}-desc`).dataset.value;
         const price = document.getElementById(`${id}-price`).dataset.value;
         const weight = document.getElementById(`${id}-weight`).dataset.value;
+        const category = document.getElementById(`${id}-category.id`).dataset.value;
         p.querySelector("[name='product_name']").value = name;
         p.querySelector("[name='desc']").value = desc;
+        p.querySelector("#category_id").value = category;
         p.querySelector("#priceinput").value = formatValue({ value: price, intlConfig });
         p.querySelector("#weight").value = formatValue({ value: weight, ...configInput });
       },
@@ -132,7 +151,9 @@ export default function Products() {
             ["product_name", "Product Name"],
             ["desc", "Description"],
             ["price", "Price (IDR)"],
-            ["weight", "Weight (grams)"]
+            ["weight", "Weight (grams)"],
+            ["category.category_name", "Category"],
+            ["category.id", "category", true]
           ]}
           keys={"products"}
           data={data?.rows}

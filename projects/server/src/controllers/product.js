@@ -46,7 +46,7 @@ const productController = {
 	editProduct: async function (req, res) {
 		try {
 			const { id } = req.params;
-			const { product_name, desc, price, weight } = req.body;
+			const { product_name, desc, price, weight, category_id } = req.body;
 			console.log(req.body);
 			const path = req?.file?.path || "";
 			const dest = path ? path
@@ -57,6 +57,7 @@ const productController = {
 			product.product_name = product_name || product.product_name;
 			product.product_image = product_image || product.product_image;
 			product.desc = desc || product.desc;
+			product.category_id = category_id || product.category_id;
 			product.price = price.replace(/[^0-9]/g, "") || product.price;
 			product.weight = weight.replace(/[^0-9]/g, "") || product.weight;
 			await product.save();
@@ -93,7 +94,8 @@ const productController = {
 				where,
 				limit, 
 				offset, 
-				order: [["product_name", sort]] 
+				order: [["product_name", sort]],
+				include: ["category"] 
 			} : { attributes: ["id", "product_name"] };
 			const products = await Products.findAndCountAll(query);
 			const next = Number(page) + 1;

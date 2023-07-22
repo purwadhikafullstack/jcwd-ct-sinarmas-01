@@ -12,8 +12,8 @@
 	.swal2-title {
 		@apply text-gray-700 dark:text-gray-100;
 	}
-	.swal2-select, .swal2-select > option {
-		@apply w-auto text-gray-800 dark:text-gray-300 shadow-md shadow-blue-700;
+	.swal2-select, .swal2-select option {
+		@apply w-auto text-gray-800 dark:text-gray-300 shadow-md shadow-blue-700 mb-3;
 	}
 	.swal2-html-container form {
 		@apply -m-5 text-left w-auto flex flex-col;
