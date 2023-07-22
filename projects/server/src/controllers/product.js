@@ -87,7 +87,7 @@ const productController = {
 	 * */
 	getProducts: async function (req, res) {
 		try {
-			const { page, filter = "", sort = "ASC" } = req.query;
+			const { page = 1, filter = "", sort = "ASC" } = req.query;
 			const { offset, limit } = paginate(Number(page));
 			const where = filter ? { category_id: filter } : {}
 			const query = page > 0 ? { 
@@ -106,6 +106,7 @@ const productController = {
 				pages,
 				nextPage: (next <= pages) ? next : null
 			}
+			console.log(result);
 			return res.status(200).json({ message: "Fetch success", ...result });
 		} catch (e) {
 			return res.status(500).json({ message: e.message });
