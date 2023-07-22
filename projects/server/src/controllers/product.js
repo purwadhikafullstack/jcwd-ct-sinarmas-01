@@ -86,9 +86,15 @@ const productController = {
 	 * */
 	getProducts: async function (req, res) {
 		try {
-			const { page } = req.query;
+			const { page, filter = "", sort = "ASC" } = req.query;
 			const { offset, limit } = paginate(Number(page));
-			const query = page > 0 ? { limit, offset } : { attributes: ["id", "product_name"] };
+			const where = filter ? { category_id: filter } : {}
+			const query = page > 0 ? { 
+				where,
+				limit, 
+				offset, 
+				order: [["product_name", sort]] 
+			} : { attributes: ["id", "product_name"] };
 			const products = await Products.findAndCountAll(query);
 			const next = Number(page) + 1;
 			const pages = Math.ceil(products.count / limit);

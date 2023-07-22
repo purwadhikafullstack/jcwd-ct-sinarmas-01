@@ -9,7 +9,7 @@ import NoContent from "@/components/NoContent";
 
 export default function Journals () {
   const [sort, setSort] = useState("ASC");
-  const [filter, setFilter] = useState("1");
+  const [filter, setFilter] = useState("");
   const { data, fetchNextPage, isError, isFetching, isFetchingNextPage, hasNextPage, error } = useJournals(sort, filter);
 
   const toggleSort = () => setSort(sort => sort === "ASC" ? "DESC" : "ASC");
@@ -26,7 +26,7 @@ export default function Journals () {
         </Button>
         <div>
           Remark Type : {" "}
-          <Select onChange={(e) => changeFilter(e.target.value)}>
+          <Select onChange={(e) => changeFilter(e.target.value)} defaultValue="">
             <Select.Option value="">All</Select.Option>
             <Select.Option value="1">Stock Warehouse</Select.Option>
             <Select.Option value="2">Checkout</Select.Option>

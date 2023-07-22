@@ -173,8 +173,9 @@ async function getJournals (req, res) {
     const page = Number(req.query?.page || 1);
     const { filter = "", sort } = req.query;
     const { limit, offset } = paginate(page);
-    const count = await StockJurnals.count();
     const where = filter ? { remark_id: filter } : {}
+    const count = await StockJurnals.count({ where });
+    console.log(req.query);
     const rows = await StockJurnals.findAll({ 
       where,
       limit, offset, include: ["tipe_jurnal", "remark", "warehouse", {
@@ -185,8 +186,8 @@ async function getJournals (req, res) {
           as: "product",
           attributes: ["id", "product_name"]
         },
-        order: [["id", sort]]
-      }]
+      }],
+      order: [["id", sort]]
     });
     const pages = Math.ceil(count / limit);
     return res.status(200).json({ message: "Fetch Success", count, rows, page, pages });
