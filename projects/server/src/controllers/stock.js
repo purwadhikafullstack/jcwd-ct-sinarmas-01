@@ -3,19 +3,15 @@ const { Warehouses, Stocks, StockJurnals, StockMutations, Products } = models;
 const { paginate } = require("../lib");
 const { Op } = require("sequelize");
 
-/**
- * 
- * @param {string | number} product_id 
- * @param {string | number} warehouse_id 
- * @param {number} stock 
- * @returns 
- */
 async function newStock (product_id, warehouse_id, qty) {
   try {
+    const exists = await getStock(product_id, warehouse_id);
+    if (exists) return await changeStock(exists.id, qty, 1);
+    if (qty < 0) throw new Error("Invalid Quantity Value");
     await Stocks.create({
       product_id, warehouse_id, stock: qty
     });
-    const stock = await Stocks.findOne({ where: { product_id, warehouse_id } });
+    const stock = await getStock(product_id, warehouse_id);
     await changeStock(stock.id, qty, 1);
     return stock;
   } catch (e) {
@@ -84,13 +80,6 @@ async function requestStock (user_id, product_id, qty) {
     throw e;
   }
 }
-/**
- * 
- * @param {string | number} id 
- * @param {number} qty 
- * @param {string} remarks 
- * @returns 
- */
 async function changeStock (id, qty, remark_id) {
   try {
     const stock = await Stocks.findByPk(id);
@@ -112,12 +101,6 @@ async function changeStock (id, qty, remark_id) {
     throw e;
   }
 }
-/**
- * Get Warehouse Stock Info
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns 
- */
 async function stocksInfo (req, res) {
   try {
     const user_id = req.user?.id;
@@ -133,12 +116,6 @@ async function stocksInfo (req, res) {
     return res.status(500).json({ message: e.message, error: e });
   }
 }
-
-/**
- * 
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- */
 async function mutationList (req, res) {
   try {
     const role = req.user.role;
@@ -167,7 +144,6 @@ async function mutationList (req, res) {
     return res.status(500).json({ message: e.message, error: e });
   }
 }
-
 async function getJournals (req, res) {
   try {
     const page = Number(req.query?.page || 1);

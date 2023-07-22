@@ -11,7 +11,7 @@ export default function RequestStock () {
   const client = useQueryClient();
   const mut = useMutation({
     mutationFn: async (data) => await requestStock(data),
-    onSuccess: () => client.invalidateQueries({ queryKey: ["stock", "requests"] })
+    onSuccess: () => client.invalidateQueries({ queryKey: ["stocks", "requests"] })
   })
   useEffect(() => {
     (async () => {

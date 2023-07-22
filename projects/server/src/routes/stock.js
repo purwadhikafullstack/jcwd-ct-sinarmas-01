@@ -1,10 +1,16 @@
 const { Router } = require("express");
 const routes = Router();
 const { stockController } = require("../controllers");
-const { stocksInfo, requestStock, mutationList, changeRequestStatus, getJournals } = stockController;
+const { stocksInfo, requestStock, mutationList, changeRequestStatus, getJournals, newStock } = stockController;
 const { verifyToken, checkRole } = require("../middlewares/auth");
 
 routes.get("/", verifyToken, checkRole(["admin", "super"]), stocksInfo);
+routes.post("/", verifyToken, checkRole(["super"]), async (req, res) => {
+  const { product_id, warehouse_id } = req.body;
+  const qty = Number(req.body?.qty || 1);
+  await newStock(product_id, warehouse_id, qty);
+  return res.status(200).json({ message: "Stock Created" });
+});
 routes.post("/request", verifyToken, checkRole(["admin"]), async (req, res) => {
   const { product_id, qty } = req.body;
   const user_id = req.user.id;

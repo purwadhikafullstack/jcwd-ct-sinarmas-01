@@ -27,6 +27,7 @@ const Stocks = lazy(() => import("./pages/common/Stocks"));
 const RequestStock = lazy(() => import("./pages/admin/RequestStock"));
 const Mutations = lazy(() => import("@/pages/common/StockMutations"));
 const Journals = lazy(() => import("./pages/super/Journals"));
+const StockMan = lazy(() => import("./pages/super/StockMan"));
 
 function App() {
   const settings = {
@@ -55,7 +56,7 @@ function App() {
           <Route path="warehouses" element={<Suspense><ManageWarehouses /></Suspense>} />
           <Route path="products" element={<Suspense><ManageProducts /></Suspense>} />
           <Route path="categories" element={<Suspense><ManageCategories /></Suspense>} />
-          <Route path="stocks" element={<Suspense><Stocks /></Suspense>} />
+          <Route path="stocks" element={<Suspense><StockMan /></Suspense>} />
           <Route path="orders" element={<Suspense><OrderList /></Suspense>} />
           <Route path="mutations" element={<Suspense><Mutations /></Suspense>} />
           <Route path="journals" element={<Suspense><Journals /></Suspense>} />
