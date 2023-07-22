@@ -1,5 +1,5 @@
 const { models } = require("../models");
-const { Warehouses, Stocks, StockJurnals, StockMutations } = models;
+const { Warehouses, Stocks, StockJurnals, StockMutations, Products } = models;
 const { paginate } = require("../lib");
 const { Op } = require("sequelize");
 
@@ -38,7 +38,7 @@ async function changeRequestStatus (id, acc) {
     await mutation.save();
     if (acc) {
       await changeStock(mutation.stock.id, mutation.qty, 1);
-      await changeStock(friend.id, mutation.qty, 3);
+      await changeStock(friend.id, -mutation.qty, 3);
     } 
     return mutation;
   } catch (e) {
@@ -171,10 +171,25 @@ async function mutationList (req, res) {
 async function getJournals (req, res) {
   try {
     const page = Number(req.query?.page || 1);
+    const { filter = "", sort } = req.query;
     const { limit, offset } = paginate(page);
-    const journals = await StockJurnals.findAndCountAll({ limit, offset });
-    const pages = Math.ceil(journals.count / limit);
-    return res.status(200).json({ message: "Fetch Success", ...journals, page, pages });
+    const count = await StockJurnals.count();
+    const where = filter ? { remark_id: filter } : {}
+    const rows = await StockJurnals.findAll({ 
+      where,
+      limit, offset, include: ["tipe_jurnal", "remark", "warehouse", {
+        model: Stocks,
+        as: "stock",
+        include: {
+          model: Products,
+          as: "product",
+          attributes: ["id", "product_name"]
+        },
+        order: [["id", sort]]
+      }]
+    });
+    const pages = Math.ceil(count / limit);
+    return res.status(200).json({ message: "Fetch Success", count, rows, page, pages });
   } catch (e) {
     return res.status(500).json({ message: e.message, error: e });
   }

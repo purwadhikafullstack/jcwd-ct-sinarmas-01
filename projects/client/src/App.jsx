@@ -26,6 +26,7 @@ const OrderList = lazy(() => import("./pages/admin/Orders"));
 const Stocks = lazy(() => import("./pages/common/Stocks"));
 const RequestStock = lazy(() => import("./pages/admin/RequestStock"));
 const Mutations = lazy(() => import("@/pages/common/StockMutations"));
+const Journals = lazy(() => import("./pages/super/Journals"));
 
 function App() {
   const settings = {
@@ -57,6 +58,7 @@ function App() {
           <Route path="stocks" element={<Suspense><Stocks /></Suspense>} />
           <Route path="orders" element={<Suspense><OrderList /></Suspense>} />
           <Route path="mutations" element={<Suspense><Mutations /></Suspense>} />
+          <Route path="journals" element={<Suspense><Journals /></Suspense>} />
         </Route>
         <Route path="/admin" element={<Layout role="admin" />}>
           <Route index element={<Suspense><Admin /></Suspense>} />
