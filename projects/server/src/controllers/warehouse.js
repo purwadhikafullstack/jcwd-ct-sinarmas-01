@@ -105,9 +105,7 @@ const warehouseController = {
     try {
       const { user_id } = req.params;
       const warehouse = await Warehouses.findOne({
-        where: {
-          user_id
-        },
+        where: { user_id },
         include: ["user"]
       });
       return res.status(200).json({ message: "Fetch Success", ...warehouse.dataValues });
