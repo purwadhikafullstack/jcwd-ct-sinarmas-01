@@ -1,6 +1,7 @@
 const { models } = require("../models");
 const { Warehouses, Addresses, Users } = models;
 const { searchGeo } = require("../controllers/address");
+const { Op } = require("sequelize");
 
 const warehouseController = {
   /**
@@ -21,7 +22,6 @@ const warehouseController = {
         geolocation: q,
         type: place.components?.city ? "Kota" : "Kabupaten",
       });
-      console.log(address);
       const warehouse = await Warehouses.create({ 
         warehouse_name, 
         address_id: address.id,
@@ -88,7 +88,10 @@ const warehouseController = {
     try {
       const page = Number(req.query.page);
       const offset = (page > 0) ? ((page-1) * 5) : 0;
-      const warehouses = await Warehouses.findAndCountAll({ limit: 5, offset, include: ['address', 'user'] });
+      const wh = await Warehouses.findOne({ where: { user_id: req.user?.id } });
+      const where = wh ? { [Op.not]: { id: wh.id } } : {};
+      const query = page > 0 ? { limit: 5, offset } : { where, attributes: ["id", "warehouse_name"] };
+      const warehouses = await Warehouses.findAndCountAll({ ...query, include: ['address', 'user'] });
       return res.status(200).json({
         message: "Fetch Success",
         ...warehouses,
@@ -98,6 +101,18 @@ const warehouseController = {
       return res.status(500).json({ message: error.message });
     }
   },
+  getWarehouse: async function (req, res) {
+    try {
+      const { user_id } = req.params;
+      const warehouse = await Warehouses.findOne({
+        where: { user_id },
+        include: ["user"]
+      });
+      return res.status(200).json({ message: "Fetch Success", ...warehouse.dataValues });
+    } catch (e) {
+      return res.status(500).json({ message: e.message, error : e });
+    }
+  }
 };
 
 module.exports = warehouseController;

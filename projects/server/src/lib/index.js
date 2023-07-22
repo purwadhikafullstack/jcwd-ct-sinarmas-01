@@ -12,6 +12,7 @@ const ongkir = require("./ongkir");
 const toGeoStr = require("./toGeoStr");
 const toLatLng = require("./toLatLng");
 const compareDistance = require("./compareDistance");
+const imageUrl = require("./imageUrl");
 
 module.exports = {
 	capitalize,
@@ -27,5 +28,6 @@ module.exports = {
 	ongkir,
 	toGeoStr,
 	toLatLng,
-	compareDistance
+	compareDistance,
+	imageUrl
 }

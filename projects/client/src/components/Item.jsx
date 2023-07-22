@@ -15,15 +15,15 @@ export default function Item(props) {
 	const { product_name, product_image, price, desc, id } = props;
 	const navigate = useNavigate();
 	return (
-		<Card className="mb-4">
+		<Card className="mb-4 h-full">
 			<Card.Body>
-				<div className="flex justify-start flex-wrap gap-6">
+				<div className="flex justify-start flex-col gap-6">
 					<div className="ml-3 w-[100px] h-[100px]">
 						<img src={product_image} alt={product_name + " Image"} className="aspect-square max-w-[100px] max-h-[100px]" />
 					</div>
 					<div className="text-left">
 						<Card.Title className="font-bold text-3xl">
-							{product_name} <br />
+							{cropText(product_name, 20)} <br />
 						</Card.Title>
 						<div className="font-extrabold text-lg">
 							{formatRp(price)}

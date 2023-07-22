@@ -55,6 +55,8 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0",
-    "@tanstack/react-query-devtools": "^4.29.19"
+    "@tanstack/react-query-devtools": "^4.29.19",
+    "brotli-webpack-plugin": "^1.1.0",
+    "compression-webpack-plugin": "^10.0.0"
   }
 }

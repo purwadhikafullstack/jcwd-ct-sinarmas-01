@@ -8,7 +8,7 @@ export default function Explore() {
   return (
     <>
       {token ? (
-        <InfScroll queryFn={getProducts} />
+        <InfScroll queryFn={getProducts} queryKey="products" />
       ) : (
         <Navigate to="/" replace />
       )}
