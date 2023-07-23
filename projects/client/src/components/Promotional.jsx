@@ -2,6 +2,7 @@ import { Button, Link } from "react-daisyui";
 import CarouselItem from "./CarouselItem";
 import { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function Promotional() {
   const [slide, setSlide] = useState(1);
@@ -11,12 +12,15 @@ export default function Promotional() {
   const goToSlide = (s) => setSlide(s);
   const nextSlide = () => goToSlide(slide + 1);
   const prevSlide = () => goToSlide(slide - 1);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (slide > length) setSlide(1);
     if (slide < 1) setSlide(length);
     link.current?.click();
-  }, [slide]);
+    if (slide === 1)
+      navigate("#");
+  }, [slide, navigate]);
 
   return (
     <div className="flex bg-base-300 flex-row p-6 gap-3 justify-center items-center">
