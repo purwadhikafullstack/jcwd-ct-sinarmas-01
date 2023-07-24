@@ -1,9 +1,19 @@
+require("dotenv/config");
 const { models } = require("../models");
 const { Users, Verification, Reset, Carts } = models;
-require("dotenv").config();
 const { createToken } = require("../lib/createToken");
 const crypto = require("crypto");
 const { hash, mailsend, randomStr } = require("../lib");
+
+const sendVerify = (email, username, reset, token) => {
+  mailsend.compose(
+    reset ? "Reset Pass" : "Verify Account",
+    email,
+    `Hello ${username}, here's your ${reset ? "reset" : "verification"} link
+    <br /><a href='${process.env.WHITELISTED_DOMAIN}/account/${reset ? "reset" : "verify"}/${token}'>Click Here</a> .
+    `
+  )
+}
 
 const AuthController = {
   /**
@@ -30,15 +40,7 @@ const AuthController = {
         user_id: user.id,
       });
       await Carts.create({ user_id: user.id });
-      mailsend.compose(
-        "Verification",
-        email,
-        `
-        <h1>Welcome to Multi-Warehouse E-Commerce. Hello ${username}, please confirm your account 
-        <a href='${process.env.WHITELISTED_DOMAIN}/account/verify/${token}'>here</a>
-        </h1>
-        `
-      );
+      sendVerify(email, username, false, token);
 
       return res.status(200).json({
         message: "Register Success!",
@@ -121,22 +123,11 @@ const AuthController = {
       if (!user)
         return res.status(404).json({ message: "E-mail not registered yet" });
       const token = randomStr(20);
-      const reset = await Reset.create({
-        token,
-        user_id: user.id,
-      });
-      mailsend.compose(
-        "Set your Password",
-        email,
-        `
-        <h1>Hello, ${email}. Here is your reset code<br/>
-        <a href="${process.env.WHITELISTED_DOMAIN}/account/reset/${token}">Reset Password</a>
-        </h1>
-      `
-      );
+      const reset = user.isVerified ? await Reset.create({ token, user_id: user.id }) : await Verification.create({ token, user_id: user.id });
+      sendVerify(email, user.username, user.isVerified, token);
 
       return res.status(200).json({
-        message: "Reset Link Sent",
+        message: (user.isVerified ? "Verification" : "Reset") + " Link Sent",
         reset,
       });
     } catch (e) {

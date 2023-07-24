@@ -3,6 +3,9 @@ import CarouselItem from "./CarouselItem";
 import { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import image1 from "@/images/banner-2.jpg";
+import image2 from "@/images/banner-3.jpg";
+import image3 from "@/images/banner-4.jpg";
 
 export default function Promotional() {
   const [slide, setSlide] = useState(1);
@@ -28,9 +31,9 @@ export default function Promotional() {
         <FaChevronLeft />
       </Button>
       <div className="carousel w-full">
-        <CarouselItem id="slide-1" imgClass="w-full" alt="Banner 1" src="/banner-2.jpg" />
-        <CarouselItem id="slide-2" imgClass="w-full" alt="Banner 2" src="/banner-3.jpg" />
-        <CarouselItem id="slide-3" imgClass="w-full" alt="Banner 3" src="/banner-4.jpg" />
+        <CarouselItem id="slide-1" imgClass="w-full" alt="Banner 1" src={image1} />
+        <CarouselItem id="slide-2" imgClass="w-full" alt="Banner 2" src={image2} />
+        <CarouselItem id="slide-3" imgClass="w-full" alt="Banner 3" src={image3} />
       </div>
       <Button size="sm" className="rounded-box" onClick={nextSlide}>
         <FaChevronRight />
