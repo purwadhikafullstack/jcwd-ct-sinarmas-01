@@ -17,12 +17,13 @@ class TipeJurnals extends Sequelize.Model {
       allowNull: true
     },
     add: {
-      type: DataTypes.TINYINT,
-      allowNull: true
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: 1
     }
   }, {
     tableName: 'tipe_jurnals',
-    timestamps: true,
+    timestamps: false,
     indexes: [
       {
         name: "PRIMARY",

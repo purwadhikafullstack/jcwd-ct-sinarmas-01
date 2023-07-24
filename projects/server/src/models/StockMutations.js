@@ -12,9 +12,21 @@ class StockMutations extends Sequelize.Model {
       allowNull: false,
       primaryKey: true
     },
-    notes: {
-      type: DataTypes.STRING(45),
-      allowNull: true
+    stock_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'stocks',
+        key: 'id'
+      }
+    },
+    sender_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'warehouses',
+        key: 'id'
+      }
     },
     warehouse_id: {
       type: DataTypes.INTEGER,
@@ -24,18 +36,19 @@ class StockMutations extends Sequelize.Model {
         key: 'id'
       }
     },
-    isApproved: {
+    notes: {
+      type: DataTypes.STRING(60),
+      allowNull: false
+    },
+    qty: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1
+    },
+    approved: {
       type: DataTypes.TINYINT,
       allowNull: true,
       defaultValue: 0
-    },
-    stock_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'stocks',
-        key: 'id'
-      }
     }
   }, {
     tableName: 'stock_mutations',
@@ -61,6 +74,13 @@ class StockMutations extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "stock_id" },
+        ]
+      },
+      {
+        name: "sender_id",
+        using: "BTREE",
+        fields: [
+          { name: "sender_id" },
         ]
       },
     ]

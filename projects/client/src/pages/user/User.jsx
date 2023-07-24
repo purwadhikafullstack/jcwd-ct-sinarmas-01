@@ -22,6 +22,9 @@ export default function User () {
             <Button onClick={() => navigate("cart/checkout")} fullWidth>
               My Checkout
             </Button>
+            <Button onClick={() => navigate("history")} fullWidth>
+              Order History
+            </Button>
           </div>
         </Card.Body>
       </Card>

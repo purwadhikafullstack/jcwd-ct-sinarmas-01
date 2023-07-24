@@ -1,10 +1,10 @@
 import { Button, Card } from "react-daisyui";
 import { FaTimes, FaCartPlus } from "react-icons/fa";
-import { useNavigate, useParams, Outlet } from "react-router-dom";
+import { useParams, Outlet } from "react-router-dom";
 import useGetDetail from "@/hooks/queries/common/useGetDetail";
 import Loading from "@/components/Loading";
 import formatRp from "@/libs/formatRp";
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import useCartMutations from "@/hooks/mutations/common/useCartMutations";
 import { getId } from "@/api/token";
 import Swal from "@/components/Swal";
@@ -12,21 +12,25 @@ import Swal from "@/components/Swal";
 export default function Detail(props) {
   const { id } = useParams();
   const { disableActions } = props;
-  const navigate = useNavigate();
-  const goBack = () => navigate("/explore");
+  const goBack = () => window.history.back();
   const { data, isLoading, isError } = useGetDetail(id);
   const { useAddMutation } = useCartMutations();
   const add = useAddMutation();
   const addToCart = (obj) => {
-    Swal.fire("Item added to cart").then(res => res && window.history.back());
     add.mutate(obj)
+    if (add.isError) return;
+    Swal.fire("Item added to cart").then(res => res && window.history.back());
   };
   const user_id = getId();
+  const top = useRef();
 
+  useEffect(() => {
+    top.current.focus();
+  }, [top]);
   return (
     <>
       <Outlet />
-      <Card>
+      <Card ref={top}>
         <Card.Body className="p-5 text-left">
           <Card.Title className="flex">
             <div className="flex-1 text-3xl font-bold">Product Detail</div>
@@ -57,17 +61,20 @@ export default function Detail(props) {
           )}
         </Card.Body>
         <Card.Actions
-          className={`p-5 ${
-            disableActions && "hidden"
-          } flex`}
+          className={`p-5 ${disableActions && "hidden"} flex flex-wrap`}
         >
           {!isLoading && !isError && (
             <>
-              <b className="text-3xl font-extrabold underline flex-1">
-                {formatRp(data.price)}
-              </b>
+              <div className="gap-3 grow">
+                <b className="text-3xl font-extrabold underline">
+                  {formatRp(data.price)}
+                </b>
+                <div className="justify-center items-center">
+                  Available Stock : {data.stock}
+                </div>
+              </div>
               <Button
-                className="flex-0"
+                className="grow"
                 color="warning"
                 startIcon={<FaCartPlus />}
                 onClick={() => addToCart({ user_id, product_id: data.id })}

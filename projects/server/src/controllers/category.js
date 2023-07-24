@@ -50,11 +50,12 @@ const categoryController = {
 	 * */
 	getList: async function (req, res) {
 		try {
-			const { page } = req.query;
+			const page = Number(req.query?.page || 1);
 			const { offset, limit } = paginate(Number(page));
-			const categories = await Categories.findAndCountAll({ offset, limit });
+			const q = page ? { offset, limit } : { attributes: ["id", "category_name"] };
+			const categories = await Categories.findAndCountAll(q);
 			const pages = Math.ceil(categories.count / limit);
-			return res.status(200).json({ message: "Fetch Success", ...categories, pages });
+			return res.status(200).json({ message: "Fetch Success", ...categories, page, pages });
 		} catch (e) {
 			return res.status(500).json({ message: e.message, error: e });
 		}

@@ -1,6 +1,7 @@
 const { models } = require("../models");
 const { Carts, CartItems } = models;
 const { Op } = require("sequelize");
+const { isAvailable } =  require("../controllers/product");
 
 async function cartExists(user_id) {
 	const cart = await Carts.findOne({ where: { user_id } });
@@ -10,10 +11,8 @@ async function newCart(user_id) {
 	try {
 		const exists = await cartExists(user_id);
 		let cart;
-		if (exists) 
-			cart = await Carts.findOne({ where: { user_id } });
-		if (!exists) 
-			cart = await Carts.create({ user_id });
+		if (exists) cart = await Carts.findOne({ where: { user_id } });
+		if (!exists) cart = await Carts.create({ user_id });
 		return cart;
 	} catch (e) {
 		throw e;
@@ -38,11 +37,16 @@ const cartController = {
 			const { user_id } = req.params;
 			const cart = await newCart(user_id);
 			let item = await CartItems.findOne({ where: { product_id, cart_id: cart.id } });
+			let available;
 			if (item) {
+				available = await isAvailable(product_id, item.qty + 1);
+				if (!available) return res.status(422).json({ message: "Insufficient Item Stock" });
 				item.qty = item.qty + 1;
 				await item.save();
 			}
 			if (!item) {
+				available = await isAvailable(product_id, 1);
+				if (!available) return res.status(422).json({ message: "Stock is Empty" });
 				item = await CartItems.create({
 					qty: 1,
 					product_id,
@@ -78,18 +82,14 @@ const cartController = {
 			const amount = Number(req.body?.amount) || 1;
 			const { product_id, user_id } = req.params;
 			const cart = await getCart(user_id);
-			const item = await CartItems.findOne({ 
-				where: { 
-					[Op.and]: {
-						cart_id: cart.id,
-						product_id
-					}
-			 	} 
-			});
-			const empty = (item.qty + amount) === 0;
-			item.qty = !empty ? (item.qty + amount) : item.qty;
-			await item.save();
-			console.log(item.qty);
+			const where = { 
+				cart_id: cart.id,
+				product_id
+			} ;
+			const item = await CartItems.findOne({ where });
+			const available = await isAvailable(product_id, item.qty + amount);
+			if (!available) return res.status(422).json({ message: "Insufficient Item Stock" });
+			await CartItems.increment({ qty: amount }, { where });
 			return res.status(200).json({ message: "Amount Changed", ...item.dataValues });
 		} catch (e) {
 			return res.status(500).json({ message: e.message, error: e });
