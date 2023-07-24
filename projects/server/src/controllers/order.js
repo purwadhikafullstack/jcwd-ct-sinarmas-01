@@ -68,7 +68,7 @@ const orderController = {
         }
       });
       order.status = status;
-      order.isCompleted = !rejected;
+      order.isCompleted = true;
       if (rejected) {
         order.checkout.checkout_items.forEach(val => {
           const where = { id: val.stock.id };
