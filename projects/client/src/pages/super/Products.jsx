@@ -71,6 +71,7 @@ const Form = () => {
 				className="mt-0"
 				id="product_image"
 				type="file"
+        accept="image/jpeg,image/png,image/webp"
 			/>
     </form>
   );

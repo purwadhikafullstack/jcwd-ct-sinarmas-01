@@ -21,11 +21,9 @@ const productController = {
 		try {
 			const { product_name, desc, price, weight } = req.body;
 			const path = req.file?.path || "";
-			const dest = path ? path
-				.replace(/\\/g, "/")
-				.replace("public/", "") : null;
+			const dest = path ? path.replace(/\\/g, "/").replace("public/", "images/") : null;
 			const origin = `${req.protocol}://${req.headers.host}`;
-			const product_image = path ? `${origin}/${dest}` : `${origin}/default-image.jpg`;
+			const product_image = path ? `${origin}/${dest}` : `${origin}/images/default-image.jpg`;
 			const product = await Products.create({
 				product_name,
 				desc,
@@ -35,7 +33,6 @@ const productController = {
 			});
 			return res.status(201).json({ message: "Product Added", product });
 		} catch (e) {
-			console.log(e);
 			return res.status(500).json({ message: e.errors ? e.errors[0].message : e.message });
 		}
 	},
@@ -49,9 +46,8 @@ const productController = {
 			const { product_name, desc, price, weight, category_id } = req.body;
 			console.log(req.body);
 			const path = req?.file?.path || "";
-			const dest = path ? path
-				.replace(/\\/g, "/")
-				.replace("public/", "") : null;
+			console.log(path);
+			const dest = path ? path.replace(/\\/g, "/").replace("public/", "images/") : null;
 			const product = await Products.findOne({ where: { id } });
 			const product_image = (path && dest) ? `${req.protocol}://${req.headers.host}/${dest}` : null;
 			product.product_name = product_name || product.product_name;

@@ -45,7 +45,7 @@ export default function Checkout () {
 			showCloseButton: true,
 			html: "Upload your payment proof to bank account <b>9876512345</b>",
 			inputAttributes: {
-				"accept": ".jpg, .png, .jpeg, .webp",
+				"accept": "image/jpeg,image/png,image/webp",
 				"aria-label": "Upload your payment proof to bank account 9876512345"
 			},
 			confirmButtonText: "Confirm Payment",

@@ -25,7 +25,7 @@ const AuthController = {
       const { email, fullname, username, role = "User" } = req.body;
       const token = crypto.randomBytes(20).toString("hex");
       const password = randomStr();
-      const profile_pic = `${req.protocol}://${req.headers.host}/default-avatar.png`;
+      const profile_pic = `${req.protocol}://${req.headers.host}/images/default-avatar.png`;
       const user = await Users.create({
         fullname,
         username,
