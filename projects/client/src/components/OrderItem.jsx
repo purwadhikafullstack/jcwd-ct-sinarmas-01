@@ -127,11 +127,17 @@ export default function OrderItem (props) {
       <Card.Actions className="p-5">
         <div className="mb-3 w-full">
           <OrderDetails checkout={checkout} />
-          <Button onClick={() => showProof(id, proof)} color="info" fullWidth>
-            Payment Proof
-          </Button>
+          {!proof ? (
+            <Button onClick={() => null} color="success" fullWidth>
+              Upload Payment Proof
+            </Button>
+          ) : (
+            <Button onClick={() => showProof(id, proof)} color="info" fullWidth>
+              Payment Proof
+            </Button>
+          )}
         </div>
-        {(role === "user" && isCompleted && status !== "Rejected") ? (
+        {(role === "user" && isCompleted && status !== "Delivered") ? (
           <Button onClick={markDeliv} fullWidth>
             I have received the ordered items
           </Button>

@@ -1,7 +1,6 @@
 const { models } = require("../models");
 const { Checkouts, Orders, CheckoutItems, Users, Stocks, Warehouses, Products } = models;
 const { paginate, imageUrl } = require("../lib");
-const { fn, col } = require("sequelize");
 
 const orderController = {
   /**
@@ -29,11 +28,9 @@ const orderController = {
       });
       checkout.checked = true;
       await checkout.save();
-      if (!req.file) return res.status(422).json({ message: "Upload your payment please" });
-      const payment_proof = imageUrl(req);
       const order = await Orders.create({
         status: "Pending",
-        payment_proof,
+        payment_proof: null,
         checkout_id,
         warehouse_id: checkout.checkout_items[0]?.stock?.warehouse?.id,
         user_id: checkout.user_id,
@@ -55,7 +52,7 @@ const orderController = {
     try {
       const { id } = req.params;
       const { status } = req.body;
-      const rejected = status === "Rejected";
+      const rejected = status === "Rejected" || status === "Cancelled";
       const order = await Orders.findByPk(id, {
         include: {
           model: Checkouts,
@@ -137,6 +134,18 @@ const orderController = {
       return res.status(200).json({ message: "Fetch Success", count, rows: orders, page, pages });
     } catch (e) {
       return res.status(500).json({ message: e.message, error: e });
+    }
+  },
+  uploadProof: async function (req, res) {
+    try {
+      const { id } = req.params;
+      const payment_proof = imageUrl(req);
+      const order = await Orders.findByPk(id);
+      order.payment_proof = payment_proof;
+      await order.save();
+      return res.status(200).json({ message: "Payment proof uploaded", ...order.dataValues })
+    } catch (e) {
+      throw e;
     }
   }
 }

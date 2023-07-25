@@ -21,9 +21,9 @@ const productController = {
 		try {
 			const { product_name, desc, price, weight } = req.body;
 			const path = req.file?.path || "";
-			const dest = path ? path.replace(/\\/g, "/").replace("public/", "images/") : null;
+			const dest = path ? path.replace(/\\/g, "/").replace("public/", "") : null;
 			const origin = `${req.protocol}://${req.headers.host}`;
-			const product_image = path ? `${origin}/${dest}` : `${origin}/images/default-image.jpg`;
+			const product_image = path ? `${origin}/${dest}` : `${origin}/default-image.jpg`;
 			const product = await Products.create({
 				product_name,
 				desc,

@@ -16,6 +16,7 @@ const {
   orderRoutes,
   stockRoutes
 } = require("./routes");
+const { verifyToken } = require("./middlewares/auth");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -69,7 +70,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   if (req.path.includes("/api/")) {
     console.error("Error : ", err.stack);
-    res.status(500).send("Error !");
+    res.status(500).send({ message: err.message, error: err });
   } else {
     next();
   }
@@ -80,7 +81,8 @@ app.use((err, req, res, next) => {
 //#region CLIENT
 const clientPath = "../../client/build";
 app.use(express.static(join(__dirname, clientPath)));
-app.use("/images", express.static("public"));
+app.use(express.static("public"));
+app.use("/images/payments", verifyToken);
 
 // Serve the HTML page
 app.get("*", (req, res) => {

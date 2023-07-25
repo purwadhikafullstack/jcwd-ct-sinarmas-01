@@ -24,9 +24,7 @@ export default function Checkout () {
 	const check = useCreateOrder();
 
 	const onSubmit = (e) => {
-		if (isLoading){
-			return;
-		}
+		if (isLoading) return;
 		e.preventDefault();
 		const form = new FormData(e.target);
 		form.append("checkout_id", data.id);
@@ -38,29 +36,6 @@ export default function Checkout () {
 	}
 	const addresses = useAddresses();
 
-	const confirmPayment = (id) => {
-		Swal.fire({
-			title: "Confirm Payment",
-			input: "file",
-			showCloseButton: true,
-			html: "Upload your payment proof to bank account <b>9876512345</b>",
-			inputAttributes: {
-				"accept": "image/jpeg,image/png,image/webp",
-				"aria-label": "Upload your payment proof to bank account 9876512345"
-			},
-			confirmButtonText: "Confirm Payment",
-			preConfirm: (value) => {
-				const form = new FormData();
-				form.append("payment", value);
-				form.append("checkout_id", id);
-				return formToObj(form);
-			}
-		}).then (res => {
-			if (!res.isConfirmed) return;
-			if (!res.value?.payment) return Swal.fire("You have to upload your proof");		
-			if (res.value?.payment) check.mutate(res.value);
-		})
-	}
 	return (
 		<Card>
 			<Card.Body>
@@ -128,7 +103,7 @@ export default function Checkout () {
 					fullWidth 
 					color="primary" 
 					disabled={!addressId || !courier || !data} 
-					onClick={() => !isLoading && confirmPayment(data.id)}
+					onClick={() => !isLoading && check.mutate({ checkout_id: data.id })}
 				>
 					Create Order
 				</Button>
